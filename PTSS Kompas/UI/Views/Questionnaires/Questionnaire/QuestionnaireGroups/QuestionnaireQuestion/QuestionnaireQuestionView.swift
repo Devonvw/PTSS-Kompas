@@ -12,7 +12,7 @@ struct QuestionnaireQuestionView: View {
     
     let questionnaire: Questionnaire
     let group: QuestionnaireGroup
-    let question = QuestionnaireQuestion.example
+    @State var question = QuestionnaireQuestion.example
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -41,7 +41,7 @@ struct QuestionnaireQuestionView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.bottom, 24)
                     
-                    ForEach(question.subQuestions) { subQuestion in
+                    ForEach($question.subQuestions) { subQuestion in
                         SubQuestionItem(subQuestion: subQuestion)
                     }
                 }

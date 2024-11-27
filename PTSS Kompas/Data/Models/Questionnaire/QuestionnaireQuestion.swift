@@ -7,7 +7,7 @@
 
 struct QuestionnaireQuestion: Codable {
     let situation: String
-    let subQuestions: [QuestionnaireSubQuestion]
+    var subQuestions: [QuestionnaireSubQuestion]
     let order: Int
     
     static let example: QuestionnaireQuestion = .init(

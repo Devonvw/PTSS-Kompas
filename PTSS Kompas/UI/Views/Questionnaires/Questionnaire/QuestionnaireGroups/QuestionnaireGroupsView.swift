@@ -28,11 +28,11 @@ struct QuestionnaireGroupsView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 28, height: 28)
-                Text("Je hoeft de vragenlijst ").font(.body)
+                Text("Je hoeft de vragenlijst ").font(.subheadline)
                     + Text("niet in één keer ")
-                        .bold()
-                    + Text("in te vullen. Het is mogelijk om op een later moment terug te keren.")
-            }.padding(4)
+                        .bold().font(.subheadline)
+                    + Text("in te vullen. Het is mogelijk om op een later moment terug te keren.").font(.subheadline)
+            }.padding(6)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.gray, lineWidth: 2)
@@ -57,18 +57,9 @@ struct QuestionnaireGroupsView: View {
                             .multilineTextAlignment(.center)
                             .padding()
                         
-                        Button(action: {
+                        ButtonVariant(label: "Probeer opnieuw", iconRight: "arrow.clockwise", action: {
                             viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)
-                        }) {
-                            Text("Retry")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
-                        }
-                        .padding(.horizontal, 40)
+                        })
                     }
                     .padding()
                 }
@@ -93,9 +84,11 @@ struct QuestionnaireGroupsView: View {
             .refreshable{viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)}
             .navigationBarItems(
                 trailing:
-                    Button(action: {
-                    }) {
-                        Label("Search", systemImage: "magnifyingglass")
+                    NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
+                        Button(action: {
+                        }) {
+                            Label("Info", systemImage: "info.circle")
+                        }
                     }
             )
             ButtonVariant(label: "Afronden", disabled: true) {}

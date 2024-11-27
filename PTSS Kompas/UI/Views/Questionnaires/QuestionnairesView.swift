@@ -79,15 +79,7 @@ struct QuestionnairesView: View {
             .searchable(text: $viewModel.searchText, prompt: "Zoeken")
             .navigationTitle("Vragenlijsten")
             .navigationBarTitleDisplayMode(.inline)
-            //            .navigationTitleAppearance(color: Color.dark)
-            .navigationBarItems(
-                trailing:
-                    Button(action: {
-                    }) {
-                        Label("Search", systemImage: "magnifyingglass")
-                    }
-            )
-        }
+           }
     }
 }
 

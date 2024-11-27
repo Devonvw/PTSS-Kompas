@@ -29,7 +29,6 @@ final class QuestionnaireService {
                 return
             }
             do {
-                print(data)
                 let questionnaires = try JSONDecoder().decode([Questionnaire].self, from: data)
                 completion(.success(questionnaires))
             } catch {
@@ -59,7 +58,6 @@ final class QuestionnaireService {
                 return
             }
             do {
-                print(data)
                 let questionnaire = try JSONDecoder().decode(QuestionnaireExplanation.self, from: data)
                 completion(.success(questionnaire))
             } catch {
@@ -87,9 +85,36 @@ final class QuestionnaireService {
                 return
             }
             do {
-                print(data)
                 let questionnaireGroups = try JSONDecoder().decode([QuestionnaireGroup].self, from: data)
                 completion(.success(questionnaireGroups))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+    
+    func getQuestionnaireQuestions(questionnaireId: String, groupId: String, completion: @escaping (Result<[QuestionnaireQuestion], Error>) -> Void) {
+        let url = URL(string: "questionnaires/\(questionnaireId)/groups/\(groupId)/questions", relativeTo: baseURL)
+        
+        guard let url else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
+            return
+        }
+        
+                
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
+                return
+            }
+            do {
+                print(data)
+                let questions = try JSONDecoder().decode([QuestionnaireQuestion].self, from: data)
+                completion(.success(questions))
             } catch {
                 completion(.failure(error))
             }

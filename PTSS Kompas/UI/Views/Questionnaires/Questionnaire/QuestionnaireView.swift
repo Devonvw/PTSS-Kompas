@@ -31,7 +31,7 @@ struct QuestionnaireView: View {
                         .padding(.bottom, 16)
                     
                     ForEach(questionnaireExplanation.questions) { question in
-                        SubQuestionItem(subQuestion: question)
+                        SubQuestionItemShow(subQuestion: question)
                     }
                 }
             }

@@ -12,7 +12,7 @@ struct QuestionnaireSubQuestion: Codable, Identifiable {
     let description: String
     let type: QuestionnaireSubQuestionType
     let answerOptions: [QuestionnaireSubQuestionAnswerOption]
-    let answer: String?
+    var answer: String?
     
     static let example: QuestionnaireSubQuestion = .init(
         id: UUID().uuidString,
