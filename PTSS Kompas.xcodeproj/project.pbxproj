@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		84E713042CF77B030073B83F /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 84E713032CF77AFF0073B83F /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		84ED1C6C2CECA60C00D81E6A /* PTSS Kompas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PTSS Kompas.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84E713032CF77AFF0073B83F /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		84ED1C6C2CECA60C00D81E6A /* PTSS Kompas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "PTSS Kompas.app"; path = "/Users/devonvanwichen/Documents/XCode/PTSS Kompas/build/Debug-iphoneos/PTSS Kompas.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +38,8 @@
 			isa = PBXGroup;
 			children = (
 				84ED1C6E2CECA60C00D81E6A /* PTSS Kompas */,
-				84ED1C6D2CECA60C00D81E6A /* Products */,
+				84E713032CF77AFF0073B83F /* .gitignore */,
 			);
-			sourceTree = "<group>";
-		};
-		84ED1C6D2CECA60C00D81E6A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				84ED1C6C2CECA60C00D81E6A /* PTSS Kompas.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,7 +92,7 @@
 			mainGroup = 84ED1C632CECA60C00D81E6A;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 84ED1C6D2CECA60C00D81E6A /* Products */;
+			productRefGroup = 84ED1C632CECA60C00D81E6A;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -109,6 +106,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84E713042CF77B030073B83F /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +252,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"PTSS Kompas/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "PTSS-Kompas-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,6 +281,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"PTSS Kompas/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "PTSS-Kompas-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
