@@ -39,7 +39,6 @@ struct PTSS_KompasApp: App {
                         }
                 }.toolbarBackground(Color.light1, for: .tabBar)
                     .toolbar(.visible, for: .tabBar)
-                    .toolbarBackground(.visible, for: .tabBar)
             }.tint(Color.dark)
         }
     }

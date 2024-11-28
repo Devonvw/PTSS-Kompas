@@ -30,6 +30,7 @@ final class QuestionnairesViewModel: ObservableObject {
     
     func fetchQuestionnaires() {
         isLoading = true
+        isFailure = false
         apiService.getQuestionnaires { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false

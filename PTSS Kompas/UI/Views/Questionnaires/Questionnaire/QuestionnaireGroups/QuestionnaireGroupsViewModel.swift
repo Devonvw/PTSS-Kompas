@@ -18,6 +18,8 @@ final class QuestionnaireGroupsViewModel: ObservableObject {
     
     func fetchQuestionnaireGroups(questionnaireId: String) {
         isLoading = true
+        isFailure = false
+
         apiService.getQuestionnaireGroups(questionnaireId: questionnaireId) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
