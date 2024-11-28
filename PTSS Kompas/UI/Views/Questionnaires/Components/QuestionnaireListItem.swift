@@ -37,16 +37,7 @@ struct QuestionnaireListItem: View {
                         .foregroundColor(.dark)
                 }
             } else {
-                Button(action: {
-                    // Action for starting the questionnaire
-                }) {
-                    Text("Start")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.light3)
-                        .cornerRadius(8)
-                }
+                ButtonVariant(label: "Start", variant: .light){}.disabled(true)
             }
         }
         .padding()

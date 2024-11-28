@@ -1,0 +1,98 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " van %lld" : {
+
+    },
+    "%@" : {
+
+    },
+    "0 van de %lld groepen voltooid" : {
+
+    },
+    "Deze vragenlijst heeft geen groepen!" : {
+
+    },
+    "Er zijn geen vragenlijsten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn nog geen vragenlijsten aan jou toegewezen." : {
+
+    },
+    "Geschatte tijd: %@" : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "Het is niet gelukt om de groepen op te halen." : {
+
+    },
+    "Het is niet gelukt om de vragenlijsten op te halen." : {
+
+    },
+    "Home" : {
+
+    },
+    "Home2" : {
+
+    },
+    "Hulpmiddelen" : {
+
+    },
+    "in te vullen. Het is mogelijk om op een later moment terug te keren." : {
+
+    },
+    "Info" : {
+
+    },
+    "Je hebt geen vragenlijsten!" : {
+
+    },
+    "Je hoeft de vragenlijst" : {
+
+    },
+    "Key" : {
+      "extractionState" : "manual"
+    },
+    "niet in één keer " : {
+
+    },
+    "Nog %lld vragen in te vullen" : {
+
+    },
+    "Retry" : {
+
+    },
+    "Uitleg" : {
+
+    },
+    "Voltooid!" : {
+
+    },
+    "Vorige" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terug"
+          }
+        }
+      }
+    },
+    "Vraag " : {
+
+    },
+    "Vragenlijsten" : {
+
+    },
+    "Zoeken" : {
+
+    }
+  },
+  "version" : "1.0"
+}

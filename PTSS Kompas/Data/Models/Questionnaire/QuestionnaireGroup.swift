@@ -10,14 +10,18 @@ struct QuestionnaireGroup: Codable, Identifiable {
     let id: String
     let title: String
     let isFinished: Bool
-    let questionsLeft: Int
-    let questionsCount: Int
+    let completedQuestions: Int
+    let totalQuestions: Int
+    
+    static func map(response: QuestionnaireGroupResponse) -> Self {
+        return QuestionnaireGroup(id: response.id, title: response.title, isFinished: response.completedQuestions == response.totalQuestions, completedQuestions: response.completedQuestions, totalQuestions: response.totalQuestions)
+    }
     
     static let example: QuestionnaireGroup = .init(
         id: UUID().uuidString,
         title: "Behandelplanning en Besluitvorming",
-        isFinished: false,
-        questionsLeft: 4,
-        questionsCount: 4
+        isFinished: true,
+        completedQuestions: 0,
+        totalQuestions: 2
     )
 }

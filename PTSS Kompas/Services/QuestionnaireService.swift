@@ -8,10 +8,10 @@
 import Foundation
 
 final class QuestionnaireService {
-    let baseURL = URL(string: "https://virtserver.swaggerhub.com/652543_1/PTSS-SUPPORT/1.0.0/")!
+    let baseURL = URL(string: "https://virtserver.swaggerhub.com/652543_1/PTSS-SUPPORT/1.0.0/questionnaires/")!
     
     func getQuestionnaires(completion: @escaping (Result<[Questionnaire], Error>) -> Void) {
-        let url = URL(string: "questionnaires", relativeTo: baseURL)
+        let url = URL(string: "", relativeTo: baseURL)
         
         guard let url else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
@@ -38,7 +38,7 @@ final class QuestionnaireService {
     }
     
     func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<QuestionnaireExplanation, Error>) -> Void) {
-        let url = URL(string: "questionnaires/\(questionnaireId)/explanation", relativeTo: baseURL)
+        let url = URL(string: "\(questionnaireId)/explanation", relativeTo: baseURL)
         
         guard let url else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
@@ -67,7 +67,7 @@ final class QuestionnaireService {
     }
     
     func getQuestionnaireGroups(questionnaireId: String, completion: @escaping (Result<[QuestionnaireGroup], Error>) -> Void) {
-        let url = URL(string: "questionnaires/\(questionnaireId)/groups", relativeTo: baseURL)
+        let url = URL(string: "\(questionnaireId)/groups", relativeTo: baseURL)
         
         guard let url else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
@@ -85,7 +85,10 @@ final class QuestionnaireService {
                 return
             }
             do {
-                let questionnaireGroups = try JSONDecoder().decode([QuestionnaireGroup].self, from: data)
+                let questionnaireGroupsResponse = try JSONDecoder().decode([QuestionnaireGroupResponse].self, from: data)
+                
+                let questionnaireGroups = questionnaireGroupsResponse.map { QuestionnaireGroup.map(response: $0) }
+                
                 completion(.success(questionnaireGroups))
             } catch {
                 completion(.failure(error))
@@ -94,7 +97,7 @@ final class QuestionnaireService {
     }
     
     func getQuestionnaireQuestions(questionnaireId: String, groupId: String, completion: @escaping (Result<[QuestionnaireQuestion], Error>) -> Void) {
-        let url = URL(string: "questionnaires/\(questionnaireId)/groups/\(groupId)/questions", relativeTo: baseURL)
+        let url = URL(string: "\(questionnaireId)/groups/\(groupId)/questions", relativeTo: baseURL)
         
         guard let url else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))

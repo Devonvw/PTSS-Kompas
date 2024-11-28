@@ -12,7 +12,7 @@
 
 /* Begin PBXFileReference section */
 		84E713032CF77AFF0073B83F /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		84ED1C6C2CECA60C00D81E6A /* PTSS Kompas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "PTSS Kompas.app"; path = "/Users/devonvanwichen/Documents/XCode/PTSS Kompas/build/Debug-iphoneos/PTSS Kompas.app"; sourceTree = "<absolute>"; };
+		84E713102CF875810073B83F /* PTSS Kompas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "PTSS Kompas.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +39,7 @@
 			children = (
 				84ED1C6E2CECA60C00D81E6A /* PTSS Kompas */,
 				84E713032CF77AFF0073B83F /* .gitignore */,
+				84E713102CF875810073B83F /* PTSS Kompas.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,7 +65,7 @@
 			packageProductDependencies = (
 			);
 			productName = "PTSS Kompas";
-			productReference = 84ED1C6C2CECA60C00D81E6A /* PTSS Kompas.app */;
+			productReference = 84E713102CF875810073B83F /* PTSS Kompas.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -88,6 +89,7 @@
 			knownRegions = (
 				en,
 				Base,
+				nl,
 			);
 			mainGroup = 84ED1C632CECA60C00D81E6A;
 			minimizedProjectReferenceProxies = 1;
@@ -182,6 +184,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -238,6 +241,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

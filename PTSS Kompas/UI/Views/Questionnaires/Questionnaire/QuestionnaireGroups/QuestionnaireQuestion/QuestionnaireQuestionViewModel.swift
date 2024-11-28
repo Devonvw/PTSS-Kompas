@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 final class QuestionnaireQuestionViewModel: ObservableObject {
-    @Published var questions: [QuestionnaireQuestion] = QuestionnaireQuestion.examples //[]
+    @Published var questions: [QuestionnaireQuestion] = []
     @Published var question: QuestionnaireQuestion? = QuestionnaireQuestion.example
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false

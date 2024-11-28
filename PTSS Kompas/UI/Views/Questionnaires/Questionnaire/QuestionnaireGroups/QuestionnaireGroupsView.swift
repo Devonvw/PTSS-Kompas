@@ -28,10 +28,10 @@ struct QuestionnaireGroupsView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 28, height: 28)
-                Text("Je hoeft de vragenlijst ").font(.subheadline)
-                    + Text("niet in één keer ")
-                        .bold().font(.subheadline)
-                    + Text("in te vullen. Het is mogelijk om op een later moment terug te keren.").font(.subheadline)
+                Text("Je hoeft de vragenlijst").font(.subheadline)
+                + Text("niet in één keer ")
+                    .bold().font(.subheadline)
+                + Text("in te vullen. Het is mogelijk om op een later moment terug te keren.").font(.subheadline)
             }.padding(6)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
@@ -85,9 +85,9 @@ struct QuestionnaireGroupsView: View {
             .navigationBarItems(
                 trailing:
                     NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
-                        Button(action: {
-                        }) {
+                        VStack(alignment: .center) {
                             Label("Info", systemImage: "info.circle")
+                            Text("Uitleg").font(.caption)
                         }
                     }
             )

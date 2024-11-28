@@ -21,9 +21,9 @@ struct PTSS_KompasApp: App {
                         .tabItem {
                             Label("Home", systemImage: "house")
                         }
-                    HomeView()
+                    ToolsView()
                         .tabItem {
-                            Label("Home", systemImage: "house")
+                            Label("Hulpmiddelen", image: "hulpmiddelenIcon")
                         }
                     HomeView()
                         .tabItem {
