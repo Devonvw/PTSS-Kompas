@@ -1,16 +1,15 @@
 //
-//  ContactProfessionalViewModel.swift
+//  ContactQuestionViewModel.swift
 //  PTSS Kompas
 //
-//  Created by Devon van Wichen on 28/11/2024.
+//  Created by Devon van Wichen on 04/12/2024.
 //
-
 import Foundation
 import Combine
 import SwiftUI
 
-final class ContactProfessionalViewModel: ObservableObject {
-    @Published var questions: [ContactQuestion] = []
+final class ContactQuestionMessagesViewModel: ObservableObject {
+    @Published var messages: [ContactQuestionMessage] = []
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     @Published var searchText = "" {
@@ -20,16 +19,17 @@ final class ContactProfessionalViewModel: ObservableObject {
             }
         }
     }
+    @Published var newMessageContent: String = ""
     @Published var pagination: Pagination?
     private var cancellables = Set<AnyCancellable>()
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
+    private var questionId: String?
     
     private let apiService = ContactService()
     
     init() {
         debounceSearchText()
-        fetchContactQuestions()
     }
     
     private func debounceSearchText() {
@@ -43,19 +43,21 @@ final class ContactProfessionalViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func fetchContactQuestions() {
+    func fetchQuestionMessages(questionId: String) {
         isLoading = true
         isFailure = false
+        self.questionId = questionId
+        
         if (pagination?.nextCursor == nil || pagination?.nextCursor == "") {
-            questions = []
+            messages = []
         }
         
-        apiService.getContactQuestions(cursor: pagination?.nextCursor, search: debouncedSearchText) { [weak self] result in
+        apiService.getContactQuestionMessages(questionId: questionId, cursor: pagination?.nextCursor, search: debouncedSearchText) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
                 case .success(let data):
-                    self?.questions.append(contentsOf: data.data)
+                    self?.messages.append(contentsOf: data.data)
                     self?.pagination = data.pagination
                 case .failure(let error):
                     self?.isFailure = true
@@ -65,8 +67,8 @@ final class ContactProfessionalViewModel: ObservableObject {
         }
     }
     
-    func fetchMoreContactQuestions(question: ContactQuestion) {
-        guard let lastQuestion = questions.last, lastQuestion.id == question.id else {
+    func fetchMoreQuestionMessages(message: ContactQuestionMessage) {
+        guard let lastMessage = messages.last, lastMessage.id == message.id else {
             return
         }
         
@@ -74,12 +76,18 @@ final class ContactProfessionalViewModel: ObservableObject {
             return
         }
         
-        fetchContactQuestions()
+        if let questionId {
+            fetchQuestionMessages(questionId: questionId)
+        }
     }
     
     
     func refreshContactQuestions() {
         pagination = nil
-        fetchContactQuestions()
+        
+        if let questionId {
+            fetchQuestionMessages(questionId: questionId)
+        }
     }
 }
+

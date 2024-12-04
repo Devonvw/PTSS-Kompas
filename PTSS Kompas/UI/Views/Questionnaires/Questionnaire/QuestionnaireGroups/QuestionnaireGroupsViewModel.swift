@@ -11,6 +11,7 @@ import SwiftUI
 
 final class QuestionnaireGroupsViewModel: ObservableObject {
     @Published var groups: [QuestionnaireGroup] = []
+    @Published var completedGroups: Int = 0
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     
@@ -26,6 +27,7 @@ final class QuestionnaireGroupsViewModel: ObservableObject {
                 switch result {
                 case .success(let data):
                     self?.groups = data
+                    self?.completedGroups = data.filter { $0.isFinished }.count
                 case .failure(let error):
                     self?.isFailure = true
                     print("Error: \(error)")

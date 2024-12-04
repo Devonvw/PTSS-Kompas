@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 final class QuestionnaireViewModel: ObservableObject {
-    @Published var questionnaireExplanation: QuestionnaireExplanation?
+    @Published var subQuestions: [QuestionnaireSubQuestion] = []
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     
@@ -25,7 +25,7 @@ final class QuestionnaireViewModel: ObservableObject {
                 self?.isLoading = false
                 switch result {
                 case .success(let data):
-                    self?.questionnaireExplanation = data
+                    self?.subQuestions = data
                 case .failure(let error):
                     self?.isFailure = true
                     print("Error: \(error)")

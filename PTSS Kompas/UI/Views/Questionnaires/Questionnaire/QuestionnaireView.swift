@@ -11,7 +11,6 @@ struct QuestionnaireView: View {
     @StateObject var viewModel = QuestionnaireViewModel()
     
     let questionnaire: Questionnaire
-    let questionnaireExplanation = QuestionnaireExplanation.example
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -27,11 +26,11 @@ struct QuestionnaireView: View {
                     Text(questionnaire.description)
                         .font(.body)
                         .foregroundColor(.dark)
-                        .fixedSize(horizontal: false, vertical: true) // Allow multiline text
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.bottom, 16)
                     
-                    ForEach(questionnaireExplanation.questions) { question in
-                        SubQuestionItemShow(subQuestion: question)
+                    ForEach(viewModel.subQuestions) { subQuestion in
+                        SubQuestionItemShow(subQuestion: subQuestion)
                     }
                 }
             }
@@ -40,9 +39,7 @@ struct QuestionnaireView: View {
             }
         }.padding()
             .onAppear {
-                Task {
-                    viewModel.fetchQuestionnaire(id: questionnaire.id)
-                }
+                viewModel.fetchQuestionnaire(id: questionnaire.id)
             }
     }
 }

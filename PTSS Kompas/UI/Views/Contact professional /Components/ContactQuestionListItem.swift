@@ -7,21 +7,16 @@
 
 import SwiftUI
 
-struct QuestionnaireListItem: View {
-    let questionnaire: Questionnaire
+struct ContactQuestionListItem: View {
+    let question: ContactQuestion
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(questionnaire.title)
+            Text(question.subject)
                 .font(.headline)
                 .foregroundColor(.dark)
             
-            Text("Geschatte tijd: \(questionnaire.estimatedTimeOfCompletion)")
-                .font(.subheadline)
-                .foregroundColor(.dark)
-                .padding(.bottom, 10)
-            
-            Text(questionnaire.description)
+            Text(question.content)
                 .font(.body)
                 .foregroundColor(.dark)
                 .lineLimit(4)
@@ -29,17 +24,23 @@ struct QuestionnaireListItem: View {
                 .padding(.bottom, 10)
                 .multilineTextAlignment(.leading)
             
-            if questionnaire.isFinished {
+            Text("Aangemaakt op \(formatDate(from: question.createdAt, to: "dd-MM-yyyy"))")
+                .font(.caption)
+                .foregroundColor(.dark)
+            if question.isClosed {
                 HStack {
-                    Text("Voltooid!")
+                    Text("Afgesloten door de professional")
                         .font(.headline)
                         .foregroundColor(.dark)
                     Spacer()
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.dark)
                 }
-            } else {
-                ButtonVariant(label: "Start", variant: .light){}.disabled(true)
+            } else if question.newAnswer {
+                ButtonVariant(label: "Bekijk nieuw antwoord", variant: .light){}.disabled(true)
+            }
+            else {
+                ButtonVariant(label: "Bekijk", variant: .light){}.disabled(true)
             }
         }
         .padding()
@@ -49,5 +50,5 @@ struct QuestionnaireListItem: View {
 }
 
 #Preview {
-    QuestionnaireListItem(questionnaire: Questionnaire.example)
+    ContactQuestionListItem(question: .example)
 }

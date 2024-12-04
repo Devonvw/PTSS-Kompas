@@ -10,15 +10,17 @@ import Foundation
 final class QuestionnaireService {
     let baseURL = URL(string: "https://virtserver.swaggerhub.com/652543_1/PTSS-SUPPORT/1.0.0/questionnaires/")!
     
-    func getQuestionnaires(completion: @escaping (Result<[Questionnaire], Error>) -> Void) {
-        let url = URL(string: "", relativeTo: baseURL)
+    func getQuestionnaires(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<Questionnaire>, Error>) -> Void) {
+        let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
-        guard let url else {
+        guard let url = baseURL.appendingQueryParameters(parameters) else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
             return
         }
         
-                
+        print(url)
+        
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -29,7 +31,8 @@ final class QuestionnaireService {
                 return
             }
             do {
-                let questionnaires = try JSONDecoder().decode([Questionnaire].self, from: data)
+                let questionnaires = try JSONDecoder().decode(PaginatedResponse<Questionnaire>.self, from: data)
+                print(questionnaires)
                 completion(.success(questionnaires))
             } catch {
                 completion(.failure(error))
@@ -37,7 +40,7 @@ final class QuestionnaireService {
         }.resume()
     }
     
-    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<QuestionnaireExplanation, Error>) -> Void) {
+    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<[QuestionnaireSubQuestion], Error>) -> Void) {
         let url = URL(string: "\(questionnaireId)/explanation", relativeTo: baseURL)
         
         guard let url else {
@@ -47,7 +50,7 @@ final class QuestionnaireService {
         
         print(url.absoluteString)
         
-                
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -58,8 +61,8 @@ final class QuestionnaireService {
                 return
             }
             do {
-                let questionnaire = try JSONDecoder().decode(QuestionnaireExplanation.self, from: data)
-                completion(.success(questionnaire))
+                let subQuestions = try JSONDecoder().decode([QuestionnaireSubQuestion].self, from: data)
+                completion(.success(subQuestions))
             } catch {
                 completion(.failure(error))
             }
@@ -74,7 +77,7 @@ final class QuestionnaireService {
             return
         }
         
-                
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -104,7 +107,7 @@ final class QuestionnaireService {
             return
         }
         
-                
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))

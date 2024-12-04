@@ -31,7 +31,7 @@ enum ButtonVariants {
 }
 
 struct ButtonVariant<Label: View>: View {
-    private let label: Label
+    private let label: Label?
     let iconRight: String?
     let iconLeft: String?
     let disabled: Bool
@@ -52,6 +52,22 @@ struct ButtonVariant<Label: View>: View {
         self.action = action
         self.disabled = disabled
         self.variant = variant
+    }
+    
+    init(
+        variant: ButtonVariants = .dark,
+        disabled: Bool = false,
+        iconRight: String? = nil,
+        iconLeft: String? = nil,
+        action: @escaping () -> Void
+    ) {
+        self.init(
+            variant: variant,
+            disabled: disabled,
+            iconRight: iconRight,
+            iconLeft: iconLeft,
+            action: action
+        )
     }
     
     init(
@@ -82,7 +98,9 @@ struct ButtonVariant<Label: View>: View {
                         .scaledToFit()
                         .frame(width: 24, height: 24)
                 }
-                label
+                if let label {
+                    label
+                }
                 if let iconRight {
                     Image(systemName: iconRight)
                         .resizable()

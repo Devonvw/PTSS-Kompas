@@ -6,5 +6,12 @@
 //
 
 struct Pagination: Codable {
+    let nextCursor: String
+    let pageSize: Int
     let totalItems: Int
+    let totalPages: Int
+    
+    static let example: Pagination = .init(
+        nextCursor: "asdasd", pageSize: 100, totalItems: 10, totalPages: 1
+    )
 }

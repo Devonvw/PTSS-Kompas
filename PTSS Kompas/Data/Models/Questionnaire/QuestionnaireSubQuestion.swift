@@ -9,7 +9,7 @@ import Foundation
 struct QuestionnaireSubQuestion: Codable, Identifiable {
     let id: String
     let text: String
-    let description: String
+    let description: String?
     let type: QuestionnaireSubQuestionType
     let answerOptions: [QuestionnaireSubQuestionAnswerOption]
     var answer: String?
@@ -32,7 +32,7 @@ struct QuestionnaireSubQuestionAnswerOption: Codable, Identifiable {
     let id: String
     let value: String
     let label: String
-    let description: String
+    let description: String?
     
     static let example: QuestionnaireSubQuestionAnswerOption = .init(
         id: UUID().uuidString,

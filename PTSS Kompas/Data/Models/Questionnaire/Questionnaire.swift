@@ -5,7 +5,7 @@
 //  Created by Devon van Wichen on 22/11/2024.
 //
 
-struct Questionnaire: Codable, Identifiable {
+struct Questionnaire: Codable, Identifiable, ExampleProvidable {
     let id: String
     let title: String
     let description: String

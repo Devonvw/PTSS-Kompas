@@ -11,7 +11,8 @@ import SwiftUI
 
 final class QuestionnaireQuestionViewModel: ObservableObject {
     @Published var questions: [QuestionnaireQuestion] = []
-    @Published var question: QuestionnaireQuestion? = QuestionnaireQuestion.example
+    @Published var question: QuestionnaireQuestion?
+    @Published var questionOrder: Int = 1
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     
@@ -48,6 +49,7 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
         let nextIndex = currentIndex + 1
         if nextIndex < questions.count {
             question = questions[nextIndex]
+            questionOrder += 1
         }
     }
     
@@ -63,6 +65,8 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
         let backIndex = currentIndex - 1
         if backIndex >= 0 {
             question = questions[backIndex]
+            questionOrder -= 1
+
         }
     }
     

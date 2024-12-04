@@ -20,19 +20,22 @@ struct SubQuestionItemShow: View {
                     .padding(.bottom, 2)
                 
             }
-            Text(subQuestion.description)
-                .font(.body)
-                .foregroundColor(.dark)
-                .padding(.bottom, 6)
+            if let description = subQuestion.description {
+                Text(description)
+                    .font(.body)
+                    .foregroundColor(.dark)
+                    .padding(.bottom, 6)
+            }
             HStack(alignment: .top) {
                 ForEach(subQuestion.answerOptions) { answerOption in
                     VStack(alignment: .center) {
                         ButtonVariant(label: answerOption.label, variant: .light) {}.disabled(true)
-                        Text(answerOption.description)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                        
+                        if let description = answerOption.description {
+                            Text(description)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
                     }
                 }
             }

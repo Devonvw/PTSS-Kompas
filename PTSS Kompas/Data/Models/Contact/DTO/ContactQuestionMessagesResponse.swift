@@ -6,7 +6,7 @@
 //
 
 struct ContactQuestionMessagesResponse: Codable {
-    let messages: [ContactQuestionMessage]
+    let data: [ContactQuestionMessage]
     let pagination: Pagination
 }
 

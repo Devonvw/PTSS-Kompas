@@ -43,7 +43,7 @@ struct QuestionnaireQuestionView: View {
                                     .cornerRadius(40)
                             }
                         }.padding(.bottom, 8)
-                        Text("Vraag ").font(.subheadline) + Text("\(question.id)").bold().font(.subheadline) + Text(" van \(group.totalQuestions)").font(.subheadline)
+                        Text("Vraag ").font(.subheadline) + Text("\(viewModel.questionOrder)").bold().font(.subheadline) + Text(" van \(group.totalQuestions)").font(.subheadline)
                         
                         Text(question.situation)
                             .font(.body)
@@ -59,7 +59,7 @@ struct QuestionnaireQuestionView: View {
                                         get: { question.subQuestions[index] },
                                         set: { newValue in viewModel.question?.subQuestions[index] = newValue }
                                     )
-                                )
+                                ).padding(.bottom, 16)
                             }
                         }
                     }

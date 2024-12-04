@@ -11,7 +11,6 @@ struct QuestionnaireGroupsView: View {
     @StateObject var viewModel = QuestionnaireGroupsViewModel()
     
     let questionnaire: Questionnaire
-    let groups = [QuestionnaireGroup.example]
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -19,17 +18,24 @@ struct QuestionnaireGroupsView: View {
                 .multilineTextAlignment(.leading)
                 .font(.headline)
                 .foregroundColor(.dark).frame(maxWidth: .infinity, alignment: .leading)
-            Text("0 van de \(groups.count) groepen voltooid")
-                .multilineTextAlignment(.leading)
-                .font(.body)
-                .foregroundColor(.dark).frame(maxWidth: .infinity, alignment: .leading)
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .frame(height: 10)
+                    .padding(4)
+            } else {
+                Text("\(viewModel.completedGroups) van de \(viewModel.groups.count) groepen voltooid")
+                    .multilineTextAlignment(.leading)
+                    .font(.subheadline)
+                    .foregroundColor(.dark).frame(maxWidth: .infinity, alignment: .leading)
+            }
             HStack(alignment: .center) {
                 Image(systemName: "info.circle")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 28, height: 28)
                 Text("Je hoeft de vragenlijst").font(.subheadline)
-                + Text("niet in één keer ")
+                + Text(" niet in één keer ")
                     .bold().font(.subheadline)
                 + Text("in te vullen. Het is mogelijk om op een later moment terug te keren.").font(.subheadline)
             }.padding(6)
@@ -43,7 +49,7 @@ struct QuestionnaireGroupsView: View {
         VStack(alignment: .leading) {
             ScrollView {
                 LazyVStack(spacing: 5) {
-                    ForEach(groups) { group in
+                    ForEach(viewModel.groups) { group in
                         NavigationLink(destination: QuestionnaireQuestionView(questionnaire: questionnaire,group: group)) {
                             QuestionnaireGroupListItem(group: group)
                                 .frame(maxWidth: .infinity)

@@ -9,17 +9,25 @@ import SwiftUI
 
 struct QuestionnairesView: View {
     @StateObject var viewModel = QuestionnairesViewModel()
-    
-    let questionnaires = [Questionnaire.example]
-    
+        
     var body: some View {
         NavigationView {
             ScrollView {
+//                if !viewModel.isLoading  {
+//                    HStack {
+//                        Text("\(viewModel.pagination?.totalItems ?? 0) vragenlijsten")
+//                            .font(.caption).fontWeight(.semibold)
+//                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
+//                }
+                    
                 LazyVStack(spacing: 5) {
-                    ForEach(viewModel.filteredQuestionaires) { questionnaire in
+                    ForEach(viewModel.questionnaires) { questionnaire in
                         NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
                             QuestionnaireListItem(questionnaire: questionnaire)
                                 .frame(maxWidth: .infinity)
+                                .onAppear {
+                                    viewModel.fetchMoreQuestionnaires(questionnaire: questionnaire)
+                                }
                         }
                     }
                 }
@@ -66,7 +74,7 @@ struct QuestionnairesView: View {
                     }
                     .padding(.top, 50)
                 }
-                else if viewModel.filteredQuestionaires.isEmpty && !viewModel.searchText.isEmpty {
+                else if viewModel.questionnaires.isEmpty && !viewModel.searchText.isEmpty {
                     VStack(spacing: 16) {
                         Text("Er zijn geen vragenlijsten gevonden met deze zoekopdracht.")
                             .font(.title)
@@ -75,11 +83,11 @@ struct QuestionnairesView: View {
                     .padding(.top, 50)
                 }
             }
-            .refreshable{viewModel.fetchQuestionnaires()}
+            .refreshable{viewModel.refreshQuestionnaires()}
             .searchable(text: $viewModel.searchText, prompt: "Zoeken")
             .navigationTitle("Vragenlijsten")
             .navigationBarTitleDisplayMode(.inline)
-           }
+        }
     }
 }
 

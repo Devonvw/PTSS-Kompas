@@ -13,7 +13,7 @@ struct SubQuestionItem: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack(alignment: .center) {
+            HStack(alignment: .top) {
                 Text(subQuestion.text)
                     .font(.headline)
                     .fontWeight(.bold)
@@ -26,11 +26,6 @@ struct SubQuestionItem: View {
                     .onTapGesture {
                         showTooltip.toggle()
                     }
-//                    .popover(isPresented: $showTooltip) {
-//                        Text(subQuestion.description)
-//                            .padding()
-//                            .frame(maxWidth: 200) // Optional size limit for the tooltip
-//                    }
                     .sheet(isPresented: $showTooltip) {
                         VStack(alignment: .leading) {
                             Text(subQuestion.text)
@@ -38,9 +33,11 @@ struct SubQuestionItem: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.dark)
                                 .padding(.bottom, 2)
-                            Text(subQuestion.description)
-                                .font(.body)
-                                .foregroundColor(.dark)
+                            if let description = subQuestion.description {
+                                Text(description)
+                                    .font(.body)
+                                    .foregroundColor(.dark)
+                            }
                         }.padding()
                             .presentationDetents([.height(200)])
 
@@ -61,11 +58,12 @@ struct SubQuestionItem: View {
                                 .stroke(Color.dark, lineWidth: isSelected ? 8 : 0)
                         )
                         .cornerRadius(8)
-                        Text(answerOption.description)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                        
+                        if let description = answerOption.description {
+                            Text(description)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
                     }
                 }
             }

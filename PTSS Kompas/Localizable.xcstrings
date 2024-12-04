@@ -4,19 +4,47 @@
     "" : {
 
     },
+    " niet in één keer " : {
+
+    },
     " van %lld" : {
 
     },
-    "%@" : {
+    "%lld" : {
 
     },
-    "0 van de %lld groepen voltooid" : {
+    "%lld van de %lld groepen voltooid" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld van de %2$lld groepen voltooid"
+          }
+        }
+      }
+    },
+    "Aangemaakt op %@" : {
+
+    },
+    "Afgesloten door de professional" : {
+
+    },
+    "Berichten (%lld)" : {
 
     },
     "Deze vragenlijst heeft geen groepen!" : {
 
     },
+    "Er zijn geen berichten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen vragen gevonden met deze zoekopdracht." : {
+
+    },
     "Er zijn geen vragenlijsten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn nog geen berichten verzonden." : {
 
     },
     "Er zijn nog geen vragenlijsten aan jou toegewezen." : {
@@ -28,7 +56,13 @@
     "Hello, World!" : {
 
     },
+    "Het is niet gelukt om de berichten op te halen." : {
+
+    },
     "Het is niet gelukt om de groepen op te halen." : {
+
+    },
+    "Het is niet gelukt om de vragen op te halen." : {
 
     },
     "Het is niet gelukt om de vragenlijsten op te halen." : {
@@ -49,7 +83,13 @@
     "Info" : {
 
     },
+    "Je hebt geen vragen!" : {
+
+    },
     "Je hebt geen vragenlijsten!" : {
+
+    },
+    "Je hebt nog geen vragen gesteld." : {
 
     },
     "Je hoeft de vragenlijst" : {
@@ -58,16 +98,26 @@
     "Key" : {
       "extractionState" : "manual"
     },
-    "niet in één keer " : {
+    "Nieuw bericht.." : {
 
     },
-    "Nog %lld vragen in te vullen" : {
-
+    "Nog %lld %@ in te vullen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Nog %1$lld %2$@ in te vullen"
+          }
+        }
+      }
     },
     "Retry" : {
 
     },
     "Uitleg" : {
+
+    },
+    "Verstuur een bericht door een bericht te schrijven in het onderstaande veld en te klikken op de rechter knop." : {
 
     },
     "Voltooid!" : {
@@ -85,6 +135,9 @@
       }
     },
     "Vraag " : {
+
+    },
+    "Vraag de professional" : {
 
     },
     "Vragenlijsten" : {

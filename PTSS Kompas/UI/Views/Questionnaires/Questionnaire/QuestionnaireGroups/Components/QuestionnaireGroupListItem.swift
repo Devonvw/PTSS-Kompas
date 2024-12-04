@@ -27,7 +27,7 @@ struct QuestionnaireGroupListItem: View {
                         .foregroundColor(.dark)
                 }
             } else {
-                Text("Nog \(group.totalQuestions - group.completedQuestions) vragen in te vullen")
+                Text("Nog \(group.totalQuestions - group.completedQuestions) \(group.totalQuestions - group.completedQuestions == 1 ? "vraag" : "vragen") in te vullen")
                     .font(.caption)
                     .foregroundColor(.dark)
             }
