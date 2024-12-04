@@ -93,7 +93,7 @@ struct ContactQuestionMessagesView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.dark, lineWidth: 2)
                     )
-                ButtonVariant(label: "", iconRight: "paperplane") {}.frame(width: 50)
+                ButtonVariant(iconRight: "paperplane") {}.frame(width: 50)
             }
 
         }

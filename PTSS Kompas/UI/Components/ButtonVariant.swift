@@ -60,8 +60,9 @@ struct ButtonVariant<Label: View>: View {
         iconRight: String? = nil,
         iconLeft: String? = nil,
         action: @escaping () -> Void
-    ) {
+    ) where Label == EmptyView {
         self.init(
+            label: { EmptyView() },
             variant: variant,
             disabled: disabled,
             iconRight: iconRight,
