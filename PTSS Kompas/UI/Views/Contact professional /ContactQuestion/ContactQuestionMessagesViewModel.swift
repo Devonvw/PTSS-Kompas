@@ -68,6 +68,8 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
     }
     
     func fetchMoreQuestionMessages(message: ContactQuestionMessage) {
+        guard let questionId else { return }
+        
         guard let lastMessage = messages.last, lastMessage.id == message.id else {
             return
         }
@@ -76,17 +78,33 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             return
         }
         
-        if let questionId {
-            fetchQuestionMessages(questionId: questionId)
-        }
+        fetchQuestionMessages(questionId: questionId)
     }
     
     
     func refreshContactQuestions() {
-        pagination = nil
+        guard let questionId else { return }
         
-        if let questionId {
-            fetchQuestionMessages(questionId: questionId)
+        pagination = nil
+        fetchQuestionMessages(questionId: questionId)
+    }
+    
+    func addMessage(content: String) {
+        guard let questionId else { return }
+        
+        apiService.addMessage(questionId: questionId, content: content) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let newMessage):
+                    print("succes")
+                    print(newMessage)
+                    self?.messages.append(newMessage)
+                    self?.newMessageContent = ""
+                case .failure(let error):
+                    self?.isFailure = true
+                    print("Error adding message: \(error)")
+                }
+            }
         }
     }
 }

@@ -81,21 +81,24 @@ struct ContactQuestionMessagesView: View {
                     .padding(.top, 50)
                 }
             }.refreshable{viewModel.refreshContactQuestions()}
-//                .searchable(text: $viewModel.searchText, placement: .sidebar, prompt: "Zoeken")
-            ButtonVariant(label: "Stel nieuwe vraag") {}
-            
-            HStack {
+            //                .searchable(text: $viewModel.searchText, placement: .sidebar, prompt: "Zoeken")
+            HStack(alignment: .bottom) {
                 TextField(
                     "Nieuw bericht..",
-                    text: $viewModel.newMessageContent
-                ).padding()
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .stroke(Color.dark, lineWidth: 2)
-                    )
-                ButtonVariant(iconRight: "paperplane") {}.frame(width: 50)
+                    text: $viewModel.newMessageContent,
+                    axis: .vertical
+                )
+                .lineLimit(1...4)
+                .padding(12)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color.dark, lineWidth: 2)
+                )
+                ButtonVariant(iconRight: "paperplane") {
+                    viewModel.addMessage(content: viewModel.newMessageContent)
+                }.frame(width: 50)
             }
-
+            
         }
         .onAppear {
             viewModel.fetchQuestionMessages(questionId: question.id)

@@ -51,7 +51,7 @@ final class ContactService {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
             return
         }
-                
+        
         URLSession.shared.dataTask(with: messagesUrl) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -62,8 +62,46 @@ final class ContactService {
                 return
             }
             do {
-//                let contactQuestionMessagesResponse = try JSONDecoder().decode(PaginatedResponse<ContactQuestionMessage>.self, from: data)
+                //                let contactQuestionMessagesResponse = try JSONDecoder().decode(PaginatedResponse<ContactQuestionMessage>.self, from: data)
                 completion(.success(PaginatedResponse<ContactQuestionMessage>.example))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+    
+    func addMessage(questionId: String, content: String, completion: @escaping (Result<ContactQuestionMessage, Error>) -> Void) {
+        let url = URL(string: "\(questionId)/messages", relativeTo: baseURL)
+        
+        guard let url else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
+            return
+        }
+        
+        let body: [String: String] = ["content": content]
+        
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: body, options: []) else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = httpBody
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Geen gegevens ontvangen."])))
+                return
+            }
+            do {
+                let addedMessage = try JSONDecoder().decode(ContactQuestionMessage.self, from: data)
+                completion(.success(addedMessage))
             } catch {
                 completion(.failure(error))
             }
