@@ -89,8 +89,14 @@ struct ContactProfessionalView: View {
                 .navigationTitle("Vraag de professional")
                 .navigationBarTitleDisplayMode(.inline)
                 
-                ButtonVariant(label: "Stel nieuwe vraag") {}
+                ButtonVariant(label: "Stel nieuwe vraag") {
+                    viewModel.shouldShowCreate = true
+                }
+                
             } .padding()
+                .sheet(isPresented: $viewModel.shouldShowCreate) {
+                    CreateContactQuestionView()
+                }
         }
     }
 }

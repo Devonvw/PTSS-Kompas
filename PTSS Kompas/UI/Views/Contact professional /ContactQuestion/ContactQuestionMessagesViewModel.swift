@@ -92,7 +92,7 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
     func addMessage(content: String) {
         guard let questionId else { return }
         
-        apiService.addMessage(questionId: questionId, content: content) { [weak self] result in
+        apiService.addMessage(questionId: questionId, createMessage: CreateContactQuestionMessage(content: content)) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let newMessage):

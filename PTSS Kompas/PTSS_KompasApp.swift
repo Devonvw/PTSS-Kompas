@@ -11,6 +11,7 @@ import SwiftUI
 struct PTSS_KompasApp: App {
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 20)!, .foregroundColor: UIColor(.dark)]
+        UITabBar.appearance().unselectedItemTintColor = UIColor.red
     }
     
     var body: some Scene {
@@ -37,8 +38,10 @@ struct PTSS_KompasApp: App {
                         .tabItem {
                             Label("Home2", systemImage: "house")
                         }
-                }.toolbarBackground(Color.light1, for: .tabBar)
-                    .toolbar(.visible, for: .tabBar)
+                }.toolbar(.visible, for: .tabBar)
+                    .toolbarBackground(Color.light3, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
+                    
             }.tint(Color.dark)
         }
     }

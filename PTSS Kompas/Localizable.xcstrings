@@ -32,6 +32,12 @@
     "Berichten (%lld)" : {
 
     },
+    "Beschrijf je vraag of situatie in detail.." : {
+
+    },
+    "Beschrijving" : {
+
+    },
     "Deze vragenlijst heeft geen groepen!" : {
 
     },
@@ -98,6 +104,9 @@
     "Key" : {
       "extractionState" : "manual"
     },
+    "Kort onderwerp van je vraag.." : {
+
+    },
     "Nieuw bericht.." : {
 
     },
@@ -111,7 +120,16 @@
         }
       }
     },
+    "Omschrijving hoe het werkt" : {
+
+    },
+    "Onderwerp" : {
+
+    },
     "Retry" : {
+
+    },
+    "Stel een nieuwe vraag" : {
 
     },
     "Uitleg" : {

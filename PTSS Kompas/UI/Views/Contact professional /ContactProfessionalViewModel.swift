@@ -24,7 +24,8 @@ final class ContactProfessionalViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
-    
+    @Published var shouldShowCreate = false
+
     private let apiService = ContactService()
     
     init() {
@@ -55,6 +56,7 @@ final class ContactProfessionalViewModel: ObservableObject {
                 self?.isLoading = false
                 switch result {
                 case .success(let data):
+                    print("kaas", data.data)
                     self?.questions.append(contentsOf: data.data)
                     self?.pagination = data.pagination
                 case .failure(let error):
@@ -82,4 +84,23 @@ final class ContactProfessionalViewModel: ObservableObject {
         pagination = nil
         fetchContactQuestions()
     }
+    
+//    func addQuestion(content: String) {
+//        guard let questionId else { return }
+//        
+//        apiService.addQuestion(questionId: questionId, createQuestion: CreateContactQuestion(content: content)) { [weak self] result in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let newMessage):
+//                    print("succes")
+//                    print(newMessage)
+//                    self?.messages.append(newMessage)
+//                    self?.newMessageContent = ""
+//                case .failure(let error):
+//                    self?.isFailure = true
+//                    print("Error adding message: \(error)")
+//                }
+//            }
+//        }
+//    }
 }
