@@ -10,7 +10,7 @@ import Foundation
 final class ContactService {
     let baseURL = "contact/"
     
-    func getContactQuestions(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestion>, Error>) -> Void) {
+    func getContactQuestions(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestion>, NSError>) -> Void) {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
         NetworkManager.shared.request(
@@ -22,7 +22,7 @@ final class ContactService {
         )
     }
     
-    func getContactQuestionMessages(questionId: String, cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestionMessage>, Error>) -> Void) {
+    func getContactQuestionMessages(questionId: String, cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestionMessage>, NSError>) -> Void) {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
         NetworkManager.shared.request(
@@ -34,7 +34,7 @@ final class ContactService {
         )
     }
     
-    func addMessage(questionId: String, createMessage: CreateContactQuestionMessage, completion: @escaping (Result<ContactQuestionMessage, Error>) -> Void) {
+    func addMessage(questionId: String, createMessage: CreateContactQuestionMessage, completion: @escaping (Result<ContactQuestionMessage, NSError>) -> Void) {
         let body: [String: String] = ["content": createMessage.content]
         
         NetworkManager.shared.request(
@@ -46,7 +46,7 @@ final class ContactService {
         )
     }
     
-    func addQuestion(createQuestion: CreateContactQuestion, completion: @escaping (Result<ContactQuestion, Error>) -> Void) {
+    func addQuestion(createQuestion: CreateContactQuestion, completion: @escaping (Result<ContactQuestion, NSError>) -> Void) {
         let body: [String: String] = ["subject": createQuestion.subject, "content": createQuestion.content]
         
         NetworkManager.shared.request(

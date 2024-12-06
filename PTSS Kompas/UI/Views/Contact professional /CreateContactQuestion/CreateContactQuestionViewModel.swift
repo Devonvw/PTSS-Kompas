@@ -11,6 +11,7 @@ import SwiftUI
 final class CreateContactQuestionViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
+    @Published private(set) var error: FormError?
     @Published var newQuestionSubject: String = ""
     @Published var newQuestionContent: String = ""
     
@@ -27,23 +28,57 @@ final class CreateContactQuestionViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let newQuestion):
-                                            print("succes")
-                                            print(newQuestion)
+                        print("succes")
+                        print(newQuestion)
                         //                    self?.messages.append(newMessage)
                         self?.newQuestionSubject = ""
                         self?.newQuestionContent = ""
                     case .failure(let error):
                         self?.isFailure = true
+                        if let err = error as? LocalizedError {
+                            self?.error = .networking(error: err as LocalizedError)
+                        }
                         print("Error adding message: \(error)")
                     }
                 }
             }
         } catch {
+            self.isFailure = true
+            
+            switch error {
+            case is CreateContactQuestionValidator.CreateValidatorError:
+                print(error as! CreateContactQuestionValidator.CreateValidatorError)
+                self.error = .validation(error: error as! CreateContactQuestionValidator.CreateValidatorError)
+            default:
+                self.error = .system(error: error)
+            }
+            
             print(error)
         }
         
         
-       
+        
+    }
+}
+
+
+extension CreateContactQuestionViewModel {
+    enum FormError: LocalizedError {
+        case networking(error: LocalizedError)
+        case validation(error: LocalizedError)
+        case system(error: Error)
+    }
+}
+
+extension CreateContactQuestionViewModel.FormError {
+    var errorDescription: String? {
+        switch self {
+        case .networking(let err),
+            .validation(let err):
+            return err.errorDescription
+        case .system(let err):
+            return err.localizedDescription
+        }
     }
 }
 
