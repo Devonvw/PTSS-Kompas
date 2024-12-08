@@ -1,35 +1,18 @@
 //
-//  ContactQuestionMessagesView.swift
+//  ChatView.swift
 //  PTSS Kompas
 //
-//  Created by Devon van Wichen on 04/12/2024.
+//  Created by Devon van Wichen on 08/12/2024.
 //
+
 import SwiftUI
 
-struct ContactQuestionMessagesView: View {
-    @StateObject var viewModel = ContactQuestionMessagesViewModel()
-    
-    let question: ContactQuestion
-    
+struct ChatView: View {
+    @StateObject var viewModel = ChatViewModel()
+
     var body: some View {
         VStack(alignment: .leading) {
             ScrollView {
-                VStack(alignment: .leading) {
-                    Text("Berichten (\(viewModel.messages.count))")
-                        .font(.headline)
-                        .foregroundColor(.dark)
-                    
-                    LazyVStack(alignment: .leading, spacing: 5) {
-                        ForEach(viewModel.messages) { message in
-                            Message(title: message.senderName, content: message.content, date: message.createdAt, type: .left)
-                                .frame(maxWidth: .infinity)
-                                .onAppear {
-                                    viewModel.fetchMoreQuestionMessages(message: message)
-                                }
-                        }
-                    }
-                }
-                
                 if viewModel.isFailure {
                     VStack(spacing: 16) {
                         Text("Het is niet gelukt om de berichten op te halen.")
@@ -38,7 +21,7 @@ struct ContactQuestionMessagesView: View {
                             .padding()
                         
                         Button(action: {
-                            viewModel.fetchQuestionMessages(questionId: question.id)
+                            viewModel.refreshChatQuestions()
                         }) {
                             Text("Retry")
                                 .fontWeight(.bold)
@@ -80,7 +63,7 @@ struct ContactQuestionMessagesView: View {
                     }
                     .padding(.top, 50)
                 }
-            }.refreshable{viewModel.refreshContactQuestions()}
+            }.refreshable{viewModel.refreshChatQuestions()}
             HStack(alignment: .bottom) {
                 TextField(
                     "Nieuw bericht..",
@@ -100,11 +83,11 @@ struct ContactQuestionMessagesView: View {
             
         }
         .onAppear {
-            viewModel.fetchQuestionMessages(questionId: question.id)
+            viewModel.refreshChatQuestions()
         }
     }
 }
 
 #Preview {
-    ContactQuestionMessagesView(question: ContactQuestion.example)
+    ChatView()
 }

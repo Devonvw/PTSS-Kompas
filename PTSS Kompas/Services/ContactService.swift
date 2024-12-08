@@ -10,26 +10,26 @@ import Foundation
 final class ContactService {
     let baseURL = "contact/"
     
-    func getContactQuestions(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestion>, NetworkError>) -> Void) {
+    func getContactQuestions(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestion, Pagination>, NetworkError>) -> Void) {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
         NetworkManager.shared.request(
             endpoint: baseURL,
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<ContactQuestion>.self,
+            responseType: PaginatedResponse<ContactQuestion, Pagination>.self,
             completion: completion
         )
     }
     
-    func getContactQuestionMessages(questionId: String, cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestionMessage>, NetworkError>) -> Void) {
+    func getContactQuestionMessages(questionId: String, cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestionMessage, Pagination>, NetworkError>) -> Void) {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
         NetworkManager.shared.request(
             endpoint: baseURL + "\(questionId)/messages",
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<ContactQuestionMessage>.self,
+            responseType: PaginatedResponse<ContactQuestionMessage, Pagination>.self,
             completion: completion
         )
     }

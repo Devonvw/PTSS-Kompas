@@ -10,14 +10,14 @@ import Foundation
 final class QuestionnaireService {
     let baseURL = "questionnaires/"
     
-    func getQuestionnaires(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<Questionnaire>, NetworkError>) -> Void) {
+    func getQuestionnaires(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<Questionnaire, Pagination>, NetworkError>) -> Void) {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
         NetworkManager.shared.request(
             endpoint: baseURL,
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<Questionnaire>.self,
+            responseType: PaginatedResponse<Questionnaire, Pagination>.self,
             completion: completion
         )
     }
