@@ -10,7 +10,7 @@ import SwiftUI
 
 final class CreateContactQuestionViewModel: ObservableObject {
     @Published var isLoading: Bool = false
-    @Published var isFailure: Bool = false
+    @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     @Published var newQuestionSubject: String = ""
     @Published var newQuestionContent: String = ""
@@ -18,14 +18,18 @@ final class CreateContactQuestionViewModel: ObservableObject {
     private let apiService = ContactService()
     private let validator = CreateContactQuestionValidator()
     
-    func addQuestion() {
+    func addQuestion(onSuccess: @escaping () -> Void) {
         let createQuestion = CreateContactQuestion(subject: newQuestionSubject, content: newQuestionContent)
+        isLoading = true
+        isAlertFailure = false
         
         do {
             try validator.validate(createQuestion)
             
             apiService.addQuestion(createQuestion: createQuestion) { [weak self] result in
                 DispatchQueue.main.async {
+                    self?.isLoading = false
+
                     switch result {
                     case .success(let newQuestion):
                         print("succes")
@@ -33,23 +37,23 @@ final class CreateContactQuestionViewModel: ObservableObject {
                         //                    self?.messages.append(newMessage)
                         self?.newQuestionSubject = ""
                         self?.newQuestionContent = ""
+                        onSuccess()
                     case .failure(let error):
-                        self?.isFailure = true
-                        if let err = error as? LocalizedError {
-                            self?.error = .networking(error: err as LocalizedError)
-                        }
+                        self?.isAlertFailure = true
+                        self?.error = .networking(error: error)
+
                         print("Error adding message: \(error)")
                     }
                 }
             }
         } catch {
-            self.isFailure = true
+            isLoading = false
             
             switch error {
             case is CreateContactQuestionValidator.CreateValidatorError:
-                print(error as! CreateContactQuestionValidator.CreateValidatorError)
                 self.error = .validation(error: error as! CreateContactQuestionValidator.CreateValidatorError)
             default:
+                isAlertFailure = true
                 self.error = .system(error: error)
             }
             

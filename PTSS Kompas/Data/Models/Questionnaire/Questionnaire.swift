@@ -18,7 +18,7 @@ struct Questionnaire: Codable, Identifiable, ExampleProvidable {
         title: "Example questionnaire",
         description: "This is an example questionnaire",
         estimatedTimeOfCompletion: "1 hour",
-        assignedAt: "202-11-22T1:10:10Z",
+        assignedAt: "2024-11-22T11:10:10Z",
         isFinished: false
     )
 }

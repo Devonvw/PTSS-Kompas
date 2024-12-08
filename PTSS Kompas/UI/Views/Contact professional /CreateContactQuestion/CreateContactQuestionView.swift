@@ -70,17 +70,35 @@ struct CreateContactQuestionView: View {
         Form {
             Section
             {
-                TextField(
-                    "Kort onderwerp van je vraag..",
-                    text: $viewModel.newQuestionSubject,
-                    axis: .vertical
-                )
-                .lineLimit(1...3)
-                .padding(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.dark, lineWidth: 2)
-                )
+                VStack(alignment: .leading) {
+                    Text("Onderwerp")
+                    TextField(
+                        "Kort onderwerp van je vraag..",
+                        text: $viewModel.newQuestionSubject,
+                        axis: .vertical
+                    )
+                    .lineLimit(1...3)
+                    .padding(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.dark, lineWidth: 2)
+                    )
+                }
+                VStack(alignment: .leading) {
+                    Text("Beschrijving")
+                    TextField(
+                        "Beschrijf je vraag of situatie in detail..",
+                        text: $viewModel.newQuestionContent,
+                        axis: .vertical
+                    )
+                    .lineLimit(4...10)
+                    .padding(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.dark, lineWidth: 2)
+                    )
+                }
+                
             } footer: {
                 if case .validation(let err) = viewModel.error,
                    let errorDesc = err.errorDescription {
@@ -88,23 +106,15 @@ struct CreateContactQuestionView: View {
                         .foregroundStyle(.red)
                 }
             }
-            Section("Beschrijving") {
-                TextField(
-                    "Beschrijf je vraag of situatie in detail..",
-                    text: $viewModel.newQuestionContent,
-                    axis: .vertical
-                )
-                .lineLimit(4...10)
-                .padding(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.dark, lineWidth: 2)
-                )
-            }
         }.padding(0)
             .background(.clear)
             .scrollContentBackground(.hidden)
-            .alert(isPresented: $viewModel.isFailure, error: viewModel.error) { }
+            .alert(isPresented: $viewModel.isAlertFailure, error: viewModel.error) { }
+            .overlay {
+                if viewModel.isLoading {
+                    ProgressView()
+                }
+            }
         //            .navigationTitle("Stel een nieuwe vraag")
         //            .toolbar {
         //                ToolbarItem(placement: .primaryAction) {
@@ -116,7 +126,9 @@ struct CreateContactQuestionView: View {
         //            }
         HStack {
             ButtonVariant(label: "Stel nieuwe vraag") {
-                viewModel.addQuestion()
+                viewModel.addQuestion {
+                    dismiss()
+                }
             }
         }.padding()
     }

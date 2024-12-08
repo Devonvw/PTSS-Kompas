@@ -15,6 +15,30 @@ enum HTTPMethod: String {
     case PATCH
 }
 
+enum NetworkError: LocalizedError {
+    case invalidURL
+    case missingData
+    case decodingFailed
+    case serverError(statusCode: Int, message: String)
+    case unknown(error: Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "Er is iets fout gegaan." //"The URL provided was invalid."
+        case .missingData:
+            return "Er is iets fout gegaan." //"No data was received from the server."
+        case .decodingFailed:
+            return "Er is iets fout gegaan." //"Failed to decode the response from the server."
+        case .serverError(let statusCode, let message):
+            return message
+        case .unknown(let error):
+            return error.localizedDescription
+        }
+    }
+}
+
+
 final class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = Config.APIBaseURL
@@ -30,16 +54,20 @@ final class NetworkManager {
         body: Any? = nil,
         headers: [String: String]? = nil,
         responseType: T.Type,
-        completion: @escaping (Result<T, NSError>) -> Void
+        completion: @escaping (Result<T, NetworkError>) -> Void
     ) {
         guard var url = URL(string: endpoint, relativeTo: baseURL) else {
-            completion(.failure(genericError))
+            completion(.failure(.invalidURL))
             return
         }
         
         if let parameters {
-            guard let appendedURL = url.appendingQueryParameters(parameters) else {
-                completion(.failure(genericError))
+            let filteredParameters = parameters.compactMapValues { value in
+                value?.isEmpty == false ? value : nil
+            }
+            
+            guard let appendedURL = url.appendingQueryParameters(filteredParameters) else {
+                completion(.failure(.invalidURL))
                 return
             }
             url = appendedURL
@@ -65,33 +93,31 @@ final class NetworkManager {
                 } else if let dictBody = body as? [String: Any] {
                     jsonData = try JSONSerialization.data(withJSONObject: dictBody, options: [])
                 } else {
-                    completion(.failure(genericError))
+                    completion(.failure(.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"])) ))
                     return
                 }
                 
                 request.httpBody = jsonData
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            }
-            catch {
-                completion(.failure(genericError))
+            } catch {
+                completion(.failure(.unknown(error: error)))
                 return
             }
         }
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print(error)
-                completion(.failure(self.genericError))
+                completion(.failure(.unknown(error: error)))
                 return
             }
             
             guard let data = data else {
-                completion(.failure(self.genericError)) //???
+                completion(.failure(.missingData))
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(self.genericError))
+                completion(.failure(.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"]))))
                 return
             }
             
@@ -101,24 +127,20 @@ final class NetworkManager {
                     let decodedResponse = try JSONDecoder().decode(responseType, from: data)
                     completion(.success(decodedResponse))
                 } catch {
-                    completion(.failure(self.genericError))
+                    completion(.failure(.decodingFailed))
                 }
             case 400...499:
-                do {
-                    let errorResponse = try JSONDecoder().decode(ResponseError.self, from: data)
-                    let localizedError = NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: errorResponse.localizedDescription])
-                    completion(.failure(localizedError))
-                } catch {
-                    completion(.failure(self.genericError))
-                }
+                let message = (try? JSONDecoder().decode(ResponseError.self, from: data).localizedDescription) ?? "Client error"
+                completion(.failure(.serverError(statusCode: httpResponse.statusCode, message: message)))
             case 500...599:
-                completion(.failure(self.genericError))
+                completion(.failure(.serverError(statusCode: httpResponse.statusCode, message: "Server error occurred")))
             default:
-                completion(.failure(self.genericError))
+                completion(.failure(.unknown(error: NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Unexpected error"]))))
             }
             
         }.resume()
     }
+    
     
     private func getBearerToken() -> String? {
         return "ABC"

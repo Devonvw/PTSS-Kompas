@@ -10,7 +10,7 @@ import Foundation
 final class QuestionnaireService {
     let baseURL = "questionnaires/"
     
-    func getQuestionnaires(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<Questionnaire>, NSError>) -> Void) {
+    func getQuestionnaires(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<Questionnaire>, NetworkError>) -> Void) {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
         
         NetworkManager.shared.request(
@@ -22,7 +22,7 @@ final class QuestionnaireService {
         )
     }
     
-    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<[QuestionnaireSubQuestion], NSError>) -> Void) {
+    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<[QuestionnaireSubQuestion], NetworkError>) -> Void) {
         NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/explanation",
             method: .GET,
@@ -31,7 +31,7 @@ final class QuestionnaireService {
         )
     }
     
-    func getQuestionnaireGroups(questionnaireId: String, completion: @escaping (Result<[QuestionnaireGroup], NSError>) -> Void) {
+    func getQuestionnaireGroups(questionnaireId: String, completion: @escaping (Result<[QuestionnaireGroup], NetworkError>) -> Void) {
         NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/groups",
             method: .GET,
@@ -47,7 +47,7 @@ final class QuestionnaireService {
         }
     }
     
-    func getQuestionnaireQuestions(questionnaireId: String, groupId: String, completion: @escaping (Result<[QuestionnaireQuestion], NSError>) -> Void) {
+    func getQuestionnaireQuestions(questionnaireId: String, groupId: String, completion: @escaping (Result<[QuestionnaireQuestion], NetworkError>) -> Void) {
         NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/groups/\(groupId)/questions",
             method: .GET,
@@ -56,7 +56,7 @@ final class QuestionnaireService {
         )
     }
     
-    func saveQuestionAnswers(answers: [SaveQuestionAnswerRequest], completion: @escaping (Result<ContactQuestion, NSError>) -> Void) {
+    func saveQuestionAnswers(answers: [SaveQuestionAnswerRequest], completion: @escaping (Result<ContactQuestion, NetworkError>) -> Void) {
         NetworkManager.shared.request(
             endpoint: baseURL,
             method: .POST,

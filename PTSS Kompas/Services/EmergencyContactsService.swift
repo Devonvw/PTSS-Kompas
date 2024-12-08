@@ -10,7 +10,7 @@ import Foundation
 final class EmergencyContactsService {
     let baseURL =  "emergency-contacts/"
 
-//    func getEmergencyContacts(completion: @escaping (Result<[EmergencyContact], NSError>) -> Void) {
+//    func getEmergencyContacts(completion: @escaping (Result<[EmergencyContact], NetworkError>) -> Void) {
 //        NetworkManager.shared.request(
 //            endpoint: baseURL,
 //            method: .GET,

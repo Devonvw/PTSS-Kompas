@@ -17,7 +17,7 @@ struct ContactQuestion: Codable, Identifiable, ExampleProvidable {
         id: "1",
         subject: "Omgaan met dissociatie tijdens een herbeleving?",
         content: "Wat kan ik concreet doen of zeggen als mijn naaste tijdens een herbeleving dissocieert, bijvoorbeeld als ze starend voor zich uit kijken en niet reageren op mijn aanwezigheid? Hoe kan ik hen op een veilige manier helpen weer contact te maken met de omgeving zonder zelf in paniek te raken of hen te overprikkelen?",
-        createdAt: "202-11-22T1:10:10Z",
+        createdAt: "2024-11-22T11:10:10Z",
         newAnswer: true,
         isClosed: false
     )

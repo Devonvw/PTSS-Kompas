@@ -15,3 +15,8 @@ struct Pagination: Codable {
         nextCursor: "asdasd", pageSize: 100, totalItems: 10, totalPages: 1
     )
 }
+
+enum PageDirection: String {
+    case Next = "next"
+    case Previous = "previous"
+}
