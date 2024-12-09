@@ -26,11 +26,11 @@ struct PTSS_KompasApp: App {
                         .tabItem {
                             Label("Hulpmiddelen", image: "hulpmiddelenIcon")
                         }
-                    QuestionnairesView()
+                    ChatView()
                         .tabItem {
-                            Label("Home", systemImage: "house")
+                            Label("Chat", systemImage: "message")
                         }
-                    HomeView()
+                    QuestionnairesView()
                         .tabItem {
                             Label("Home", systemImage: "house")
                         }

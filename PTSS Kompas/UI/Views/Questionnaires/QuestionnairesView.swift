@@ -38,19 +38,10 @@ struct QuestionnairesView: View {
                             .font(.title3)
                             .multilineTextAlignment(.center)
                             .padding()
-                        
-                        Button(action: {
+
+                        ButtonVariant(label: "Probeer opnieuw"){
                             viewModel.fetchQuestionnaires()
-                        }) {
-                            Text("Retry")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
                         }
-                        .padding(.horizontal, 40)
                     }
                     .padding()
                 }

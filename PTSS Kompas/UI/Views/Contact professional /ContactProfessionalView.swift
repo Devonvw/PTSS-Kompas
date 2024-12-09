@@ -40,18 +40,9 @@ struct ContactProfessionalView: View {
                                 .multilineTextAlignment(.center)
                                 .padding()
                             
-                            Button(action: {
+                            ButtonVariant(label: "Probeer opnieuw"){
                                 viewModel.fetchContactQuestions()
-                            }) {
-                                Text("Retry")
-                                    .fontWeight(.bold)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(8)
                             }
-                            .padding(.horizontal, 40)
                         }
                         .padding()
                     }

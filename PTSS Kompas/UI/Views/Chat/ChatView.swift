@@ -13,6 +13,17 @@ struct ChatView: View {
     var body: some View {
         VStack(alignment: .leading) {
             ScrollView {
+                LazyVStack(alignment: .leading, spacing: 5) {
+                    ForEach(viewModel.messages) { message in
+                        //TODO Check senderIf if left or right
+                        Message(title: message.senderName, content: message.content, date: message.sentAt, type: .left)
+                            .frame(maxWidth: .infinity)
+                            .onAppear {
+                                viewModel.fetchNextQuestionMessages(message: message)
+                                viewModel.fetchPreviousQuestionMessages(message: message)
+                            }
+                    }
+                }
                 if viewModel.isFailure {
                     VStack(spacing: 16) {
                         Text("Het is niet gelukt om de berichten op te halen.")
@@ -20,18 +31,23 @@ struct ChatView: View {
                             .multilineTextAlignment(.center)
                             .padding()
                         
-                        Button(action: {
+//                        Button(action: {
+//                            viewModel.refreshChatQuestions()
+//                        }) {
+//                            Text("Retry")
+//                                .fontWeight(.bold)
+//                                .frame(maxWidth: .infinity)
+//                                .padding()
+//                                .background(Color.blue)
+//                                .foregroundColor(.white)
+//                                .cornerRadius(8)
+//                            ButtonVariant(label: "Retry"){}
+//                        }
+//                        .padding(.horizontal, 40)
+                        ButtonVariant(label: "Probeer opnieuw"){
                             viewModel.refreshChatQuestions()
-                        }) {
-                            Text("Retry")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
                         }
-                        .padding(.horizontal, 40)
+
                     }
                     .padding()
                 }
@@ -63,7 +79,7 @@ struct ChatView: View {
                     }
                     .padding(.top, 50)
                 }
-            }.refreshable{viewModel.refreshChatQuestions()}
+            }
             HStack(alignment: .bottom) {
                 TextField(
                     "Nieuw bericht..",
@@ -82,9 +98,12 @@ struct ChatView: View {
             }
             
         }
+        .padding()
         .onAppear {
             viewModel.refreshChatQuestions()
         }
+        .navigationTitle("Vragenlijsten")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

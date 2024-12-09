@@ -47,16 +47,18 @@ final class NetworkManager {
     
     private init() {}
     
+    
+    
     func request<T: Decodable>(
         endpoint: String,
         method: HTTPMethod,
         parameters: [String: String?]? = nil,
         body: Any? = nil,
         headers: [String: String]? = nil,
-        responseType: T.Type,
+        responseType: T.Type = T.self,  // Default response type is the generic type T
         completion: @escaping (Result<T, NetworkError>) -> Void
     ) {
-        guard var url = URL(string: endpoint, relativeTo: baseURL) else {
+        guard var url = URL(string: endpoint.hasSuffix("/") ? String(endpoint.dropLast()) : endpoint, relativeTo: baseURL) else {
             completion(.failure(.invalidURL))
             return
         }
@@ -92,7 +94,10 @@ final class NetworkManager {
                     jsonData = try JSONSerialization.data(withJSONObject: arrayBody, options: [])
                 } else if let dictBody = body as? [String: Any] {
                     jsonData = try JSONSerialization.data(withJSONObject: dictBody, options: [])
+                } else if let encodableBody = body as? Encodable {
+                    jsonData = try JSONEncoder().encode(EncodableWrapper(encodableBody))
                 } else {
+                    print(body)
                     completion(.failure(.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"])) ))
                     return
                 }
@@ -100,6 +105,7 @@ final class NetworkManager {
                 request.httpBody = jsonData
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             } catch {
+                print(error)
                 completion(.failure(.unknown(error: error)))
                 return
             }
@@ -111,10 +117,10 @@ final class NetworkManager {
                 return
             }
             
-            guard let data = data else {
-                completion(.failure(.missingData))
-                return
-            }
+            //                guard let data = data else {
+            //                    completion(.failure(.missingData))
+            //                    return
+            //                }
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"]))))
@@ -123,13 +129,29 @@ final class NetworkManager {
             
             switch httpResponse.statusCode {
             case 200...299:
-                do {
-                    let decodedResponse = try JSONDecoder().decode(responseType, from: data)
-                    completion(.success(decodedResponse))
-                } catch {
-                    completion(.failure(.decodingFailed))
+                if responseType == Never.self {
+                    // If the responseType is Never, just return success with an empty result
+                    completion(.success(() as! T))  // Force cast `()` as T (Never)
+                } else {
+                    do {
+                        guard let data = data else {
+                            completion(.failure(.missingData))
+                            return
+                        }
+                        // Otherwise decode the data as the expected type T
+                        let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+                        completion(.success(decodedResponse))
+                    } catch {
+                        print(error)
+                        completion(.failure(.decodingFailed))
+                    }
                 }
             case 400...499:
+                guard let data = data else {
+                    completion(.failure(.missingData))
+                    return
+                }
+                
                 let message = (try? JSONDecoder().decode(ResponseError.self, from: data).localizedDescription) ?? "Client error"
                 completion(.failure(.serverError(statusCode: httpResponse.statusCode, message: message)))
             case 500...599:
@@ -140,6 +162,8 @@ final class NetworkManager {
             
         }.resume()
     }
+    
+    
     
     
     private func getBearerToken() -> String? {

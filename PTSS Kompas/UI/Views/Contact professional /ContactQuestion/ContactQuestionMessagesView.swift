@@ -21,6 +21,7 @@ struct ContactQuestionMessagesView: View {
                     
                     LazyVStack(alignment: .leading, spacing: 5) {
                         ForEach(viewModel.messages) { message in
+                            //TODO Check senderIf if left or right
                             Message(title: message.senderName, content: message.content, date: message.createdAt, type: .left)
                                 .frame(maxWidth: .infinity)
                                 .onAppear {
@@ -37,18 +38,9 @@ struct ContactQuestionMessagesView: View {
                             .multilineTextAlignment(.center)
                             .padding()
                         
-                        Button(action: {
+                        ButtonVariant(label: "Probeer opnieuw"){
                             viewModel.fetchQuestionMessages(questionId: question.id)
-                        }) {
-                            Text("Retry")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
                         }
-                        .padding(.horizontal, 40)
                     }
                     .padding()
                 }
