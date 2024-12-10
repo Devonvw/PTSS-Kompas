@@ -18,7 +18,7 @@ struct PTSS_KompasApp: App {
         WindowGroup {
             TabView {
                 Group {
-                    ContactProfessionalView()
+                    RegisterView()
                         .tabItem {
                             Label("Home", systemImage: "house")
                         }
@@ -34,7 +34,7 @@ struct PTSS_KompasApp: App {
                         .tabItem {
                             Label("Home", systemImage: "house")
                         }
-                    HomeView()
+                    ContactProfessionalView()
                         .tabItem {
                             Label("Home2", systemImage: "house")
                         }

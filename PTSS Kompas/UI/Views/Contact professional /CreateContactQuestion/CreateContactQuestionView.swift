@@ -12,51 +12,6 @@ struct CreateContactQuestionView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        //        Form {
-        //
-        //            Section {
-        //                Section("Onderwerp") {
-        //                    TextField(
-        //                        "Kort onderwerp van je vraag..",
-        //                        text: $viewModel.newQuestionSubject,
-        //                        axis: .vertical
-        //                    )
-        //                    .lineLimit(1...3)
-        //                    .padding(12)
-        //                    .overlay(
-        //                        RoundedRectangle(cornerRadius: 5)
-        //                            .stroke(Color.dark, lineWidth: 2)
-        //                    )
-        //                }
-        //            } footer: {
-        //                if case .validation(let err) = viewModel.error {
-        //                    Text(err.localizedDescription)
-        //                        .foregroundStyle(.red)
-        //                }
-        //
-        //            }
-        //        }
-        //                    .disabled(vm.state == .submitting)
-        //                    .navigationTitle("Create")
-        //                    .toolbar {
-        //                        ToolbarItem(placement: .primaryAction) {
-        //                            done
-        //                        }
-        //                    }
-        //                    .onChange(of: vm.state) { formState in
-        //                        if formState == .successful {
-        //                            dismiss()
-        //                            successfulAction()
-        //                        }
-        //                    }
-        //                    .alert(isPresented: $vm.hasError,
-        //                           error: vm.error) { }
-        //                    .overlay {
-        //
-        //                        if vm.state == .submitting {
-        //                            ProgressView()
-        //                        }
-        //                    }
         VStack(alignment: .leading) {
             Text("Stel een nieuwe vraag") .font(.headline)
                 .foregroundColor(.dark)
@@ -115,7 +70,6 @@ struct CreateContactQuestionView: View {
                     ProgressView()
                 }
             }
-        //            .navigationTitle("Stel een nieuwe vraag")
         //            .toolbar {
         //                ToolbarItem(placement: .primaryAction) {
         //                    Button("Klaar") {
