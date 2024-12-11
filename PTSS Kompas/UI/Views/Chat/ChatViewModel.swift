@@ -108,6 +108,7 @@ final class ChatViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let newMessage):
+                    print("kaas", newMessage)
                     self?.messages.append(newMessage)
                     self?.newMessageContent = ""
                 case .failure(let error):

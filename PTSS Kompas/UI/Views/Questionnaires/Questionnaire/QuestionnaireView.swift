@@ -29,9 +29,12 @@ struct QuestionnaireView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.bottom, 16)
                     
-                    ForEach(viewModel.subQuestions) { subQuestion in
-                        SubQuestionItemShow(subQuestion: subQuestion)
+                    if let explanation = viewModel.explanation {
+                        ForEach(explanation.subQuestions) { subQuestion in
+                            SubQuestionItemShow(subQuestion: subQuestion)
+                        }
                     }
+                   
                 }
             }
             NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {

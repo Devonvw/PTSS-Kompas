@@ -22,13 +22,20 @@ final class QuestionnaireService {
         )
     }
     
-    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<[QuestionnaireSubQuestion], NetworkError>) -> Void) {
+    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<QuestionnaireExplanation, NetworkError>) -> Void) {
         NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/explanation",
             method: .GET,
-            responseType: [QuestionnaireSubQuestion].self,
-            completion: completion
-        )
+            responseType: QuestionnaireExplanationResponse.self
+        )  { result in
+            switch result {
+            case .success(let questionnaireExplanationResponse):
+                let questionnaireExplanation = QuestionnaireExplanation.map(response: questionnaireExplanationResponse)
+                completion(.success(questionnaireExplanation))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     func getQuestionnaireGroups(questionnaireId: String, completion: @escaping (Result<[QuestionnaireGroup], NetworkError>) -> Void) {
@@ -47,13 +54,20 @@ final class QuestionnaireService {
         }
     }
     
-    func getQuestionnaireQuestions(questionnaireId: String, groupId: String, completion: @escaping (Result<[QuestionnaireQuestion], NetworkError>) -> Void) {
+    func getQuestionnaireQuestions(questionnaireId: String, groupId: Int, completion: @escaping (Result<[QuestionnaireQuestion], NetworkError>) -> Void) {
         NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/groups/\(groupId)/questions",
             method: .GET,
-            responseType: [QuestionnaireQuestion].self,
-            completion: completion
-        )
+            responseType: [QuestionnaireQuestionResponse].self
+        ) { result in
+            switch result {
+            case .success(let questionnaireQuestionResponse):
+                let questionnaireQuestions = questionnaireQuestionResponse.map { QuestionnaireQuestion.map(response: $0) }
+                completion(.success(questionnaireQuestions))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     func saveQuestionAnswers(answers: [SaveQuestionAnswerRequest], completion: @escaping (Result<ContactQuestion, NetworkError>) -> Void) {

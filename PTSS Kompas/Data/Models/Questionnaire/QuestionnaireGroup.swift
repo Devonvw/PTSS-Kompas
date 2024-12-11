@@ -7,7 +7,7 @@
 import Foundation
 
 struct QuestionnaireGroup: Codable, Identifiable {
-    let id: String
+    let id: Int
     let title: String
     let isFinished: Bool
     let completedQuestions: Int
@@ -18,7 +18,7 @@ struct QuestionnaireGroup: Codable, Identifiable {
     }
     
     static let example: QuestionnaireGroup = .init(
-        id: UUID().uuidString,
+        id: 1,
         title: "Behandelplanning en Besluitvorming",
         isFinished: true,
         completedQuestions: 0,

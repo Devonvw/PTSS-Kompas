@@ -18,7 +18,7 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
     
     private let apiService = QuestionnaireService()
     
-    func fetchQuestionnaireQuestions(questionnaireId: String, groupId: String) {
+    func fetchQuestionnaireQuestions(questionnaireId: String, groupId: Int) {
         isLoading = true
         isFailure = false
         

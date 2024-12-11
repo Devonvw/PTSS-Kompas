@@ -10,6 +10,9 @@
     " van %lld" : {
 
     },
+    ".." : {
+
+    },
     "%lld" : {
 
     },
@@ -41,7 +44,13 @@
     "Chat" : {
 
     },
+    "Code" : {
+
+    },
     "Deze vragenlijst heeft geen groepen!" : {
+
+    },
+    "Email" : {
 
     },
     "Er zijn geen berichten gevonden met deze zoekopdracht." : {
@@ -60,6 +69,12 @@
 
     },
     "Geschatte tijd: %@" : {
+
+    },
+    "Heb je al een account" : {
+
+    },
+    "Heb je geen 6-cijferige code ontvangen? Neem dan contact op met de persoon die jou heeft uitgenodigd." : {
 
     },
     "Hello, World!" : {
@@ -139,6 +154,9 @@
 
     },
     "Voltooid!" : {
+
+    },
+    "voorbeeld@gmail.com" : {
 
     },
     "Vorige" : {

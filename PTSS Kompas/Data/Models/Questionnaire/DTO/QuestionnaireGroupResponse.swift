@@ -8,7 +8,7 @@
 import Foundation
 
 struct QuestionnaireGroupResponse: Codable, Identifiable {
-    let id: String
+    let id: Int
     let title: String
     let completedQuestions: Int
     let totalQuestions: Int

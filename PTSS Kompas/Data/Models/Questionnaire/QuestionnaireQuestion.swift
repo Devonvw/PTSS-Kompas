@@ -11,6 +11,10 @@ struct QuestionnaireQuestion: Codable, Identifiable {
     let situation: String
     var subQuestions: [QuestionnaireSubQuestion]
     
+    static func map(response: QuestionnaireQuestionResponse) -> Self {
+        return QuestionnaireQuestion(id: response.id, isFinished: response.isFinished, situation: response.situation, subQuestions: response.subQuestions.map { QuestionnaireSubQuestion.map(response: $0) })
+    }
+    
     static let example: QuestionnaireQuestion = .init(
         id: "1",
         isFinished: false,
