@@ -80,8 +80,10 @@ struct CreateContactQuestionView: View {
         //            }
         HStack {
             ButtonVariant(label: "Stel nieuwe vraag") {
-                viewModel.addQuestion {
-                    dismiss()
+                Task {
+                    await viewModel.addQuestion() {
+                        dismiss()
+                    }
                 }
             }
         }.padding()

@@ -27,7 +27,9 @@ struct ContactProfessionalView: View {
                                 ContactQuestionListItem(question: question)
                                     .frame(maxWidth: .infinity)
                                     .onAppear {
-                                        viewModel.fetchMoreContactQuestions(question: question)
+                                        Task {
+                                            await viewModel.fetchMoreContactQuestions(question: question)
+                                        }
                                     }
                             }
                         }
@@ -41,16 +43,15 @@ struct ContactProfessionalView: View {
                                 .padding()
                             
                             ButtonVariant(label: "Probeer opnieuw"){
-                                viewModel.fetchContactQuestions()
+                                Task {
+                                    await viewModel.fetchContactQuestions()
+                                }
                             }
                         }
                         .padding()
                     }
                     else if viewModel.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .frame(height: 120)
-                            .padding(4)
+                        Loading()
                     }
                     else if viewModel.questions.isEmpty && viewModel.searchText.isEmpty {
                         VStack(spacing: 16) {
@@ -75,7 +76,7 @@ struct ContactProfessionalView: View {
                         .padding(.top, 50)
                     }
                 }
-                .refreshable{viewModel.refreshContactQuestions()}
+                .refreshable{Task {await viewModel.refreshContactQuestions()}}
                 .searchable(text: $viewModel.searchText, prompt: "Zoeken")
                 .navigationTitle("Vraag de professional")
                 .navigationBarTitleDisplayMode(.inline)

@@ -19,8 +19,10 @@ struct ChatView: View {
                         Message(title: message.senderName, content: message.content, date: message.sentAt, type: .left)
                             .frame(maxWidth: .infinity)
                             .onAppear {
-                                viewModel.fetchNextQuestionMessages(message: message)
-                                viewModel.fetchPreviousQuestionMessages(message: message)
+                                Task {
+                                    await viewModel.fetchNextQuestionMessages(message: message)
+                                    await viewModel.fetchPreviousQuestionMessages(message: message)
+                                }
                             }
                     }
                 }
@@ -30,22 +32,10 @@ struct ChatView: View {
                             .font(.title3)
                             .multilineTextAlignment(.center)
                             .padding()
-                        
-//                        Button(action: {
-//                            viewModel.refreshChatQuestions()
-//                        }) {
-//                            Text("Retry")
-//                                .fontWeight(.bold)
-//                                .frame(maxWidth: .infinity)
-//                                .padding()
-//                                .background(Color.blue)
-//                                .foregroundColor(.white)
-//                                .cornerRadius(8)
-//                            ButtonVariant(label: "Retry"){}
-//                        }
-//                        .padding(.horizontal, 40)
                         ButtonVariant(label: "Probeer opnieuw"){
-                            viewModel.refreshChatQuestions()
+                            Task {
+                                await viewModel.refreshChatQuestions()
+                            }
                         }
 
                     }
@@ -93,15 +83,20 @@ struct ChatView: View {
                         .stroke(Color.dark, lineWidth: 2)
                 )
                 ButtonVariant(iconRight: "paperplane") {
-                    viewModel.addMessage(content: viewModel.newMessageContent)
+                    Task {
+                        await viewModel.addMessage(content: viewModel.newMessageContent)
+                    }
                 }.frame(width: 50)
             }
             
         }
         .padding()
         .onAppear {
-            viewModel.refreshChatQuestions()
+            Task {
+                await viewModel.refreshChatQuestions()
+            }
         }
+        .searchable(text: $viewModel.searchText)
         .navigationTitle("Vragenlijsten")
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -20,13 +20,15 @@ struct QuestionnairesView: View {
 //                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
 //                }
                     
-                LazyVStack(spacing: 5) {
+                LazyVStack(spacing: 10) {
                     ForEach(viewModel.questionnaires) { questionnaire in
                         NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
                             QuestionnaireListItem(questionnaire: questionnaire)
                                 .frame(maxWidth: .infinity)
                                 .onAppear {
-                                    viewModel.fetchMoreQuestionnaires(questionnaire: questionnaire)
+                                    Task {
+                                        await viewModel.fetchMoreQuestionnaires(questionnaire: questionnaire)
+                                    }
                                 }
                         }
                     }
@@ -40,16 +42,15 @@ struct QuestionnairesView: View {
                             .padding()
 
                         ButtonVariant(label: "Probeer opnieuw"){
-                            viewModel.fetchQuestionnaires()
+                            Task {
+                                await viewModel.fetchQuestionnaires()
+                            }
                         }
                     }
                     .padding()
                 }
                 else if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .frame(height: 120)
-                        .padding(4)
+                    Loading()
                 }
                 else if viewModel.questionnaires.isEmpty && viewModel.searchText.isEmpty {
                     VStack(spacing: 16) {
@@ -74,10 +75,11 @@ struct QuestionnairesView: View {
                     .padding(.top, 50)
                 }
             }
-            .refreshable{viewModel.refreshQuestionnaires()}
+            .refreshable{Task { await viewModel.refreshQuestionnaires()}}
             .searchable(text: $viewModel.searchText, prompt: "Zoeken")
             .navigationTitle("Vragenlijsten")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

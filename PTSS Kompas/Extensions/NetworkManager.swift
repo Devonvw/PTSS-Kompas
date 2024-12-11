@@ -38,16 +38,12 @@ enum NetworkError: LocalizedError {
     }
 }
 
-
 final class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = Config.APIBaseURL
     private let tokenKey = "jwt_token"
-    private let genericError = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Er is iets fout gegaan."])
     
     private init() {}
-    
-    
     
     func request<T: Decodable>(
         endpoint: String,
@@ -55,22 +51,19 @@ final class NetworkManager {
         parameters: [String: String?]? = nil,
         body: Any? = nil,
         headers: [String: String]? = nil,
-        responseType: T.Type = T.self,  // Default response type is the generic type T
-        completion: @escaping (Result<T, NetworkError>) -> Void
-    ) {
+        responseType: T.Type = T.self
+    ) async throws -> T {
+        // Build the URL
         guard var url = URL(string: endpoint.hasSuffix("/") ? String(endpoint.dropLast()) : endpoint, relativeTo: baseURL) else {
-            completion(.failure(.invalidURL))
-            return
+            throw NetworkError.invalidURL
         }
         
         if let parameters {
             let filteredParameters = parameters.compactMapValues { value in
                 value?.isEmpty == false ? value : nil
             }
-            
             guard let appendedURL = url.appendingQueryParameters(filteredParameters) else {
-                completion(.failure(.invalidURL))
-                return
+                throw NetworkError.invalidURL
             }
             url = appendedURL
         }
@@ -87,6 +80,7 @@ final class NetworkManager {
         }
         headers?.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
         
+        // Attach body if needed
         if let body {
             do {
                 let jsonData: Data
@@ -97,77 +91,57 @@ final class NetworkManager {
                 } else if let encodableBody = body as? Encodable {
                     jsonData = try JSONEncoder().encode(EncodableWrapper(encodableBody))
                 } else {
-                    print(body)
-                    completion(.failure(.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"])) ))
-                    return
+                    throw NetworkError.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"]))
                 }
                 
                 request.httpBody = jsonData
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             } catch {
-                print(error)
-                completion(.failure(.unknown(error: error)))
-                return
+                throw NetworkError.unknown(error: error)
             }
         }
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(.unknown(error: error)))
-                return
-            }
-            
-            //                guard let data = data else {
-            //                    completion(.failure(.missingData))
-            //                    return
-            //                }
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"]))))
-                return
+                throw NetworkError.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"]))
             }
             
             switch httpResponse.statusCode {
             case 200...299:
                 if responseType == Never.self {
-                    // If the responseType is Never, just return success with an empty result
-                    completion(.success(() as! T))  // Force cast `()` as T (Never)
+                    return () as! T // Force cast `()` as T (Never)
                 } else {
-                    do {
-                        guard let data = data else {
-                            completion(.failure(.missingData))
-                            return
-                        }
-                        // Otherwise decode the data as the expected type T
-                        let decodedResponse = try JSONDecoder().decode(responseType, from: data)
-                        completion(.success(decodedResponse))
-                    } catch {
-                        print(error)
-                        completion(.failure(.decodingFailed))
-                    }
+//                    guard let data = data else {
+//                        throw NetworkError.missingData
+//                    }
+                    return try JSONDecoder().decode(responseType, from: data)
                 }
             case 400...499:
-                guard let data = data else {
-                    completion(.failure(.missingData))
-                    return
-                }
-                
                 let message = (try? JSONDecoder().decode(ResponseError.self, from: data).localizedDescription) ?? "Client error"
-                completion(.failure(.serverError(statusCode: httpResponse.statusCode, message: message)))
+                throw NetworkError.serverError(statusCode: httpResponse.statusCode, message: message)
             case 500...599:
-                completion(.failure(.serverError(statusCode: httpResponse.statusCode, message: "Server error occurred")))
+                throw NetworkError.serverError(statusCode: httpResponse.statusCode, message: "Server error occurred")
             default:
-                completion(.failure(.unknown(error: NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Unexpected error"]))))
+                throw NetworkError.unknown(error: NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Unexpected error"]))
             }
-            
-        }.resume()
+        } catch {
+            throw NetworkError.unknown(error: error)
+        }
     }
-    
-    
-    
     
     private func getBearerToken() -> String? {
         return "ABC"
-        //        return KeychainManager.shared.retrieveToken(for: tokenKey)
+        // return KeychainManager.shared.retrieveToken(for: tokenKey)
+    }
+}
+
+// Add this extension for URL parameter handling if not already present
+extension URL {
+    func appendingQueryParameters(_ parameters: [String: String]) -> URL? {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
+        components?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+        return components?.url
     }
 }

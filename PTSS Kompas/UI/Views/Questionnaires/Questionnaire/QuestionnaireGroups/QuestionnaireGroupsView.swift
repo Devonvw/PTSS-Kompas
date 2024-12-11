@@ -21,7 +21,7 @@ struct QuestionnaireGroupsView: View {
             if viewModel.isLoading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
-                    .frame(height: 10)
+                    .frame(height: 6)
                     .padding(4)
             } else {
                 Text("\(viewModel.completedGroups) van de \(viewModel.groups.count) groepen voltooid")
@@ -48,7 +48,7 @@ struct QuestionnaireGroupsView: View {
         }.padding(.horizontal).padding(.top)
         VStack(alignment: .leading) {
             ScrollView {
-                LazyVStack(spacing: 5) {
+                LazyVStack(spacing: 10) {
                     ForEach(viewModel.groups) { group in
                         NavigationLink(destination: QuestionnaireQuestionView(questionnaire: questionnaire,group: group)) {
                             QuestionnaireGroupListItem(group: group)
@@ -64,16 +64,15 @@ struct QuestionnaireGroupsView: View {
                             .padding()
                         
                         ButtonVariant(label: "Probeer opnieuw", iconRight: "arrow.clockwise", action: {
-                            viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)
+                            Task {
+                                await viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)
+                            }
                         })
                     }
                     .padding()
                 }
                 else if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .frame(height: 120)
-                        .padding(4)
+                    Loading()
                 }
                 else if viewModel.groups.isEmpty {
                     VStack(spacing: 16) {
@@ -85,9 +84,11 @@ struct QuestionnaireGroupsView: View {
                 }
             }
             .onAppear{
-                viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)
+                Task {
+                    await viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)
+                }
             }
-            .refreshable{viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)}
+            .refreshable{Task { await viewModel.fetchQuestionnaireGroups(questionnaireId: questionnaire.id)}}
             .navigationBarItems(
                 trailing:
                     NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {

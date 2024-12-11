@@ -14,7 +14,7 @@ struct ContactQuestionListItem: View {
         VStack(alignment: .leading) {
             Text(question.subject)
                 .font(.headline)
-                .foregroundColor(.dark)
+                .foregroundColor(.dark).multilineTextAlignment(.leading)
             
             Text(question.content)
                 .font(.body)

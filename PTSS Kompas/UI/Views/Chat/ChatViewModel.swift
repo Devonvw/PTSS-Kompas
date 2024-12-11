@@ -38,46 +38,56 @@ final class ChatViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
-                self?.refreshChatQuestions()
+                Task {
+                    await self?.refreshChatQuestions()
+                }
             }
             .store(in: &cancellables)
     }
     
-    func fetchChatMessages(direction: PageDirection) {
+    func fetchChatMessages(direction: PageDirection) async {
         isLoading = true
         isFailure = false
         
-        if ((pagination?.nextCursor == nil || pagination?.nextCursor == "") && (pagination?.previousCursor == nil || pagination?.previousCursor == "") ) {
+        if (pagination?.nextCursor == nil || pagination?.nextCursor == "") &&
+           (pagination?.previousCursor == nil || pagination?.previousCursor == "") {
             messages = []
         }
         
-        apiService.getChatMessages(pageDirection: direction, cursor: direction == .Next ? pagination?.nextCursor : pagination?.nextCursor, search: debouncedSearchText) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    if (direction == .Previous) {
-                        // Upward scroll, older messages
-                        self?.messages.insert(contentsOf: data.data, at: 0)
-                    } else {
-                        // Downward scroll, newer messages
-                        self?.messages.append(contentsOf: data.data)
-                    }
-                    self?.pagination = data.pagination
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
+        do {
+            let data = try await apiService.getChatMessages(
+                pageDirection: direction,
+                cursor: direction == .Next ? pagination?.nextCursor : pagination?.previousCursor,
+                search: debouncedSearchText
+            )
+            
+            await MainActor.run {
+                if direction == .Previous {
+                    // Upward scroll, older messages
+                    self.messages.insert(contentsOf: data.data, at: 0)
+                } else {
+                    // Downward scroll, newer messages
+                    self.messages.append(contentsOf: data.data)
                 }
+                self.pagination = data.pagination
+                self.isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                self.isLoading = false
+                self.isFailure = true
+            }
+            print("Error: \(error)")
         }
     }
+
     
-    func refreshChatQuestions() {
+    func refreshChatQuestions() async {
         pagination = nil
-        fetchChatMessages(direction: .Next)
+        await fetchChatMessages(direction: .Next)
     }
     
-    func fetchNextQuestionMessages(message: ChatMessage) {
+    func fetchNextQuestionMessages(message: ChatMessage) async {
         guard let lastMessage = messages.last, lastMessage.id == message.id else {
             return
         }
@@ -86,10 +96,10 @@ final class ChatViewModel: ObservableObject {
             return
         }
         
-        fetchChatMessages(direction: .Next)
+        await fetchChatMessages(direction: .Next)
     }
     
-    func fetchPreviousQuestionMessages(message: ChatMessage) {
+    func fetchPreviousQuestionMessages(message: ChatMessage) async {
         guard let firstMessage = messages.first, firstMessage.id == message.id else {
             return
         }
@@ -98,25 +108,26 @@ final class ChatViewModel: ObservableObject {
             return
         }
         
-        fetchChatMessages(direction: .Previous)
+        await fetchChatMessages(direction: .Previous)
     }
     
-    func addMessage(content: String) {
+    func addMessage(content: String) async {
         let createMessage = CreateChatMessage(content: content)
         
-        apiService.addMessage(createMessage: createMessage) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let newMessage):
-                    print("kaas", newMessage)
-                    self?.messages.append(newMessage)
-                    self?.newMessageContent = ""
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error adding message: \(error)")
-                }
+        do {
+            let newMessage = try await apiService.addMessage(createMessage: createMessage)
+            
+            await MainActor.run {
+                messages.append(newMessage)
+                newMessageContent = ""
             }
+        } catch {
+            await MainActor.run {
+                isFailure = true
+            }
+            print("Error adding message: \(error)")
         }
     }
+
 }
 

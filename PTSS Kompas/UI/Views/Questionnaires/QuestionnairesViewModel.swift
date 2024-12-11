@@ -27,8 +27,10 @@ final class QuestionnairesViewModel: ObservableObject {
     private let apiService = QuestionnaireService()
     
     init() {
+        Task {
+            await fetchQuestionnaires()
+        }
         debounceSearchText()
-        fetchQuestionnaires()
     }
     
     private func debounceSearchText() {
@@ -37,34 +39,40 @@ final class QuestionnairesViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
-                self?.refreshQuestionnaires()
+                Task {
+                    await self?.refreshQuestionnaires()
+                }
             }
             .store(in: &cancellables)
     }
     
-    func fetchQuestionnaires() {
+    func fetchQuestionnaires() async {
         isLoading = true
         isFailure = false
-        if (pagination?.nextCursor == nil || pagination?.nextCursor == "") {
+        
+        if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
             questionnaires = []
         }
         
-        apiService.getQuestionnaires(cursor: pagination?.nextCursor, search: debouncedSearchText) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                   self?.questionnaires.append(contentsOf: data.data)
-                    self?.pagination = data.pagination
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
-                }
+        do {
+            let data = try await apiService.getQuestionnaires(cursor: pagination?.nextCursor, search: debouncedSearchText)
+            
+            await MainActor.run {
+                self.questionnaires.append(contentsOf: data.data)
+                self.pagination = data.pagination
+                self.isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                self.isFailure = true
+                self.isLoading = false
+            }
+            print("Error: \(error)")
         }
     }
     
-    func fetchMoreQuestionnaires(questionnaire: Questionnaire) {
+    
+    func fetchMoreQuestionnaires(questionnaire: Questionnaire) async {
         guard let lastQuestionnaire = questionnaires.last, lastQuestionnaire.id == questionnaire.id else {
             return
         }
@@ -73,11 +81,11 @@ final class QuestionnairesViewModel: ObservableObject {
             return
         }
         
-        fetchQuestionnaires()
+        await fetchQuestionnaires()
     }
     
-    func refreshQuestionnaires() {
+    func refreshQuestionnaires() async {
         pagination = nil
-        fetchQuestionnaires()
+        await fetchQuestionnaires()
     }
 }

@@ -16,21 +16,24 @@ final class QuestionnaireViewModel: ObservableObject {
     
     private let apiService = QuestionnaireService()
     
-    func fetchQuestionnaire(id: String) {
+    func fetchQuestionnaire(id: String) async {
         isLoading = true
         isFailure = false
-
-        apiService.getQuestionnaireExplanation(questionnaireId: id) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    self?.explanation = data
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
-                }
+        
+        do {
+            let data = try await apiService.getQuestionnaireExplanation(questionnaireId: id)
+            
+            await MainActor.run {
+                self.explanation = data
+                self.isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                self.isFailure = true
+                self.isLoading = false
+            }
+            print("Error: \(error)")
         }
     }
+
 }

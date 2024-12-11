@@ -7,7 +7,7 @@
 import Foundation
 
 struct QuestionnaireSubQuestion: Codable, Identifiable {
-    let id: String
+    let id: Int
     let text: String
     let description: String?
     let type: QuestionnaireSubQuestionType
@@ -19,7 +19,7 @@ struct QuestionnaireSubQuestion: Codable, Identifiable {
     }
     
     static let example: QuestionnaireSubQuestion = .init(
-        id: UUID().uuidString,
+        id: 1,
         text: "Hoe belangrijk is deze behoefte voor u?",
         description: "Beoordeel elke behoefte op een schaal van 1 tot 4, waarbij 1 \"niet belangrijk\" is en 4 \"zeer belangrijk.\" klik het nummer aan dat het beste uw mening weergeeft.",
         type: QuestionnaireSubQuestionType.SINGLE_SELECT,

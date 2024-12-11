@@ -18,51 +18,56 @@ final class CreateContactQuestionViewModel: ObservableObject {
     private let apiService = ContactService()
     private let validator = CreateContactQuestionValidator()
     
-    func addQuestion(onSuccess: @escaping () -> Void) {
+    func addQuestion(onSuccess: () -> Void) async {
         let createQuestion = CreateContactQuestion(subject: newQuestionSubject, content: newQuestionContent)
         isLoading = true
         isAlertFailure = false
         
         do {
             try validator.validate(createQuestion)
-            
-            apiService.addQuestion(createQuestion: createQuestion) { [weak self] result in
-                DispatchQueue.main.async {
-                    self?.isLoading = false
-
-                    switch result {
-                    case .success(let newQuestion):
-                        print("succes")
-                        print(newQuestion)
-                        //                    self?.messages.append(newMessage)
-                        self?.newQuestionSubject = ""
-                        self?.newQuestionContent = ""
-                        onSuccess()
-                    case .failure(let error):
-                        self?.isAlertFailure = true
-                        self?.error = .networking(error: error)
-
-                        print("Error adding message: \(error)")
-                    }
-                }
+        } catch let validationError as CreateContactQuestionValidator.CreateValidatorError {
+            await MainActor.run {
+                self.isLoading = false
+                self.error = .validation(error: validationError)
             }
+            print(validationError)
         } catch {
-            isLoading = false
-            
-            switch error {
-            case is CreateContactQuestionValidator.CreateValidatorError:
-                self.error = .validation(error: error as! CreateContactQuestionValidator.CreateValidatorError)
-            default:
-                isAlertFailure = true
+            await MainActor.run {
+                self.isLoading = false
+                self.isAlertFailure = true
                 self.error = .system(error: error)
             }
-            
             print(error)
         }
         
-        
+        do {
+            let newQuestion = try await apiService.addQuestion(createQuestion: createQuestion)
+            
+            await MainActor.run {
+                self.isLoading = false
+                self.newQuestionSubject = ""
+                self.newQuestionContent = ""
+                print("Success")
+                print(newQuestion)
+                onSuccess()
+            }
+        } catch let error as NetworkError {
+            await MainActor.run {
+                self.isLoading = false
+                self.isAlertFailure = true
+                self.error = .networking(error: error)
+                print("Error adding question: \(error)")
+            }
+        } catch {
+            await MainActor.run {
+                self.isAlertFailure = true
+                self.isLoading = false
+            }
+            print("Error: \(error)")
+        }
         
     }
+    
 }
 
 
@@ -78,7 +83,7 @@ extension CreateContactQuestionViewModel.FormError {
     var errorDescription: String? {
         switch self {
         case .networking(let err),
-            .validation(let err):
+                .validation(let err):
             return err.errorDescription
         case .system(let err):
             return err.localizedDescription

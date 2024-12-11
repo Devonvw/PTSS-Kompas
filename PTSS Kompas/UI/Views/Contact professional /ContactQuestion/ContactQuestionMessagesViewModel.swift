@@ -38,36 +38,41 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
-                self?.refreshContactQuestions()
+                Task {
+                    await self?.refreshContactQuestions()
+                }
             }
             .store(in: &cancellables)
     }
     
-    func fetchQuestionMessages(questionId: String) {
+    func fetchQuestionMessages(questionId: String) async {
         isLoading = true
         isFailure = false
         self.questionId = questionId
-        
-        if (pagination?.nextCursor == nil || pagination?.nextCursor == "") {
+
+        if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
             messages = []
         }
-        
-        apiService.getContactQuestionMessages(questionId: questionId, cursor: pagination?.nextCursor, search: debouncedSearchText) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    self?.messages.append(contentsOf: data.data)
-                    self?.pagination = data.pagination
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
-                }
+
+        do {
+            let data = try await apiService.getContactQuestionMessages(questionId: questionId, cursor: pagination?.nextCursor, search: debouncedSearchText)
+            
+            await MainActor.run {
+                messages.append(contentsOf: data.data)
+                pagination = data.pagination
+                isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                isLoading = false
+                isFailure = true
+            }
+            print("Error: \(error)")
         }
     }
+
     
-    func fetchMoreQuestionMessages(message: ContactQuestionMessage) {
+    func fetchMoreQuestionMessages(message: ContactQuestionMessage) async {
         guard let questionId else { return }
         
         guard let lastMessage = messages.last, lastMessage.id == message.id else {
@@ -78,34 +83,34 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             return
         }
         
-        fetchQuestionMessages(questionId: questionId)
+        await fetchQuestionMessages(questionId: questionId)
     }
     
     
-    func refreshContactQuestions() {
+    func refreshContactQuestions() async {
         guard let questionId else { return }
         
         pagination = nil
-        fetchQuestionMessages(questionId: questionId)
+        await fetchQuestionMessages(questionId: questionId)
     }
     
-    func addMessage(content: String) {
+    func addMessage(content: String) async {
         guard let questionId else { return }
         
-        apiService.addMessage(questionId: questionId, createMessage: CreateContactQuestionMessage(content: content)) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let newMessage):
-                    print("succes")
-                    print(newMessage)
-                    self?.messages.append(newMessage)
-                    self?.newMessageContent = ""
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error adding message: \(error)")
-                }
+        do {
+            let newMessage = try await apiService.addMessage(questionId: questionId, createMessage: CreateContactQuestionMessage(content: content))
+            
+            await MainActor.run {
+                messages.append(newMessage)
+                newMessageContent = ""
             }
+        } catch {
+            await MainActor.run {
+                isFailure = true
+            }
+            print("Error adding message: \(error)")
         }
     }
+
 }
 

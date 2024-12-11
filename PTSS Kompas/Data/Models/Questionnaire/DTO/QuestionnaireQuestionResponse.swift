@@ -6,7 +6,7 @@
 //
 
 struct QuestionnaireQuestionResponse: Codable, Identifiable {
-    let id: String
+    let id: Int
     let isFinished: Bool
     let situation: String
     var subQuestions: [QuestionnaireSubQuestionResponse]

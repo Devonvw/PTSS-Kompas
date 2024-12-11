@@ -10,73 +10,49 @@ import Foundation
 final class QuestionnaireService {
     let baseURL = "questionnaires/"
     
-    func getQuestionnaires(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<Questionnaire, Pagination>, NetworkError>) -> Void) {
+    func getQuestionnaires(cursor: String?, search: String?) async throws -> PaginatedResponse<Questionnaire, Pagination> {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
-        
-        NetworkManager.shared.request(
+        return try await NetworkManager.shared.request(
             endpoint: baseURL,
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<Questionnaire, Pagination>.self,
-            completion: completion
+            responseType: PaginatedResponse<Questionnaire, Pagination>.self
         )
     }
     
-    func getQuestionnaireExplanation(questionnaireId: String, completion: @escaping (Result<QuestionnaireExplanation, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func getQuestionnaireExplanation(questionnaireId: String) async throws -> QuestionnaireExplanation {
+        let response = try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/explanation",
             method: .GET,
             responseType: QuestionnaireExplanationResponse.self
-        )  { result in
-            switch result {
-            case .success(let questionnaireExplanationResponse):
-                let questionnaireExplanation = QuestionnaireExplanation.map(response: questionnaireExplanationResponse)
-                completion(.success(questionnaireExplanation))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        )
+        return QuestionnaireExplanation.map(response: response)
     }
     
-    func getQuestionnaireGroups(questionnaireId: String, completion: @escaping (Result<[QuestionnaireGroup], NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func getQuestionnaireGroups(questionnaireId: String) async throws -> [QuestionnaireGroup] {
+        let response = try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/groups",
             method: .GET,
             responseType: [QuestionnaireGroupResponse].self
-        ) { result in
-            switch result {
-            case .success(let questionnaireGroupsResponse):
-                let questionnaireGroups = questionnaireGroupsResponse.map { QuestionnaireGroup.map(response: $0) }
-                completion(.success(questionnaireGroups))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        )
+        return response.map { QuestionnaireGroup.map(response: $0) }
     }
     
-    func getQuestionnaireQuestions(questionnaireId: String, groupId: Int, completion: @escaping (Result<[QuestionnaireQuestion], NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func getQuestionnaireQuestions(questionnaireId: String, groupId: Int) async throws -> [QuestionnaireQuestion] {
+        let response = try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/groups/\(groupId)/questions",
             method: .GET,
             responseType: [QuestionnaireQuestionResponse].self
-        ) { result in
-            switch result {
-            case .success(let questionnaireQuestionResponse):
-                let questionnaireQuestions = questionnaireQuestionResponse.map { QuestionnaireQuestion.map(response: $0) }
-                completion(.success(questionnaireQuestions))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        )
+        return response.map { QuestionnaireQuestion.map(response: $0) }
     }
     
-    func saveQuestionAnswers(answers: [SaveQuestionAnswerRequest], completion: @escaping (Result<ContactQuestion, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
-            endpoint: baseURL,
-            method: .POST,
+    func saveQuestionAnswers(questionnaireId: String, groupId: Int, questionId: Int, answers: [SaveQuestionAnswerRequest]) async throws {
+        try await NetworkManager.shared.request(
+            endpoint: baseURL + "\(questionnaireId)/groups/\(groupId)/questions/\(questionId)",
+            method: .PUT,
             body: answers,
-            responseType: ContactQuestion.self,
-            completion: completion
+            responseType: Never.self
         )
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct QuestionnaireQuestionView: View {
     @StateObject var viewModel = QuestionnaireQuestionViewModel()
     
+    @State private var shouldNavigate = false
     let questionnaire: Questionnaire
     let group: QuestionnaireGroup
     
@@ -28,10 +29,7 @@ struct QuestionnaireQuestionView: View {
                     
                     
                     if viewModel.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .frame(height: 120)
-                            .padding(4).frame(alignment: .center)
+                        Loading()
                     } else if let question = viewModel.question {
                         HStack(alignment: .center) {
                             ForEach(viewModel.questions) { questionItem in
@@ -76,25 +74,46 @@ struct QuestionnaireQuestionView: View {
             HStack(alignment: .center) {
                 if !viewModel.isFirstQuestion {
                     ButtonVariant(label: "", iconRight: "arrow.left") {
-                        viewModel.backQuestion()
-                    }.frame(width: 80)
+                        viewModel.backQuestion(questionnaireId: questionnaire.id, groupId: group.id)
+                    }.frame(width: 80).padding(.trailing, 10)
                 }
                 if viewModel.isLastQuestion {
-                    NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
+                    NavigationLink(
+                       destination: QuestionnaireGroupsView(questionnaire: questionnaire),
+                       isActive: $shouldNavigate // Binding to control navigation
+                   ) {
+                       EmptyView() // Placeholder since NavigationLink is programmatically controlled
+                   }
+//                    NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
                         ButtonVariant(label: "Volgende", iconRight: "arrow.right") {
-                            viewModel.nextQuestion()
-                        }.disabled(true)
-                    }
+                            viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id)
+                            shouldNavigate = true
+                        }
+//                    }
                 } else {
-                    ButtonVariant(label: "Volgende", iconRight: "arrow.right") {
-                        viewModel.nextQuestion()
+                    ButtonVariant(label: {
+                        if viewModel.isSaving {
+                            VStack(alignment: .center) {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle())
+                                    .frame(height: 16)
+                                    .padding(4)
+                                Spacer().frame(maxWidth: .infinity, maxHeight: 0)
+                            }
+                        } else {
+                            Text("Volgende")
+                        }
+                    }, iconRight: "arrow.right") {
+                        viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id)
                     }
                 }
                 
             }
         }.padding()
             .onAppear {
-                viewModel.fetchQuestionnaireQuestions(questionnaireId: questionnaire.id, groupId: group.id)
+                Task {
+                    await viewModel.fetchQuestionnaireQuestions(questionnaireId: questionnaire.id, groupId: group.id)
+                }
             }
     }
 }

@@ -11,177 +11,152 @@ final class UserService {
     let baseURL = "users/"
     let groupsBaseURL = "groups/"
     
-    func inviteUser(body: UserInviteCreate, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func inviteUser(body: UserInviteCreate) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "invite",
             method: .POST,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func verifyUserInvitation(body: UserInviteVerify, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func verifyUserInvitation(body: UserInviteVerify) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "invite/verify",
             method: .POST,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func register(body: UserRegister, completion: @escaping (Result<AuthResponse, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func register(body: UserRegister) async throws -> AuthResponse {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "register",
             method: .POST,
             body: body,
-            responseType: AuthResponse.self,
-            completion: completion
+            responseType: AuthResponse.self
         )
     }
     
-    func login(body: Login, completion: @escaping (Result<AuthResponse, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func login(body: Login) async throws -> AuthResponse {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "login",
             method: .POST,
             body: body,
-            responseType: AuthResponse.self,
-            completion: completion
+            responseType: AuthResponse.self
         )
     }
     
-    func loginPin(body: PinLogin, completion: @escaping (Result<AuthResponse, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func loginPin(body: PinLogin) async throws -> AuthResponse {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "login",
             method: .POST,
             body: body,
-            responseType: AuthResponse.self,
-            completion: completion
+            responseType: AuthResponse.self
         )
     }
     
-    func getCurrentUser(completion: @escaping (Result<User, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func getCurrentUser() async throws -> User {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "me",
             method: .GET,
-            responseType: User.self,
-            completion: completion
+            responseType: User.self
         )
     }
     
-    func deleteUserFromGroup(userId: String, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func deleteUserFromGroup(userId: String) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "\(userId)",
             method: .DELETE,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func updatePassword(body: PasswordUpdate, completion: @escaping (Result<AuthResponse, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func updatePassword(body: PasswordUpdate) async throws -> AuthResponse {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "me/password",
             method: .PUT,
             body: body,
-            responseType: AuthResponse.self,
-            completion: completion
+            responseType: AuthResponse.self
         )
     }
     
-    func createPin(body: PinCreate, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func createPin(body: PinCreate) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "me/pin",
             method: .POST,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func updatePin(body: PinUpdate, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func updatePin(body: PinUpdate) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "me/pin",
             method: .PUT,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func getMembersOfCurrentUsersGroup(completion: @escaping (Result<[User], NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func getMembersOfCurrentUsersGroup() async throws -> [User] {
+        return try await NetworkManager.shared.request(
             endpoint: groupsBaseURL + "members",
             method: .GET,
-            responseType: [User].self,
-            completion: completion
+            responseType: [User].self
         )
     }
     
-    func getCurrentGroup(completion: @escaping (Result<UserGroup, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func getCurrentGroup() async throws -> UserGroup {
+        return try await NetworkManager.shared.request(
             endpoint: groupsBaseURL,
             method: .GET,
-            responseType: UserGroup.self,
-            completion: completion
+            responseType: UserGroup.self
         )
     }
     
-    func requestPasswordReset(body: ForgotPassword, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func requestPasswordReset(body: ForgotPassword) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "forgot-password",
             method: .POST,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func verifyRequestPasswordReset(body: ForgotPasswordVerify, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func verifyRequestPasswordReset(body: ForgotPasswordVerify) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "forgot-password/verify",
             method: .POST,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    func resetPassword(body: ForgotPasswordReset, completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func resetPassword(body: ForgotPasswordReset) async throws {
+        try await NetworkManager.shared.request(
             endpoint: baseURL + "forgot-password/reset",
             method: .POST,
             body: body,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
     
-    //    func getPrimaryCaregiverOfCurrentUsersGroup(completion: @escaping (Result<[User], NetworkError>) -> Void) {
-    //        NetworkManager.shared.request(
-    //            endpoint: groupsBaseURL + "members",
-    //            method: .GET,
-    //            responseType: [User].self,
-    //            completion: completion
-    //        )
-    //    }
-    
-    func updatePrimaryCaregiverOfCurrentUsersGroup(body: PrimaryCaregiverAssign, completion: @escaping (Result<UserGroup, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func updatePrimaryCaregiverOfCurrentUsersGroup(body: PrimaryCaregiverAssign) async throws -> UserGroup {
+        return try await NetworkManager.shared.request(
             endpoint: groupsBaseURL + "primary-caregiver",
             method: .PUT,
             body: body,
-            responseType: UserGroup.self,
-            completion: completion
+            responseType: UserGroup.self
         )
     }
     
-    func deletePrimaryCaregiverOfCurrentUsersGroup(completion: @escaping (Result<Never, NetworkError>) -> Void) {
-        NetworkManager.shared.request(
+    func deletePrimaryCaregiverOfCurrentUsersGroup() async throws {
+        try await NetworkManager.shared.request(
             endpoint: groupsBaseURL + "primary-caregiver",
             method: .DELETE,
-            responseType: Never.self,
-            completion: completion
+            responseType: Never.self
         )
     }
 }
+

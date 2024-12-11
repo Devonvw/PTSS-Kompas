@@ -30,7 +30,9 @@ final class ContactProfessionalViewModel: ObservableObject {
     
     init() {
         debounceSearchText()
-        fetchContactQuestions()
+        Task {
+            await fetchContactQuestions()
+        }
     }
     
     private func debounceSearchText() {
@@ -39,35 +41,40 @@ final class ContactProfessionalViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
-                self?.refreshContactQuestions()
+                Task {
+                    await self?.refreshContactQuestions()
+                }
             }
             .store(in: &cancellables)
     }
     
-    func fetchContactQuestions() {
+    func fetchContactQuestions() async {
         isLoading = true
         isFailure = false
-        if (pagination?.nextCursor == nil || pagination?.nextCursor == "") {
+        
+        if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
             questions = []
         }
         
-        apiService.getContactQuestions(cursor: pagination?.nextCursor, search: debouncedSearchText) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    print("kaas", data.data)
-                    self?.questions.append(contentsOf: data.data)
-                    self?.pagination = data.pagination
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
-                }
+        do {
+            let data = try await apiService.getContactQuestions(cursor: pagination?.nextCursor, search: debouncedSearchText)
+            
+            await MainActor.run {
+                questions.append(contentsOf: data.data)
+                pagination = data.pagination
+                isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                isFailure = true
+                isLoading = false
+            }
+            print("Error: \(error)")
         }
     }
+
     
-    func fetchMoreContactQuestions(question: ContactQuestion) {
+    func fetchMoreContactQuestions(question: ContactQuestion) async {
         guard let lastQuestion = questions.last, lastQuestion.id == question.id else {
             return
         }
@@ -76,31 +83,12 @@ final class ContactProfessionalViewModel: ObservableObject {
             return
         }
         
-        fetchContactQuestions()
+        await fetchContactQuestions()
     }
     
     
-    func refreshContactQuestions() {
+    func refreshContactQuestions() async {
         pagination = nil
-        fetchContactQuestions()
+        await fetchContactQuestions()
     }
-    
-//    func addQuestion(content: String) {
-//        guard let questionId else { return }
-//        
-//        apiService.addQuestion(questionId: questionId, createQuestion: CreateContactQuestion(content: content)) { [weak self] result in
-//            DispatchQueue.main.async {
-//                switch result {
-//                case .success(let newMessage):
-//                    print("succes")
-//                    print(newMessage)
-//                    self?.messages.append(newMessage)
-//                    self?.newMessageContent = ""
-//                case .failure(let error):
-//                    self?.isFailure = true
-//                    print("Error adding message: \(error)")
-//                }
-//            }
-//        }
-//    }
 }

@@ -29,12 +29,31 @@ struct QuestionnaireView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.bottom, 16)
                     
+                    if viewModel.isFailure {
+                        VStack(spacing: 16) {
+                            Text("Het is niet gelukt om de uitleg op te halen.")
+                                .font(.title3)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            
+                            ButtonVariant(label: "Probeer opnieuw"){
+                                Task {
+                                    await viewModel.fetchQuestionnaire(id: questionnaire.id)
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                    else if viewModel.isLoading && viewModel.explanation == nil {
+                        Loading()
+                    }
+                    
                     if let explanation = viewModel.explanation {
                         ForEach(explanation.subQuestions) { subQuestion in
-                            SubQuestionItemShow(subQuestion: subQuestion)
+                            SubQuestionItemShow(subQuestion: subQuestion).padding(.bottom, 16)
                         }
                     }
-                   
+                    
                 }
             }
             NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
@@ -42,7 +61,9 @@ struct QuestionnaireView: View {
             }
         }.padding()
             .onAppear {
-                viewModel.fetchQuestionnaire(id: questionnaire.id)
+                Task {
+                    await viewModel.fetchQuestionnaire(id: questionnaire.id)
+                }
             }
     }
 }

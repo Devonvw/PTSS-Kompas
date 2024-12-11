@@ -10,51 +10,42 @@ import Foundation
 final class ContactService {
     let baseURL = "contact/"
     
-    func getContactQuestions(cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestion, Pagination>, NetworkError>) -> Void) {
+    func getContactQuestions(cursor: String?, search: String?) async throws -> PaginatedResponse<ContactQuestion, Pagination> {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
-        
-        NetworkManager.shared.request(
+        return try await NetworkManager.shared.request(
             endpoint: baseURL,
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<ContactQuestion, Pagination>.self,
-            completion: completion
+            responseType: PaginatedResponse<ContactQuestion, Pagination>.self
         )
     }
     
-    func getContactQuestionMessages(questionId: String, cursor: String?, search: String?, completion: @escaping (Result<PaginatedResponse<ContactQuestionMessage, Pagination>, NetworkError>) -> Void) {
+    func getContactQuestionMessages(questionId: String, cursor: String?, search: String?) async throws -> PaginatedResponse<ContactQuestionMessage, Pagination> {
         let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
-        
-        NetworkManager.shared.request(
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionId)/messages",
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<ContactQuestionMessage, Pagination>.self,
-            completion: completion
+            responseType: PaginatedResponse<ContactQuestionMessage, Pagination>.self
         )
     }
     
-    func addMessage(questionId: String, createMessage: CreateContactQuestionMessage, completion: @escaping (Result<ContactQuestionMessage, NetworkError>) -> Void) {
-        let body: [String: String] = ["content": createMessage.content]
-        
-        NetworkManager.shared.request(
+    func addMessage(questionId: String, createMessage: CreateContactQuestionMessage) async throws -> ContactQuestionMessage {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionId)/messages",
             method: .POST,
-            body: body,
-            responseType: ContactQuestionMessage.self,
-            completion: completion
+            body: createMessage,
+            responseType: ContactQuestionMessage.self
         )
     }
     
-    func addQuestion(createQuestion: CreateContactQuestion, completion: @escaping (Result<ContactQuestion, NetworkError>) -> Void) {
-        let body: [String: String] = ["subject": createQuestion.subject, "content": createQuestion.content]
-        
-        NetworkManager.shared.request(
+    func addQuestion(createQuestion: CreateContactQuestion) async throws -> ContactQuestion {
+        return try await NetworkManager.shared.request(
             endpoint: baseURL,
             method: .POST,
-            body: body,
-            responseType: ContactQuestion.self,
-            completion: completion
+            body: createQuestion,
+            responseType: ContactQuestion.self
         )
     }
 }
+

@@ -8,6 +8,6 @@
 import Foundation
 
 struct SaveQuestionAnswerRequest: Codable, Identifiable {
-    let id: String
+    let id: Int
     let answer: String
 }

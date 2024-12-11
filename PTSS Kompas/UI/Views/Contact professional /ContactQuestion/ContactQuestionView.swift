@@ -29,7 +29,7 @@ struct ContactQuestionView: View {
                     } label: {
                         Text(question.subject)
                             .font(.headline)
-                            .foregroundColor(.dark)
+                            .foregroundColor(.dark).multilineTextAlignment(.leading)
                     }
                     Text("Aangemaakt op \(formatDate(from: question.createdAt, to: "dd-MM-yyyy"))")
                         .font(.caption)

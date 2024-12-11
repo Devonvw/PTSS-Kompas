@@ -25,7 +25,9 @@ struct ContactQuestionMessagesView: View {
                             Message(title: message.senderName, content: message.content, date: message.createdAt, type: .left)
                                 .frame(maxWidth: .infinity)
                                 .onAppear {
-                                    viewModel.fetchMoreQuestionMessages(message: message)
+                                    Task {
+                                        await viewModel.fetchMoreQuestionMessages(message: message)
+                                    }
                                 }
                         }
                     }
@@ -39,16 +41,15 @@ struct ContactQuestionMessagesView: View {
                             .padding()
                         
                         ButtonVariant(label: "Probeer opnieuw"){
-                            viewModel.fetchQuestionMessages(questionId: question.id)
+                            Task {
+                                await viewModel.fetchQuestionMessages(questionId: question.id)
+                            }
                         }
                     }
                     .padding()
                 }
                 else if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .frame(height: 120)
-                        .padding(4)
+                    Loading()
                 }
                 else if viewModel.messages.isEmpty && viewModel.searchText.isEmpty {
                     VStack(spacing: 16) {
@@ -72,7 +73,7 @@ struct ContactQuestionMessagesView: View {
                     }
                     .padding(.top, 50)
                 }
-            }.refreshable{viewModel.refreshContactQuestions()}
+            }.refreshable{Task { await viewModel.refreshContactQuestions()}}
             HStack(alignment: .bottom) {
                 TextField(
                     "Nieuw bericht..",
@@ -86,13 +87,17 @@ struct ContactQuestionMessagesView: View {
                         .stroke(Color.dark, lineWidth: 2)
                 )
                 ButtonVariant(iconRight: "paperplane") {
-                    viewModel.addMessage(content: viewModel.newMessageContent)
+                    Task {
+                        await viewModel.addMessage(content: viewModel.newMessageContent)
+                    }
                 }.frame(width: 50)
             }
             
         }
         .onAppear {
-            viewModel.fetchQuestionMessages(questionId: question.id)
+            Task {
+                await viewModel.fetchQuestionMessages(questionId: question.id)
+            }
         }
     }
 }
