@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class ContactProfessionalViewModel: ObservableObject {
     @Published var questions: [ContactQuestion] = []
     @Published var isLoading: Bool = false

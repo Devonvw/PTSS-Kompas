@@ -1,31 +1,30 @@
 //
-//  CreateContactQuestionViewModel.swift
+//  RegisterVerifyViewModel.swift
 //  PTSS Kompas
 //
-//  Created by Devon van Wichen on 05/12/2024.
+//  Created by Devon van Wichen on 15/12/2024.
 //
+
 import Foundation
 import Combine
 import SwiftUI
 
-final class CreateContactQuestionViewModel: ObservableObject {
+@MainActor
+final class RegisterVerifyViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
-    @Published var newQuestionSubject: String = ""
-    @Published var newQuestionContent: String = ""
     
-    private let apiService = ContactService()
-    private let validator = CreateContactQuestionValidator()
+    private let apiService = UserService()
+    private let validator = RegisterVerifyValidator()
     
-    func addQuestion(onSuccess: () -> Void) async {
-        let createQuestion = CreateContactQuestion(subject: newQuestionSubject, content: newQuestionContent)
+    func verifyRegister(body: UserInviteVerify, onSuccess: () -> Void) async {
         isLoading = true
         isAlertFailure = false
         
         do {
-            try validator.validate(createQuestion)
-        } catch let validationError as CreateContactQuestionValidator.CreateValidatorError {
+            try validator.validate(body)
+        } catch let validationError as RegisterVerifyValidator.ValidatorError {
             await MainActor.run {
                 self.isLoading = false
                 self.error = .validation(error: validationError)
@@ -41,14 +40,11 @@ final class CreateContactQuestionViewModel: ObservableObject {
         }
         
         do {
-            let newQuestion = try await apiService.addQuestion(createQuestion: createQuestion)
+            try await apiService.verifyUserInvitation(body: body)
             
             await MainActor.run {
                 self.isLoading = false
-                self.newQuestionSubject = ""
-                self.newQuestionContent = ""
                 print("Success")
-                print(newQuestion)
                 onSuccess()
             }
         } catch let error as NetworkError {
@@ -56,14 +52,14 @@ final class CreateContactQuestionViewModel: ObservableObject {
                 self.isLoading = false
                 self.isAlertFailure = true
                 self.error = .networking(error: error)
-                print("Error adding question: \(error)")
+                print("Error adding question2: \(error)")
             }
         } catch {
             await MainActor.run {
                 self.isAlertFailure = true
                 self.isLoading = false
             }
-            print("Error: \(error)")
+            print("Error 12: \(error)")
         }
         
     }
@@ -71,7 +67,7 @@ final class CreateContactQuestionViewModel: ObservableObject {
 }
 
 
-extension CreateContactQuestionViewModel {
+extension RegisterVerifyViewModel {
     enum FormError: LocalizedError {
         case networking(error: LocalizedError)
         case validation(error: LocalizedError)
@@ -79,7 +75,7 @@ extension CreateContactQuestionViewModel {
     }
 }
 
-extension CreateContactQuestionViewModel.FormError {
+extension RegisterVerifyViewModel.FormError {
     var errorDescription: String? {
         switch self {
         case .networking(let err),

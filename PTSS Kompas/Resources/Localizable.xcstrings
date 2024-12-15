@@ -10,7 +10,7 @@
     " van %lld" : {
 
     },
-    ".." : {
+    "..." : {
 
     },
     "%lld" : {
@@ -27,6 +27,9 @@
       }
     },
     "Aangemaakt op %@" : {
+
+    },
+    "Achternaam" : {
 
     },
     "Afgesloten door de professional" : {
@@ -71,13 +74,16 @@
     "Geschatte tijd: %@" : {
 
     },
-    "Heb je al een account" : {
+    "Heb je al een account?" : {
 
     },
     "Heb je geen 6-cijferige code ontvangen? Neem dan contact op met de persoon die jou heeft uitgenodigd." : {
 
     },
     "Hello, World!" : {
+
+    },
+    "Herhaal wachtwoord" : {
 
     },
     "Het is niet gelukt om de berichten op te halen." : {
@@ -110,6 +116,12 @@
     "Info" : {
 
     },
+    "Jan" : {
+
+    },
+    "Jansen" : {
+
+    },
     "Je hebt geen vragen!" : {
 
     },
@@ -126,6 +138,9 @@
       "extractionState" : "manual"
     },
     "Kort onderwerp van je vraag.." : {
+
+    },
+    "Maak een wachtwoord aan en start met PTSS Kompas." : {
 
     },
     "Nieuw bericht.." : {
@@ -165,6 +180,9 @@
     "voorbeeld@gmail.com" : {
 
     },
+    "Voornaam" : {
+
+    },
     "Vorige" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -185,10 +203,19 @@
     "Vragenlijsten" : {
 
     },
+    "Vul hieronder je naam in om verder te gaan en deel te nemen." : {
+
+    },
     "Vul je e-mailadres en de 6-cijferige code in die je per e-mail hebt ontvangen om te beginnen met PTSS Kompas." : {
 
     },
+    "Wachtwoord" : {
+
+    },
     "Welkom" : {
+
+    },
+    "Welkom %@" : {
 
     },
     "Zoeken" : {

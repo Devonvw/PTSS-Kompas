@@ -9,12 +9,14 @@ struct UserRegister: Codable, ExampleProvidable {
     let firstName: String
     let lastName: String
     let password: String
+    let repeatPassword: String
     let invitationCode: String
 
     static let example: UserRegister = .init(
         firstName: "Jan",
         lastName: "de Jong",
         password: "Password123!",
+        repeatPassword: "Password123!",
         invitationCode: "123456"
     )
 }

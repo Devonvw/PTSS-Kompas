@@ -1,54 +1,54 @@
 //
-//  CreateContactQuestionViewModel.swift
+//  RegisterNameViewModel.swift
 //  PTSS Kompas
 //
-//  Created by Devon van Wichen on 05/12/2024.
+//  Created by Devon van Wichen on 15/12/2024.
 //
+
 import Foundation
 import Combine
 import SwiftUI
 
-final class CreateContactQuestionViewModel: ObservableObject {
+final class RegisterViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
-    @Published var newQuestionSubject: String = ""
-    @Published var newQuestionContent: String = ""
+    @Published var passwordValidation: PasswordValidationResult?
     
-    private let apiService = ContactService()
-    private let validator = CreateContactQuestionValidator()
+    private let apiService = UserService()
+    private let validator = RegisterVerifyValidator()
     
-    func addQuestion(onSuccess: () -> Void) async {
-        let createQuestion = CreateContactQuestion(subject: newQuestionSubject, content: newQuestionContent)
+    func validatePassword(password: String) async {
+        passwordValidation = PasswordValidator.validate(password: password)
+    }
+    
+    func verifyRegister(body: UserInviteVerify, onSuccess: () -> Void) async {
         isLoading = true
         isAlertFailure = false
         
         do {
-            try validator.validate(createQuestion)
-        } catch let validationError as CreateContactQuestionValidator.CreateValidatorError {
+            try validator.validate(body)
+        } catch let validationError as RegisterVerifyValidator.ValidatorError {
             await MainActor.run {
                 self.isLoading = false
                 self.error = .validation(error: validationError)
             }
-            return
+            print(validationError)
         } catch {
             await MainActor.run {
                 self.isLoading = false
                 self.isAlertFailure = true
                 self.error = .system(error: error)
             }
-            return
+            print(error)
         }
         
         do {
-            let newQuestion = try await apiService.addQuestion(createQuestion: createQuestion)
+            try await apiService.verifyUserInvitation(body: body)
             
             await MainActor.run {
                 self.isLoading = false
-                self.newQuestionSubject = ""
-                self.newQuestionContent = ""
                 print("Success")
-                print(newQuestion)
                 onSuccess()
             }
         } catch let error as NetworkError {
@@ -71,7 +71,7 @@ final class CreateContactQuestionViewModel: ObservableObject {
 }
 
 
-extension CreateContactQuestionViewModel {
+extension RegisterViewModel {
     enum FormError: LocalizedError {
         case networking(error: LocalizedError)
         case validation(error: LocalizedError)
@@ -79,7 +79,7 @@ extension CreateContactQuestionViewModel {
     }
 }
 
-extension CreateContactQuestionViewModel.FormError {
+extension RegisterViewModel.FormError {
     var errorDescription: String? {
         switch self {
         case .networking(let err),

@@ -48,11 +48,11 @@ final class QuestionnaireService {
     }
     
     func saveQuestionAnswers(questionnaireId: String, groupId: Int, questionId: Int, answers: [SaveQuestionAnswerRequest]) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionnaireId)/groups/\(groupId)/questions/\(questionId)",
             method: .PUT,
             body: answers,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
 }

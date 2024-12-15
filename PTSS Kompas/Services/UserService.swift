@@ -12,20 +12,20 @@ final class UserService {
     let groupsBaseURL = "groups/"
     
     func inviteUser(body: UserInviteCreate) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "invite",
             method: .POST,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
     func verifyUserInvitation(body: UserInviteVerify) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "invite/verify",
             method: .POST,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
@@ -82,20 +82,20 @@ final class UserService {
     }
     
     func createPin(body: PinCreate) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "me/pin",
             method: .POST,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
     func updatePin(body: PinUpdate) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "me/pin",
             method: .PUT,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
@@ -116,29 +116,29 @@ final class UserService {
     }
     
     func requestPasswordReset(body: ForgotPassword) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "forgot-password",
             method: .POST,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
     func verifyRequestPasswordReset(body: ForgotPasswordVerify) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "forgot-password/verify",
             method: .POST,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
     func resetPassword(body: ForgotPasswordReset) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "forgot-password/reset",
             method: .POST,
             body: body,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
@@ -152,10 +152,10 @@ final class UserService {
     }
     
     func deletePrimaryCaregiverOfCurrentUsersGroup() async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: groupsBaseURL + "primary-caregiver",
             method: .DELETE,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
 }

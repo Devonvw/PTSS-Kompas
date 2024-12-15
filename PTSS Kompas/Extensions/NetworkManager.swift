@@ -38,6 +38,8 @@ enum NetworkError: LocalizedError {
     }
 }
 
+struct VoidResponse: Decodable {}
+
 final class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = Config.APIBaseURL
@@ -110,8 +112,8 @@ final class NetworkManager {
             
             switch httpResponse.statusCode {
             case 200...299:
-                if responseType == Never.self {
-                    return () as! T // Force cast `()` as T (Never)
+                if responseType == VoidResponse.self {
+                    return VoidResponse() as! T // Return empty VoidResponse
                 } else {
 //                    guard let data = data else {
 //                        throw NetworkError.missingData

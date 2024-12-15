@@ -16,7 +16,7 @@ enum RegisterScreens {
     case Pin
 }
 
-final class RegisterViewModel: ObservableObject {
+final class RegisterStore: ObservableObject {
     @Published var currentScreen: RegisterScreens = .Verify
     @Published var email: String = ""
     @Published var registerCode: String = ""

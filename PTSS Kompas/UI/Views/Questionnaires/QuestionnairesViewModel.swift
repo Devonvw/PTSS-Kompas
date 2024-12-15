@@ -8,6 +8,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class QuestionnairesViewModel: ObservableObject {
     @Published var questionnaires: [Questionnaire] = []
     @Published var isLoading: Bool = false
@@ -48,10 +49,12 @@ final class QuestionnairesViewModel: ObservableObject {
     
     func fetchQuestionnaires() async {
         isLoading = true
-        isFailure = false
+        await MainActor.run { self.isFailure = false }
         
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            questionnaires = []
+            await MainActor.run {
+                questionnaires = []
+            }
         }
         
         do {
