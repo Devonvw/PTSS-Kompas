@@ -9,17 +9,27 @@ import SwiftUI
 
 struct QuestionnairesView: View {
     @StateObject var viewModel = QuestionnairesViewModel()
-    
-    let questionnaires = [Questionnaire.example]
-    
+        
     var body: some View {
         NavigationView {
             ScrollView {
-                LazyVStack(spacing: 5) {
-                    ForEach(viewModel.filteredQuestionaires) { questionnaire in
+//                if !viewModel.isLoading  {
+//                    HStack {
+//                        Text("\(viewModel.pagination?.totalItems ?? 0) vragenlijsten")
+//                            .font(.caption).fontWeight(.semibold)
+//                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
+//                }
+                    
+                LazyVStack(spacing: 10) {
+                    ForEach(viewModel.questionnaires) { questionnaire in
                         NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
                             QuestionnaireListItem(questionnaire: questionnaire)
                                 .frame(maxWidth: .infinity)
+                                .onAppear {
+                                    Task {
+                                        await viewModel.fetchMoreQuestionnaires(questionnaire: questionnaire)
+                                    }
+                                }
                         }
                     }
                 }
@@ -30,27 +40,17 @@ struct QuestionnairesView: View {
                             .font(.title3)
                             .multilineTextAlignment(.center)
                             .padding()
-                        
-                        Button(action: {
-                            viewModel.fetchQuestionnaires()
-                        }) {
-                            Text("Retry")
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
+
+                        ButtonVariant(label: "Probeer opnieuw"){
+                            Task {
+                                await viewModel.fetchQuestionnaires()
+                            }
                         }
-                        .padding(.horizontal, 40)
                     }
                     .padding()
                 }
                 else if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .frame(height: 120)
-                        .padding(4)
+                    Loading()
                 }
                 else if viewModel.questionnaires.isEmpty && viewModel.searchText.isEmpty {
                     VStack(spacing: 16) {
@@ -66,7 +66,7 @@ struct QuestionnairesView: View {
                     }
                     .padding(.top, 50)
                 }
-                else if viewModel.filteredQuestionaires.isEmpty && !viewModel.searchText.isEmpty {
+                else if viewModel.questionnaires.isEmpty && !viewModel.searchText.isEmpty {
                     VStack(spacing: 16) {
                         Text("Er zijn geen vragenlijsten gevonden met deze zoekopdracht.")
                             .font(.title)
@@ -75,18 +75,11 @@ struct QuestionnairesView: View {
                     .padding(.top, 50)
                 }
             }
-            .refreshable{viewModel.fetchQuestionnaires()}
+            .refreshable{Task { await viewModel.refreshQuestionnaires()}}
             .searchable(text: $viewModel.searchText, prompt: "Zoeken")
             .navigationTitle("Vragenlijsten")
             .navigationBarTitleDisplayMode(.inline)
-            //            .navigationTitleAppearance(color: Color.dark)
-            .navigationBarItems(
-                trailing:
-                    Button(action: {
-                    }) {
-                        Label("Search", systemImage: "magnifyingglass")
-                    }
-            )
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

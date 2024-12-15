@@ -1,0 +1,226 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " niet in één keer " : {
+
+    },
+    " van %lld" : {
+
+    },
+    "..." : {
+
+    },
+    "%lld" : {
+
+    },
+    "%lld van de %lld groepen voltooid" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld van de %2$lld groepen voltooid"
+          }
+        }
+      }
+    },
+    "Aangemaakt op %@" : {
+
+    },
+    "Achternaam" : {
+
+    },
+    "Afgesloten door de professional" : {
+
+    },
+    "Berichten (%lld)" : {
+
+    },
+    "Beschrijf je vraag of situatie in detail.." : {
+
+    },
+    "Beschrijving" : {
+
+    },
+    "Chat" : {
+
+    },
+    "Code" : {
+
+    },
+    "Deze vragenlijst heeft geen groepen!" : {
+
+    },
+    "Email" : {
+
+    },
+    "Er zijn geen berichten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen vragen gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen vragenlijsten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn nog geen berichten verzonden." : {
+
+    },
+    "Er zijn nog geen vragenlijsten aan jou toegewezen." : {
+
+    },
+    "Geschatte tijd: %@" : {
+
+    },
+    "Heb je al een account?" : {
+
+    },
+    "Heb je geen 6-cijferige code ontvangen? Neem dan contact op met de persoon die jou heeft uitgenodigd." : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "Herhaal wachtwoord" : {
+
+    },
+    "Het is niet gelukt om de berichten op te halen." : {
+
+    },
+    "Het is niet gelukt om de groepen op te halen." : {
+
+    },
+    "Het is niet gelukt om de uitleg op te halen." : {
+
+    },
+    "Het is niet gelukt om de vragen op te halen." : {
+
+    },
+    "Het is niet gelukt om de vragenlijsten op te halen." : {
+
+    },
+    "Home" : {
+
+    },
+    "Home2" : {
+
+    },
+    "Hulpmiddelen" : {
+
+    },
+    "in te vullen. Het is mogelijk om op een later moment terug te keren." : {
+
+    },
+    "Info" : {
+
+    },
+    "Jan" : {
+
+    },
+    "Jansen" : {
+
+    },
+    "Je hebt geen vragen!" : {
+
+    },
+    "Je hebt geen vragenlijsten!" : {
+
+    },
+    "Je hebt nog geen vragen gesteld." : {
+
+    },
+    "Je hoeft de vragenlijst" : {
+
+    },
+    "Key" : {
+      "extractionState" : "manual"
+    },
+    "Kort onderwerp van je vraag.." : {
+
+    },
+    "Maak een wachtwoord aan en start met PTSS Kompas." : {
+
+    },
+    "Nieuw bericht.." : {
+
+    },
+    "Nog %lld %@ in te vullen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Nog %1$lld %2$@ in te vullen"
+          }
+        }
+      }
+    },
+    "Omschrijving hoe het werkt" : {
+
+    },
+    "Onderwerp" : {
+
+    },
+    "Stel een nieuwe vraag" : {
+
+    },
+    "Uitleg" : {
+
+    },
+    "Verstuur een bericht door een bericht te schrijven in het onderstaande veld en te klikken op de rechter knop." : {
+
+    },
+    "Volgende" : {
+
+    },
+    "Voltooid!" : {
+
+    },
+    "voorbeeld@gmail.com" : {
+
+    },
+    "Voornaam" : {
+
+    },
+    "Vorige" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terug"
+          }
+        }
+      }
+    },
+    "Vraag " : {
+
+    },
+    "Vraag de professional" : {
+
+    },
+    "Vragenlijsten" : {
+
+    },
+    "Vul hieronder je naam in om verder te gaan en deel te nemen." : {
+
+    },
+    "Vul je e-mailadres en de 6-cijferige code in die je per e-mail hebt ontvangen om te beginnen met PTSS Kompas." : {
+
+    },
+    "Wachtwoord" : {
+
+    },
+    "Welkom" : {
+
+    },
+    "Welkom %@" : {
+
+    },
+    "Zoeken" : {
+
+    }
+  },
+  "version" : "1.0"
+}

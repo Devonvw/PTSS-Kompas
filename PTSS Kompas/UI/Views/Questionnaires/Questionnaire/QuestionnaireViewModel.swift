@@ -10,25 +10,30 @@ import Combine
 import SwiftUI
 
 final class QuestionnaireViewModel: ObservableObject {
-    @Published var questionnaireExplanation: QuestionnaireExplanation?
+    @Published var explanation: QuestionnaireExplanation?
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     
     private let apiService = QuestionnaireService()
     
-    func fetchQuestionnaire(id: String) {
+    func fetchQuestionnaire(id: String) async {
         isLoading = true
-        apiService.getQuestionnaireExplanation(questionnaireId: id) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    self?.questionnaireExplanation = data
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
-                }
+        isFailure = false
+        
+        do {
+            let data = try await apiService.getQuestionnaireExplanation(questionnaireId: id)
+            
+            await MainActor.run {
+                self.explanation = data
+                self.isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                self.isFailure = true
+                self.isLoading = false
+            }
+            print("Error: \(error)")
         }
     }
+
 }

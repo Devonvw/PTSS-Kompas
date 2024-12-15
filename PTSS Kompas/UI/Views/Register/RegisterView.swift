@@ -8,8 +8,32 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @StateObject var store = RegisterStore()
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Image("LogoFull")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 200)
+            
+            VStack {
+                Group {
+                    switch store.currentScreen {
+                    case .Verify:
+                        RegisterVerifyView(registerStore: store)
+                    case .Name:
+                        RegisterNameView(registerStore: store)
+                    case .Password:
+                        RegisterPasswordView(registerStore: store)
+                    case .Pin:
+                        RegisterVerifyView(registerStore: store)
+                    }
+                }
+            }.frame(maxHeight: .infinity)
+            
+            Spacer()
+        }.padding()
     }
 }
 

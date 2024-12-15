@@ -20,24 +20,23 @@ struct QuestionnaireGroupListItem: View {
             if group.isFinished {
                 HStack {
                     Text("Voltooid!")
-                        .font(.headline)
+                        .font(.subheadline)
                         .foregroundColor(.dark)
                     Spacer()
                     Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
+                        .foregroundColor(.dark)
                 }
             } else {
-                Text("Nog \(group.questionsLeft) vragen in te vullen")
+                Text("Nog \(group.totalQuestions - group.completedQuestions) \(group.totalQuestions - group.completedQuestions == 1 ? "vraag" : "vragen") in te vullen")
                     .font(.caption)
                     .foregroundColor(.dark)
             }
             Spacer().frame(maxWidth: .infinity, maxHeight: 0)
         }
         .padding()
-        .background(.light2)
+        .background(group.isFinished ? .light1 : .light2)
         .cornerRadius(8)
-        .frame(maxWidth: .infinity, alignment: .leading) // Ensure the entire card stretches but aligns left
-
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

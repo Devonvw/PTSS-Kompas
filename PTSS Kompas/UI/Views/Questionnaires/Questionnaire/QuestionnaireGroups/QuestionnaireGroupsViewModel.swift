@@ -11,24 +11,30 @@ import SwiftUI
 
 final class QuestionnaireGroupsViewModel: ObservableObject {
     @Published var groups: [QuestionnaireGroup] = []
+    @Published var completedGroups: Int = 0
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     
     private let apiService = QuestionnaireService()
     
-    func fetchQuestionnaireGroups(questionnaireId: String) {
+    func fetchQuestionnaireGroups(questionnaireId: String) async {
         isLoading = true
-        apiService.getQuestionnaireGroups(questionnaireId: questionnaireId) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    self?.groups = data
-                case .failure(let error):
-                    self?.isFailure = true
-                    print("Error: \(error)")
-                }
+        isFailure = false
+
+        do {
+            let data = try await apiService.getQuestionnaireGroups(questionnaireId: questionnaireId)
+            await MainActor.run {
+                self.groups = data
+                self.completedGroups = data.filter { $0.isFinished }.count
+                self.isLoading = false
             }
+        } catch {
+            await MainActor.run {
+                self.isFailure = true
+                self.isLoading = false
+            }
+            print("Error: \(error)")
         }
     }
+
 }

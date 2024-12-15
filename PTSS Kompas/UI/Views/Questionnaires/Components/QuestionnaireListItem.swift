@@ -24,8 +24,10 @@ struct QuestionnaireListItem: View {
             Text(questionnaire.description)
                 .font(.body)
                 .foregroundColor(.dark)
-                .fixedSize(horizontal: false, vertical: true) // Allow multiline text
+                .lineLimit(4)
+                .truncationMode(.tail)
                 .padding(.bottom, 10)
+                .multilineTextAlignment(.leading)
             
             if questionnaire.isFinished {
                 HStack {
@@ -37,16 +39,7 @@ struct QuestionnaireListItem: View {
                         .foregroundColor(.dark)
                 }
             } else {
-                Button(action: {
-                    // Action for starting the questionnaire
-                }) {
-                    Text("Start")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.light3)
-                        .cornerRadius(8)
-                }
+                ButtonVariant(label: "Start", variant: .light){}.disabled(true)
             }
         }
         .padding()
