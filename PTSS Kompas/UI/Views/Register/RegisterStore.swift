@@ -25,5 +25,4 @@ final class RegisterStore: ObservableObject {
     @Published var lastName: String = ""
     @Published var password: String = ""
     @Published var repeatPassword: String = ""
-    @Published var pin: String = ""
 }
