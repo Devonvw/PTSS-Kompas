@@ -14,7 +14,7 @@ class AuthManager: ObservableObject {
     @Published var isLoggedIn: Bool = false
         public var isLoadingInitial: Bool = false
         private let accessTokenKey = "accessToken"
-        private let refreshTokenKey = "refreshToken"
+        private let refreshTokenKey = "accessToken"
         private let authRefreshEndpoint = "auth/refresh"
 
         init() {
@@ -32,6 +32,7 @@ class AuthManager: ObservableObject {
 
                     return
                 }
+                print("kaas2")
 
                 if try isTokenExpired(_refreshToken) == true {
                     isLoggedIn = false
@@ -49,10 +50,13 @@ class AuthManager: ObservableObject {
         }
 
         public func isTokenExpired(_ token: String) throws -> Bool? {
+            print("kaas3", token)
             let payload = try decode(jwtToken: token)
             guard let exp = payload["exp"] as? TimeInterval else {
                 return nil
             }
+            print("kaas4")
+
             let currentTime = Date().timeIntervalSince1970
             return currentTime > exp
         }
@@ -101,7 +105,6 @@ class AuthManager: ObservableObject {
                 responseType: AuthResponse.self
             )
 
-            // Save the new tokens
             _ = KeychainManager.shared.saveToken(response.accessToken, for: accessTokenKey)
         }
     

@@ -116,6 +116,9 @@
     "Info" : {
 
     },
+    "Inloggen" : {
+
+    },
     "Jan" : {
 
     },
@@ -140,6 +143,9 @@
     "Kort onderwerp van je vraag.." : {
 
     },
+    "Login" : {
+
+    },
     "Maak een wachtwoord aan en start met PTSS Kompas." : {
 
     },
@@ -160,6 +166,12 @@
 
     },
     "Onderwerp" : {
+
+    },
+    "Pincode" : {
+
+    },
+    "Pincode vergeten? Log dan in met jouw emailadres. Vervolgens is het bij instellingen mogelijk om de pincode te wijzigen." : {
 
     },
     "Stel een nieuwe vraag" : {
