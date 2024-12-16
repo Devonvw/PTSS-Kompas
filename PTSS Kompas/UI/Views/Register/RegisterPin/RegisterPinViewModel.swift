@@ -9,26 +9,21 @@ import Foundation
 import Combine
 import SwiftUI
 
-final class RegisterViewModel: ObservableObject {
+final class RegisterPinViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
-    @Published var passwordValidation: PasswordValidationResult?
     
     private let apiService = UserService()
-    private let validator = RegisterValidator()
+    private let validator = RegisterPinValidator()
     
-    func validatePassword(password: String) async {
-        passwordValidation = PasswordValidator.validate(password: password)
-    }
-    
-    func register(body: UserRegister, onSuccess: () -> Void) async {
+    func createPin(body: PinCreate, onSuccess: () -> Void) async {
         isLoading = true
         isAlertFailure = false
         
         do {
             try validator.validate(body)
-        } catch let validationError as RegisterValidator.ValidatorError {
+        } catch let validationError as RegisterPinValidator.ValidatorError {
             await MainActor.run {
                 self.isLoading = false
                 self.error = .validation(error: validationError)
@@ -46,9 +41,7 @@ final class RegisterViewModel: ObservableObject {
         }
         
         do {
-            let response = try await apiService.register(body: body)
-            _ = KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
-            _ = KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+            _ = try await apiService.createPin(body: body)
 
             await MainActor.run {
                 self.isLoading = false
@@ -76,7 +69,7 @@ final class RegisterViewModel: ObservableObject {
 }
 
 
-extension RegisterViewModel {
+extension RegisterPinViewModel {
     enum FormError: LocalizedError {
         case networking(error: LocalizedError)
         case validation(error: LocalizedError)
@@ -84,7 +77,7 @@ extension RegisterViewModel {
     }
 }
 
-extension RegisterViewModel.FormError {
+extension RegisterPinViewModel.FormError {
     var errorDescription: String? {
         switch self {
         case .networking(let err),
@@ -95,4 +88,6 @@ extension RegisterViewModel.FormError {
         }
     }
 }
+
+
 
