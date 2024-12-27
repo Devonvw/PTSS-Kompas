@@ -32,7 +32,6 @@ class AuthManager: ObservableObject {
 
                     return
                 }
-                print("kaas2")
 
                 if try isTokenExpired(_refreshToken) == true {
                     isLoggedIn = false

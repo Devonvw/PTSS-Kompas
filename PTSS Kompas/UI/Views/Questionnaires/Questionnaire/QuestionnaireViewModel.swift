@@ -31,6 +31,7 @@ final class QuestionnaireViewModel: ObservableObject {
             await MainActor.run {
                 self.isFailure = true
                 self.isLoading = false
+                self.explanation = nil
             }
             print("Error: \(error)")
         }
