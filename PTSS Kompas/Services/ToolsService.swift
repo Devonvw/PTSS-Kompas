@@ -9,18 +9,23 @@ import Foundation
 final class ToolService {
     let baseURL = "tools/"
 
-    func getTools(cursor: String?, sortOrder: String?) async throws -> PaginatedResponse<Tool, Pagination> {
+    func getTools(cursor: String?, search: String?) async throws -> [ToolCategory] {
         let parameters: [String: String?] = [
             "cursor": cursor,
             "size": "100",
-            "sortOrder": sortOrder
+            "search": search
         ]
-        return try await NetworkManager.shared.request(
-            endpoint: baseURL,
+
+        let response = try await NetworkManager.shared.request(
+            endpoint: baseURL + "categories",
             method: .GET,
             parameters: parameters,
-            responseType: PaginatedResponse<Tool, Pagination>.self
+            responseType: [ToolCategoryResponse].self
+
+//            responseType: PaginatedResponse<ToolCategory, Pagination>.self
         )
+        
+        return response.map { ToolCategory.map(response: $0) }
     }
 
     func getToolById(toolId: String) async throws -> Tool {
@@ -48,11 +53,10 @@ final class ToolService {
         )
     }
 
-    func getToolComments(toolId: String, cursor: String?, sortOrder: String?) async throws -> PaginatedResponse<ToolComment, Pagination> {
+    func getToolComments(toolId: String, cursor: String?) async throws -> PaginatedResponse<ToolComment, Pagination> {
         let parameters: [String: String?] = [
             "cursor": cursor,
             "size": "100",
-            "sortOrder": sortOrder
         ]
         return try await NetworkManager.shared.request(
             endpoint: baseURL + "\(toolId)/comments",

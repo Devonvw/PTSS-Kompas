@@ -11,12 +11,14 @@ struct Tool: Codable, Identifiable, ExampleProvidable {
     let description: String
     let createdBy: String
     let createdAt: String
+    let media: Media?
 
     static let example: Tool = .init(
         id: "123e4567-e89b-12d3-a456-426614174000",
         name: "5-4-3-2-1 Methode",
         description: "Een praktische en effectieve...",
         createdBy: "Pricilla Simons",
-        createdAt: "2024-01-01T10:00:00Z"
+        createdAt: "2024-01-01T10:00:00Z",
+        media: Media.example
     )
 }

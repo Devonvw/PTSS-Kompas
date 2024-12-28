@@ -13,6 +13,16 @@
     "..." : {
 
     },
+    "%@ (%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$lld)"
+          }
+        }
+      }
+    },
     "%lld" : {
 
     },
@@ -56,7 +66,22 @@
     "Email" : {
 
     },
+    "Er informatie gevonden met deze zoekopdracht." : {
+
+    },
+    "Er is geen andere informatie beschikbaar" : {
+
+    },
+    "Er is geen informatie beschikbaar" : {
+
+    },
     "Er zijn geen berichten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen hulpmiddelen gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen hulpmiddelen!" : {
 
     },
     "Er zijn geen vragen gevonden met deze zoekopdracht." : {
@@ -86,10 +111,16 @@
     "Herhaal wachtwoord" : {
 
     },
+    "Het is niet gelukt om andere informatie op te halen." : {
+
+    },
     "Het is niet gelukt om de berichten op te halen." : {
 
     },
     "Het is niet gelukt om de groepen op te halen." : {
+
+    },
+    "Het is niet gelukt om de hulpmiddelen op te halen." : {
 
     },
     "Het is niet gelukt om de uitleg op te halen." : {
@@ -99,6 +130,12 @@
 
     },
     "Het is niet gelukt om de vragenlijsten op te halen." : {
+
+    },
+    "Het is niet gelukt om deze informatie op te halen." : {
+
+    },
+    "Het is niet gelukt om informatie op te halen." : {
 
     },
     "Home" : {
@@ -114,6 +151,9 @@
 
     },
     "Info" : {
+
+    },
+    "Informatie" : {
 
     },
     "Inloggen" : {
@@ -141,6 +181,9 @@
       "extractionState" : "manual"
     },
     "Kort onderwerp van je vraag.." : {
+
+    },
+    "Lees meer over:" : {
 
     },
     "Login" : {

@@ -1,15 +1,16 @@
 //
-//  ContactQuestionViewModel.swift
+//  ToolViewModel.swift
 //  PTSS Kompas
 //
-//  Created by Devon van Wichen on 04/12/2024.
+//  Created by Devon van Wichen on 28/12/2024.
 //
+
 import Foundation
 import Combine
 import SwiftUI
 
-final class ContactQuestionMessagesViewModel: ObservableObject {
-    @Published var messages: [ContactQuestionMessage] = []
+final class ToolViewModel: ObservableObject {
+    @Published var comments: [ToolComment] = []
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     @Published var searchText = "" {
@@ -19,14 +20,14 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             }
         }
     }
-    @Published var newMessageContent: String = ""
+    @Published var newCommentContent: String = ""
     @Published var pagination: Pagination?
     private var cancellables = Set<AnyCancellable>()
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
-    private var questionId: String?
+    private var toolId: String?
     
-    private let apiService = ContactService()
+    private let apiService = ToolService()
     
     init() {
         debounceSearchText()
@@ -39,26 +40,26 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
                 Task {
-                    await self?.refreshContactQuestions()
+                    await self?.refreshToolComments()
                 }
             }
             .store(in: &cancellables)
     }
     
-    func fetchQuestionMessages(questionId: String) async {
+    func fetchToolComments(toolId: String) async {
         isLoading = true
         isFailure = false
-        self.questionId = questionId
+        self.toolId = toolId
 
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            messages = []
+            comments = []
         }
 
         do {
-            let data = try await apiService.getContactQuestionMessages(questionId: questionId, cursor: pagination?.nextCursor, search: debouncedSearchText)
+            let data = try await apiService.getToolComments(toolId: toolId, cursor: pagination?.nextCursor)
             
             await MainActor.run {
-                messages.append(contentsOf: data.data)
+                comments.append(contentsOf: data.data)
                 pagination = data.pagination
                 isLoading = false
             }
@@ -72,10 +73,10 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
     }
 
     
-    func fetchMoreQuestionMessages(message: ContactQuestionMessage) async {
-        guard let questionId else { return }
+    func fetchMoreToolComments(comment: ToolComment) async {
+        guard let toolId else { return }
         
-        guard let lastMessage = messages.last, lastMessage.id == message.id else {
+        guard let lastComment = comments.last, lastComment.id == comment.id else {
             return
         }
         
@@ -83,26 +84,26 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             return
         }
         
-        await fetchQuestionMessages(questionId: questionId)
+        await fetchToolComments(toolId: toolId)
     }
     
     
-    func refreshQuestionMessages() async {
-        guard let questionId else { return }
+    func refreshToolComments() async {
+        guard let toolId else { return }
         
         pagination = nil
-        await fetchQuestionMessages(questionId: questionId)
+        await fetchToolComments(toolId: toolId)
     }
     
-    func addMessage(content: String) async {
-        guard let questionId else { return }
+    func addComment(content: String) async {
+        guard let toolId else { return }
         
         do {
-            let newMessage = try await apiService.addMessage(questionId: questionId, createMessage: CreateContactQuestionMessage(content: content))
+            let newComment = try await apiService.addToolComment(toolId: toolId, comment: CreateToolComment(content: content))
             
             await MainActor.run {
-                messages.append(newMessage)
-                newMessageContent = ""
+                comments.append(newComment)
+                newCommentContent = ""
             }
         } catch {
             await MainActor.run {

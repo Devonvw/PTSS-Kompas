@@ -11,16 +11,16 @@ import Foundation
 class AuthManager: ObservableObject {
     static let shared = AuthManager()
 
-    @Published var isLoggedIn: Bool = false
+    @Published var isLoggedIn: Bool = true
         public var isLoadingInitial: Bool = false
         private let accessTokenKey = "accessToken"
         private let refreshTokenKey = "accessToken"
         private let authRefreshEndpoint = "auth/refresh"
 
         init() {
-            Task {
-                await checkLoginStatus()
-            }
+//            Task {
+//                await checkLoginStatus()
+//            }
         }
 
         private func checkLoginStatus() async {

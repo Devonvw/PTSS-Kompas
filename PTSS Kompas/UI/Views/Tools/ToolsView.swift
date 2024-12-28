@@ -8,11 +8,69 @@
 import SwiftUI
 
 struct ToolsView: View {
+    @StateObject var viewModel = ToolsViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            ScrollView {
+                LazyVStack(spacing: 4) {
+                    ForEach(viewModel.categories) { category in
+                        //                        NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
+                        ToolCategoryListItem(category: category)
+                            .frame(maxWidth: .infinity)
+                            .onAppear {
+                                Task {
+                                    await viewModel.fetchMoreCategories(category: category)
+                                }
+                            }
+                        //                        }
+                    }
+                }
+                .padding()
+                if viewModel.isFailure {
+                    VStack(spacing: 16) {
+                        Text("Het is niet gelukt om de hulpmiddelen op te halen.")
+                            .font(.title3)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                        
+                        ButtonVariant(label: "Probeer opnieuw"){
+                            Task {
+                                await viewModel.fetchToolCategories()
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                else if viewModel.isLoading {
+                    Loading()
+                }
+                else if viewModel.categories.isEmpty && viewModel.searchText.isEmpty {
+                    VStack(spacing: 16) {
+                        Text("Er zijn geen hulpmiddelen!")
+                            .font(.title)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.top, 50)
+                }
+                else if viewModel.categories.isEmpty && !viewModel.searchText.isEmpty {
+                    VStack(spacing: 16) {
+                        Text("Er zijn geen hulpmiddelen gevonden met deze zoekopdracht.")
+                            .font(.title)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.top, 50)
+                }
+            }
+            .refreshable{Task { await viewModel.refreshToolCategories()}}
+            .searchable(text: $viewModel.searchText, prompt: "Zoeken")
+            .navigationTitle("Hulpmiddelen")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationViewStyle(StackNavigationViewStyle())
+        }
     }
 }
 
 #Preview {
-    ToolsView()
+    QuestionnairesView()
 }
