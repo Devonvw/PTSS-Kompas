@@ -9,10 +9,8 @@ import Foundation
 final class ToolService {
     let baseURL = "tools/"
 
-    func getTools(cursor: String?, search: String?) async throws -> [ToolCategory] {
+    func getTools(search: String?) async throws -> [ToolCategory] {
         let parameters: [String: String?] = [
-            "cursor": cursor,
-            "size": "100",
             "search": search
         ]
 
@@ -21,8 +19,6 @@ final class ToolService {
             method: .GET,
             parameters: parameters,
             responseType: [ToolCategoryResponse].self
-
-//            responseType: PaginatedResponse<ToolCategory, Pagination>.self
         )
         
         return response.map { ToolCategory.map(response: $0) }
@@ -56,10 +52,12 @@ final class ToolService {
     func getToolComments(toolId: String, cursor: String?) async throws -> PaginatedResponse<ToolComment, Pagination> {
         let parameters: [String: String?] = [
             "cursor": cursor,
-            "size": "100",
+            "size": "50",
         ]
+        print(baseURL + "\(toolId)/comments")
+        
         return try await NetworkManager.shared.request(
-            endpoint: baseURL + "\(toolId)/comments",
+            endpoint: baseURL + "9e52b2b1-6a89-4d99-a1d4-2956c7383d88/comments",
             method: .GET,
             parameters: parameters,
             responseType: PaginatedResponse<ToolComment, Pagination>.self

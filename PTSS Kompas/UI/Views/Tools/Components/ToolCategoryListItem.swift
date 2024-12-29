@@ -17,10 +17,10 @@ struct ToolCategoryListItem: View {
                 LazyVStack(alignment: .leading, spacing: 4) {
                     Spacer().frame(maxWidth: .infinity, maxHeight: 0)
                     ForEach(category.tools) { tool in
-                        //                        NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
-                        ToolListItem(tool: tool)
-                            .frame(maxWidth: .infinity)
-                        //                        }
+                        NavigationLink(destination: ToolView(tool: tool)) {
+                            ToolListItem(tool: tool)
+                                .frame(maxWidth: .infinity)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity)

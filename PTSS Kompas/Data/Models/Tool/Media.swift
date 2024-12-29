@@ -5,7 +5,7 @@
 //  Created by Devon van Wichen on 27/12/2024.
 //
 
-struct Media: Codable, Identifiable, ExampleProvidable {
+struct Media: Codable, Identifiable, Hashable, ExampleProvidable {
     let id: String
     let url: String
     let href: String?

@@ -56,7 +56,7 @@ struct GeneralInformationView: View {
                                             .resizable()
                                     }
                                 default:
-                                    ProgressView()
+                                    ProgressView().frame(maxWidth: .infinity, minHeight: 256)
                                 }
                             }
                             .frame(maxWidth: .infinity, maxHeight: 256)

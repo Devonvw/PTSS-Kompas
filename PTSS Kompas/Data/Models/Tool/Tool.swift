@@ -5,7 +5,7 @@
 //  Created by Devon van Wichen on 27/12/2024.
 //
 
-struct Tool: Codable, Identifiable, ExampleProvidable {
+struct Tool: Codable, Identifiable, Hashable, ExampleProvidable {
     let id: String
     let name: String
     let description: String

@@ -22,7 +22,7 @@ struct PTSS_KompasApp: App {
             else if (AuthManager.shared.isLoggedIn) {
                 TabView {
                     Group {
-                        RegisterView()
+                        HomeView()
                             .tabItem {
                                 Label("Home", systemImage: "house")
                             }

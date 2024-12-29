@@ -9,8 +9,9 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class ToolViewModel: ObservableObject {
-    @Published var comments: [ToolComment] = []
+    @Published var comments: [ToolComment] = [ToolComment.example]
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     @Published var searchText = "" {
@@ -26,6 +27,7 @@ final class ToolViewModel: ObservableObject {
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
     private var toolId: String?
+    @Published var shouldShowCreate = false
     
     private let apiService = ToolService()
     
@@ -50,11 +52,14 @@ final class ToolViewModel: ObservableObject {
         isLoading = true
         isFailure = false
         self.toolId = toolId
-
+        
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            comments = []
+            await MainActor.run {
+                comments = []
+            }
         }
-
+        
+        
         do {
             let data = try await apiService.getToolComments(toolId: toolId, cursor: pagination?.nextCursor)
             
@@ -71,7 +76,7 @@ final class ToolViewModel: ObservableObject {
             print("Error: \(error)")
         }
     }
-
+    
     
     func fetchMoreToolComments(comment: ToolComment) async {
         guard let toolId else { return }
@@ -95,23 +100,27 @@ final class ToolViewModel: ObservableObject {
         await fetchToolComments(toolId: toolId)
     }
     
-    func addComment(content: String) async {
-        guard let toolId else { return }
-        
-        do {
-            let newComment = try await apiService.addToolComment(toolId: toolId, comment: CreateToolComment(content: content))
-            
-            await MainActor.run {
-                comments.append(newComment)
-                newCommentContent = ""
-            }
-        } catch {
-            await MainActor.run {
-                isFailure = true
-            }
-            print("Error adding message: \(error)")
-        }
+    //    func addComment(content: String) async {
+    //        guard let toolId else { return }
+    //
+    //        do {
+    //            let newComment = try await apiService.addToolComment(toolId: toolId, comment: CreateToolComment(content: content))
+    //
+    //            await MainActor.run {
+    //                comments.append(newComment)
+    //                newCommentContent = ""
+    //            }
+    //        } catch {
+    //            await MainActor.run {
+    //                isFailure = true
+    //            }
+    //            print("Error adding message: \(error)")
+    //        }
+    //    }
+    
+    func addComment(_ comment: ToolComment) {
+        comments.append(comment)
     }
-
+    
 }
 

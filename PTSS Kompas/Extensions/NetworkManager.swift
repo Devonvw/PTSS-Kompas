@@ -81,9 +81,11 @@ final class NetworkManager {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
 
+
         if let token = getBearerToken(), !token.isEmpty {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
+        
         headers?.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
 
         if let body {

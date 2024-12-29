@@ -13,9 +13,11 @@ struct ToolsView: View {
     var body: some View {
         NavigationView {
             ScrollView {
+                Button("Nieuw", systemImage: "plus") {
+                    viewModel.shouldShowCreate = true
+                }.labelStyle(.iconOnly).padding(8).background(.light2).cornerRadius(20)
                 LazyVStack(spacing: 4) {
                     ForEach(viewModel.categories) { category in
-                        //                        NavigationLink(destination: QuestionnaireView(questionnaire: questionnaire)) {
                         ToolCategoryListItem(category: category)
                             .frame(maxWidth: .infinity)
                             .onAppear {
@@ -23,7 +25,6 @@ struct ToolsView: View {
                                     await viewModel.fetchMoreCategories(category: category)
                                 }
                             }
-                        //                        }
                     }
                 }
                 .padding()
@@ -67,6 +68,14 @@ struct ToolsView: View {
             .navigationTitle("Hulpmiddelen")
             .navigationBarTitleDisplayMode(.inline)
             .navigationViewStyle(StackNavigationViewStyle())
+            .sheet(isPresented: $viewModel.shouldShowCreate) {
+                CreateToolView() {
+                    newTool in
+                    Task {
+                        await viewModel.refreshToolCategories()
+                    }
+                }
+            }
         }
     }
 }

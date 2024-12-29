@@ -39,7 +39,7 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
                 Task {
-                    await self?.refreshContactQuestions()
+                    await self?.refreshQuestionMessages()
                 }
             }
             .store(in: &cancellables)

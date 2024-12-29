@@ -11,7 +11,7 @@ import SwiftUI
 
 @MainActor
 final class ToolsViewModel: ObservableObject {
-    @Published var categories: [ToolCategory] = []
+    @Published var categories: [ToolCategory] = [ToolCategory.example]
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     @Published var searchText = "" {
@@ -25,12 +25,13 @@ final class ToolsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
-    
+    @Published var shouldShowCreate = false
+
     private let apiService = ToolService()
     
     init() {
         Task {
-            await fetchToolCategories()
+//            await fetchToolCategories()
         }
         debounceSearchText()
     }
@@ -52,20 +53,11 @@ final class ToolsViewModel: ObservableObject {
         isLoading = true
         await MainActor.run { self.isFailure = false }
         
-        if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            await MainActor.run {
-                categories = []
-            }
-        }
-        
         do {
-            let data = try await apiService.getTools(cursor: pagination?.nextCursor, search: debouncedSearchText)
+            let data = try await apiService.getTools(search: debouncedSearchText)
             
             await MainActor.run {
-                //                self.categories.append(contentsOf: data.data)
                 self.categories.append(contentsOf: data)
-                
-//                self.pagination = data.pagination
                 self.isLoading = false
             }
         } catch {
