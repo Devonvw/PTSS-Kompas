@@ -80,14 +80,17 @@ struct QuestionnaireQuestionView: View {
                 if viewModel.isLastQuestion {
                     NavigationLink(
                        destination: QuestionnaireGroupsView(questionnaire: questionnaire),
-                       isActive: $shouldNavigate // Binding to control navigation
+                       isActive: $shouldNavigate
                    ) {
-                       EmptyView() // Placeholder since NavigationLink is programmatically controlled
+                       EmptyView()
                    }
 //                    NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
                         ButtonVariant(label: "Volgende", iconRight: "arrow.right") {
-                            viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id)
-                            shouldNavigate = true
+                            Task {
+                                await viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id) {
+                                    shouldNavigate = true
+                                }
+                            }
                         }
 //                    }
                 } else {
@@ -104,7 +107,11 @@ struct QuestionnaireQuestionView: View {
                             Text("Volgende")
                         }
                     }, iconRight: "arrow.right") {
-                        viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id)
+                        Task {
+                            await viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id) {
+                                
+                            }
+                        }
                     }
                 }
                 

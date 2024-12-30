@@ -82,6 +82,9 @@
     "Deze vragenlijst heeft geen groepen!" : {
 
     },
+    "Direct hulp nodig? Bel met het noodnummer." : {
+
+    },
     "Email" : {
 
     },
@@ -149,6 +152,9 @@
 
     },
     "Het is niet gelukt om de hulpmiddelen op te halen." : {
+
+    },
+    "Het is niet gelukt om de noodnummers op te halen." : {
 
     },
     "Het is niet gelukt om de opmerkingen op te halen." : {

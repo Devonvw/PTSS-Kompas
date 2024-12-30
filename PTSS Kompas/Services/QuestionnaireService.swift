@@ -11,7 +11,7 @@ final class QuestionnaireService {
     let baseURL = "questionnaires/"
     
     func getQuestionnaires(cursor: String?, search: String?) async throws -> PaginatedResponse<Questionnaire, Pagination> {
-        let parameters: [String: String?] = ["cursor": cursor, "size": "100", "search": search]
+        let parameters: [String: String?] = ["cursor": cursor, "size": "50", "search": search]
         return try await NetworkManager.shared.request(
             endpoint: baseURL,
             method: .GET,

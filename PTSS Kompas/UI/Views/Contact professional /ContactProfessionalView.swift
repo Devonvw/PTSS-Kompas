@@ -14,13 +14,7 @@ struct ContactProfessionalView: View {
         NavigationView {
             VStack(alignment: .leading) {
                 ScrollView {
-                    //                if !viewModel.isLoading  {
-                    //                    HStack {
-                    //                        Text("\(viewModel.pagination?.totalItems ?? 0) vragenlijsten")
-                    //                            .font(.caption).fontWeight(.semibold)
-                    //                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
-                    //                }
-                    
+                    EmergencyContactButton()
                     LazyVStack(spacing: 5) {
                         ForEach(viewModel.questions) { question in
                             NavigationLink(destination: ContactQuestionView(question: question)) {

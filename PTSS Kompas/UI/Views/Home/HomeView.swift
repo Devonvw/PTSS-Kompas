@@ -10,10 +10,11 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            EmergencyContactButton().padding(.bottom, 20)
             HStack {
-                Text("Welkom in de groep!")
+                Text("Welkom in de groep!").font(.title)
                 Spacer().frame(height: 0)
-                Button("Leden", systemImage: "group") {
+                Button("Leden", systemImage: "person.3") {
                     
                 }.labelStyle(.iconOnly).padding(8)
                 

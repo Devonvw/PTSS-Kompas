@@ -12,7 +12,7 @@ final class GeneralInformationService {
 
     func getGeneralInformation(cursor: String? = nil, search: String?) async throws -> PaginatedResponse<GeneralInformationItem, Pagination> {
         let parameters: [String: String?] = [
-            "size": "100",
+            "size": "50",
             "cursor": cursor,
             "search": search
         ]

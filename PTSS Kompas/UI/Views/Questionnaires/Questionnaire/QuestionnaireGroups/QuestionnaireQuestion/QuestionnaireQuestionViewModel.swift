@@ -40,7 +40,7 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
         }
     }
 
-    func saveAnswers(questionnaireId: String, groupId: Int) async throws {
+    func saveAnswers(questionnaireId: String, groupId: Int) async {
         isSaving = true
         isFailureSaving = false
 
@@ -80,12 +80,11 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
                 self.isFailureSaving = true
             }
             print("Error: \(error)")
-            throw error
         }
     }
 
     
-    func nextQuestion(questionnaireId: String, groupId: Int) {
+    func nextQuestion(questionnaireId: String, groupId: Int, onSuccess: () -> Void) async {
         if (isLastQuestion) { return }
         
         guard let currentQuestion = question,
@@ -94,21 +93,8 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
             return
         }
         
-//        saveAnswers(questionnaireId: questionnaireId, groupId: groupId)  { [weak self] result in
-//            DispatchQueue.main.async {
-//                self?.isSaving = false
-//                switch result {
-//                case .success(_):
-//                    let nextIndex = currentIndex + 1
-//                    if nextIndex < (self?.questions.count ?? 0) {
-//                        self?.question = self?.questions[nextIndex]
-//                        self?.questionOrder += 1
-//                    }
-//                case .failure(let error):
-//                    print("Error: \(error)")
-//                }
-//            }
-//        }
+        await saveAnswers(questionnaireId: questionnaireId, groupId: groupId)
+        onSuccess()
         
         let nextIndex = currentIndex + 1
         if nextIndex < questions.count {
