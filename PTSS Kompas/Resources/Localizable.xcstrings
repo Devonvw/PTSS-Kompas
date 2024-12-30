@@ -97,6 +97,9 @@
     "Er is geen informatie beschikbaar" : {
 
     },
+    "Er is iets fout gegaan tijdens het opslaan. Probeer het opnieuw." : {
+
+    },
     "Er staat 1 vragenlijst klaar" : {
 
     },
@@ -253,6 +256,9 @@
           }
         }
       }
+    },
+    "OK" : {
+
     },
     "Omschrijving hoe het werkt" : {
 

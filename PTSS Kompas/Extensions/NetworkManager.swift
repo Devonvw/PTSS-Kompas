@@ -56,7 +56,7 @@ final class NetworkManager {
         endpoint: String,
         method: HTTPMethod,
         parameters: [String: String?]? = nil,
-        body: Any? = nil,
+        body: Encodable? = nil,
         headers: [String: String]? = nil,
         responseType: T.Type = T.self
     ) async throws -> T {
@@ -91,12 +91,14 @@ final class NetworkManager {
         if let body {
             do {
                 let jsonData: Data
-                if let arrayBody = body as? [Any] {
-                    jsonData = try JSONSerialization.data(withJSONObject: arrayBody, options: [])
-                } else if let dictBody = body as? [String: Any] {
-                    jsonData = try JSONSerialization.data(withJSONObject: dictBody, options: [])
+
+                if let encodableArrayBody = body as? [Encodable] {
+                    let wrappedArray = encodableArrayBody.map { EncodableWrapper($0) }
+                    jsonData = try JSONEncoder().encode(wrappedArray)
                 } else if let encodableBody = body as? Encodable {
                     jsonData = try JSONEncoder().encode(EncodableWrapper(encodableBody))
+                } else if let dictBody = body as? [String: Any] {
+                    jsonData = try JSONSerialization.data(withJSONObject: dictBody, options: [])
                 } else {
                     throw NetworkError.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"]))
                 }

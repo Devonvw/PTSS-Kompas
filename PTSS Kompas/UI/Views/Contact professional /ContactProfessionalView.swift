@@ -25,7 +25,7 @@ struct ContactProfessionalView: View {
                                             await viewModel.fetchMoreContactQuestions(question: question)
                                         }
                                     }
-                            }
+                            }.disabled(question.isClosed)
                         }
                     }
                     

@@ -37,6 +37,7 @@ struct ButtonVariant<Label: View>: View {
     let disabled: Bool
     let variant: ButtonVariants
     let action: () -> Void
+    let isLoading: Bool?
     
     init(
         @ViewBuilder label: () -> Label,
@@ -44,6 +45,7 @@ struct ButtonVariant<Label: View>: View {
         disabled: Bool = false,
         iconRight: String? = nil,
         iconLeft: String? = nil,
+        isLoading: Bool? = false,
         action: @escaping () -> Void
     ) {
         self.label = label()
@@ -51,6 +53,7 @@ struct ButtonVariant<Label: View>: View {
         self.iconLeft = iconLeft
         self.action = action
         self.disabled = disabled
+        self.isLoading = isLoading
         self.variant = variant
     }
     
@@ -59,6 +62,7 @@ struct ButtonVariant<Label: View>: View {
         disabled: Bool = false,
         iconRight: String? = nil,
         iconLeft: String? = nil,
+        isLoading: Bool? = false,
         action: @escaping () -> Void
     ) where Label == EmptyView {
         self.init(
@@ -67,6 +71,7 @@ struct ButtonVariant<Label: View>: View {
             disabled: disabled,
             iconRight: iconRight,
             iconLeft: iconLeft,
+            isLoading: isLoading,
             action: action
         )
     }
@@ -93,20 +98,27 @@ struct ButtonVariant<Label: View>: View {
             action()
         } label: {
             HStack(spacing: 8) {
-                if let iconLeft {
-                    Image(systemName: iconLeft)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-                }
-                if let label {
-                    label
-                }
-                if let iconRight {
-                    Image(systemName: iconRight)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
+                if isLoading == true {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .frame(height: 16)
+                        .padding(4)
+                } else {
+                    if let iconLeft {
+                        Image(systemName: iconLeft)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    }
+                    if let label {
+                        label
+                    }
+                    if let iconRight {
+                        Image(systemName: iconRight)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    }
                 }
             }
             .font(.title3)

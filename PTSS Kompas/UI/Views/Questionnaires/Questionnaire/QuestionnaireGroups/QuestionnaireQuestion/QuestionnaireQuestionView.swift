@@ -55,7 +55,10 @@ struct QuestionnaireQuestionView: View {
                                 SubQuestionItem(
                                     subQuestion: Binding(
                                         get: { question.subQuestions[index] },
-                                        set: { newValue in viewModel.question?.subQuestions[index] = newValue }
+                                        set: { newValue in
+                                            viewModel.question?.subQuestions[index] = newValue
+//                                            viewModel.updateSubQuestionsAnsweredState()
+                                        }
                                     )
                                 ).padding(.bottom, 16)
                             }
@@ -74,39 +77,32 @@ struct QuestionnaireQuestionView: View {
             HStack(alignment: .center) {
                 if !viewModel.isFirstQuestion {
                     ButtonVariant(label: "", iconRight: "arrow.left") {
-                        viewModel.backQuestion(questionnaireId: questionnaire.id, groupId: group.id)
+                        Task {
+                            await viewModel.backQuestion(questionnaireId: questionnaire.id, groupId: group.id)
+                        }
                     }.frame(width: 80).padding(.trailing, 10)
                 }
                 if viewModel.isLastQuestion {
                     NavigationLink(
-                       destination: QuestionnaireGroupsView(questionnaire: questionnaire),
-                       isActive: $shouldNavigate
-                   ) {
-                       EmptyView()
-                   }
-//                    NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
-                        ButtonVariant(label: "Volgende", iconRight: "arrow.right") {
-                            Task {
-                                await viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id) {
-                                    shouldNavigate = true
-                                }
+                        destination: QuestionnaireGroupsView(questionnaire: questionnaire),
+                        isActive: $shouldNavigate
+                    ) {
+                        EmptyView()
+                    }
+                    //                    NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
+                    ButtonVariant(label: "Volgende", disabled: !viewModel.areAllSubQuestionsAnsweredState || viewModel.isSaving, iconRight: "arrow.right") {
+                        Task {
+                            await viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id) {
+                                shouldNavigate = true
                             }
                         }
-//                    }
+                    }
+                    //                    }
                 } else {
                     ButtonVariant(label: {
-                        if viewModel.isSaving {
-                            VStack(alignment: .center) {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle())
-                                    .frame(height: 16)
-                                    .padding(4)
-                                Spacer().frame(maxWidth: .infinity, maxHeight: 0)
-                            }
-                        } else {
-                            Text("Volgende")
-                        }
-                    }, iconRight: "arrow.right") {
+                        Text("Volgende")
+                    }, disabled: !viewModel.areAllSubQuestionsAnsweredState || viewModel.isSaving
+                                  ,iconRight: "arrow.right", isLoading: viewModel.isSaving) {
                         Task {
                             await viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id) {
                                 
@@ -121,6 +117,9 @@ struct QuestionnaireQuestionView: View {
                 Task {
                     await viewModel.fetchQuestionnaireQuestions(questionnaireId: questionnaire.id, groupId: group.id)
                 }
+            }
+            .alert("Er is iets fout gegaan tijdens het opslaan. Probeer het opnieuw.", isPresented: $viewModel.isFailureSaving) {
+                Button("OK", role: .cancel) { }
             }
     }
 }

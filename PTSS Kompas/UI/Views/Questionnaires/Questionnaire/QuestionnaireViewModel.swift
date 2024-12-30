@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class QuestionnaireViewModel: ObservableObject {
     @Published var explanation: QuestionnaireExplanation?
     @Published var isLoading: Bool = false
