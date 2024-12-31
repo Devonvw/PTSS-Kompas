@@ -21,6 +21,8 @@ final class AccountViewModel: ObservableObject {
     @Published var isFailureDelete: Bool = false
     @Published var showDeleteAlert = false
     @Published var showUpdateAlert = false
+    @Published var showInviteAlert = false
+
     @Published var selectedMember: User?
 
     

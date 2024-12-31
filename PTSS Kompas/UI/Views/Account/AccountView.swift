@@ -104,6 +104,9 @@ struct AccountView: View {
                         }
                         .padding(.top, 50)
                     }
+                    ButtonVariant(label: "Nieuw lid uitnodigen") {
+                        viewModel.showInviteAlert = true
+                    }
                 }
                 
                 Spacer().frame(maxWidth: .infinity)
@@ -133,6 +136,15 @@ struct AccountView: View {
                         Color.light3.edgesIgnoringSafeArea(.all)
                         EditPrimaryCaregiverView(currentPrimaryCaregiver: viewModel.primaryCaregiver, members: viewModel.allMembers) { newPrimaryCaregiver in
                             viewModel.primaryCaregiver = newPrimaryCaregiver
+                            Task {
+                                await viewModel.fetchMembers()
+                            }
+                        }
+                    }
+                }.sheet(isPresented: $viewModel.showInviteAlert) {
+                    ZStack {
+                        Color.light3.edgesIgnoringSafeArea(.all)
+                        InviteMemberView() {
                             Task {
                                 await viewModel.fetchMembers()
                             }
