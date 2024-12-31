@@ -13,7 +13,7 @@ struct AccountView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 8) {
+            LazyVStack(alignment: .leading, spacing: 8) {
                 Text("Informatie").font(.title2).layoutPriority(1)
                 if let user = AuthManager.shared.user {
                     Text("Voornaam").font(.subheadline)
@@ -106,7 +106,13 @@ struct AccountView: View {
                     }
                     ButtonVariant(label: "Nieuw lid uitnodigen") {
                         viewModel.showInviteAlert = true
-                    }
+                    }.padding(.bottom, 16)
+                }
+                ButtonVariant(label: "Pincode wijzigen", iconRight: "arrow.right") {
+                    viewModel.showUpdatePinAlert = true
+                }
+                ButtonVariant(label: "Wachtwoord wijzigen", iconRight: "arrow.right") {
+                    viewModel.showUpdatePasswordAlert = true
                 }
                 
                 Spacer().frame(maxWidth: .infinity)
@@ -148,6 +154,20 @@ struct AccountView: View {
                             Task {
                                 await viewModel.fetchMembers()
                             }
+                        }
+                    }
+                }.sheet(isPresented: $viewModel.showUpdatePinAlert) {
+                    ZStack {
+                        Color.light3.edgesIgnoringSafeArea(.all)
+                        UpdatePinView() {
+                            
+                        }
+                    }
+                }.sheet(isPresented: $viewModel.showUpdatePasswordAlert) {
+                    ZStack {
+                        Color.light3.edgesIgnoringSafeArea(.all)
+                        UpdatePasswordView() {
+                            
                         }
                     }
                 }

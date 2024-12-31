@@ -25,8 +25,12 @@ struct RegisterValidator {
             throw ValidatorError.missingRepeatPassword
         }
         
-        if userRegister.password != userRegister.repeatPassword {
+        if !PasswordValidator.validate(password: userRegister.password).isValid {
             throw ValidatorError.invalidPassword
+        }
+        
+        if userRegister.password != userRegister.repeatPassword {
+            throw ValidatorError.invalidRepeatPassword
         }
     }
 }
@@ -38,6 +42,8 @@ extension RegisterValidator {
         case missingPassword
         case missingRepeatPassword
         case invalidPassword
+        case invalidRepeatPassword
+
     }
 }
 
@@ -53,7 +59,10 @@ extension RegisterValidator.ValidatorError {
         case .missingRepeatPassword:
             return "Vergeet niet om het wachtwoord te herhalen"
         case .invalidPassword:
+            return "Het nieuwe wachtwoord voldoet niet aan de gestelde eisen"
+        case .invalidRepeatPassword:
             return "Wachtwoord en herhaal wachtwoord zijn niet gelijk"
         }
+        
     }
 }

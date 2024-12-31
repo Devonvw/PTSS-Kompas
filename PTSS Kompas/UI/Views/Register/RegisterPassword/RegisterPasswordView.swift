@@ -58,6 +58,8 @@ struct RegisterPasswordView: View {
             .background(.clear)
             .scrollContentBackground(.hidden)
         
+        PasswordValidatorView(password: registerStore.password)
+        
         
         HStack(alignment: .center) {
             ButtonVariant(label: "", iconRight: "arrow.left") {

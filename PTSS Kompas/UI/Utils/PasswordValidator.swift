@@ -15,10 +15,14 @@ struct PasswordValidationResult {
     var isValid: Bool {
         return isLengthValid && hasNumber && hasUppercase && hasLowercase && hasSpecialCharacter
     }
+    
+    static let initial: PasswordValidationResult = .init(isLengthValid: false, hasNumber: false, hasUppercase: false, hasLowercase: false, hasSpecialCharacter: false)
 }
+
 
 struct PasswordValidator {
     static func validate(password: String) -> PasswordValidationResult {
+        print(password)
         let isLengthValid = password.count >= 9
         let hasNumber = password.range(of: "\\d", options: .regularExpression) != nil
         let hasUppercase = password.range(of: "[A-Z]", options: .regularExpression) != nil

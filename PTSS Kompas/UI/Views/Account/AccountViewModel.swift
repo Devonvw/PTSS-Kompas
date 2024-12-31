@@ -22,6 +22,8 @@ final class AccountViewModel: ObservableObject {
     @Published var showDeleteAlert = false
     @Published var showUpdateAlert = false
     @Published var showInviteAlert = false
+    @Published var showUpdatePinAlert = false
+    @Published var showUpdatePasswordAlert = false
 
     @Published var selectedMember: User?
 

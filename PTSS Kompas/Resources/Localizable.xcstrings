@@ -173,6 +173,9 @@
     "Heb je geen 6-cijferige code ontvangen? Neem dan contact op met de persoon die jou heeft uitgenodigd." : {
 
     },
+    "Herhaal nieuw wachtwoord" : {
+
+    },
     "Herhaal wachtwoord" : {
 
     },
@@ -216,6 +219,12 @@
 
     },
     "Hoofdmantelzorger" : {
+
+    },
+    "Huidige pincode" : {
+
+    },
+    "Huidige wachtwoord" : {
 
     },
     "Hulpmiddelen" : {
@@ -272,6 +281,21 @@
     "Maak een wachtwoord aan en start met PTSS Kompas." : {
 
     },
+    "Minimaal 1 cijfer" : {
+
+    },
+    "Minimaal 1 hoofdletter" : {
+
+    },
+    "Minimaal 1 kleine letter" : {
+
+    },
+    "Minimaal 1 speciaal karakter" : {
+
+    },
+    "Minimaal 9 karakters" : {
+
+    },
     "Naam" : {
 
     },
@@ -279,6 +303,12 @@
 
     },
     "Nieuw bericht.." : {
+
+    },
+    "Nieuw wachtwoord" : {
+
+    },
+    "Nieuwe pincode" : {
 
     },
     "Nieuwe reactie" : {
@@ -399,6 +429,12 @@
 
     },
     "Wijzig de hoofdmantelzorger" : {
+
+    },
+    "Wijzig pincode" : {
+
+    },
+    "Wijzig wachtwoord" : {
 
     },
     "Zoeken" : {
