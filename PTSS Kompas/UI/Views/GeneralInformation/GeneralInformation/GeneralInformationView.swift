@@ -82,7 +82,6 @@ struct GeneralInformationView: View {
                             }
                         }
                     }
-                    .padding()
                     if viewModel.isFailure {
                         VStack(spacing: 16) {
                             Text("Het is niet gelukt om andere informatie op te halen.")
@@ -108,9 +107,6 @@ struct GeneralInformationView: View {
                                 .foregroundColor(.gray)
                         }
                         .padding(.top, 50)
-                    }
-                    NavigationLink(destination: GeneralInformationItemView()) {
-                        ButtonVariant(label: "Terug naar overzicht") {}.disabled(true)
                     }
                 }
             }

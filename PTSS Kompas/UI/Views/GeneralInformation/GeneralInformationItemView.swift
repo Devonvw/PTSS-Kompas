@@ -33,7 +33,7 @@ struct GeneralInformationItemView: View {
                         }
                     }
                 }
-                .padding()
+                
                 if viewModel.isFailure {
                     VStack(spacing: 16) {
                         Text("Het is niet gelukt om informatie op te halen.")
@@ -68,10 +68,10 @@ struct GeneralInformationItemView: View {
                     }
                     .padding(.top, 50)
                 }
-            }
+            }.padding()
             .refreshable{Task { await viewModel.refreshGeneralInformationItems()}}
             .searchable(text: $viewModel.searchText, prompt: "Zoeken")
-            .navigationTitle("Informatie")
+            .navigationTitle("PTSS Info")
             .navigationBarTitleDisplayMode(.inline)
             .navigationViewStyle(StackNavigationViewStyle())
         }

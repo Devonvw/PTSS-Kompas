@@ -60,8 +60,6 @@ final class NetworkManager {
         headers: [String: String]? = nil,
         responseType: T.Type = T.self
     ) async throws -> T {
-        try await ensureTokenValidity()
-
         guard var url = URL(string: endpoint.hasSuffix("/") ? String(endpoint.dropLast()) : endpoint, relativeTo: baseURL) else {
             throw NetworkError.invalidURL
         }
@@ -95,12 +93,10 @@ final class NetworkManager {
                 if let encodableArrayBody = body as? [Encodable] {
                     let wrappedArray = encodableArrayBody.map { EncodableWrapper($0) }
                     jsonData = try JSONEncoder().encode(wrappedArray)
-                } else if let encodableBody = body as? Encodable {
-                    jsonData = try JSONEncoder().encode(EncodableWrapper(encodableBody))
                 } else if let dictBody = body as? [String: Any] {
                     jsonData = try JSONSerialization.data(withJSONObject: dictBody, options: [])
                 } else {
-                    throw NetworkError.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"]))
+                    jsonData = try JSONEncoder().encode(EncodableWrapper(body))
                 }
 
                 request.httpBody = jsonData
@@ -142,7 +138,7 @@ final class NetworkManager {
         }
 
         do {
-            if let isExpired = try AuthManager.shared.isTokenExpired(accessToken), isExpired {
+            if let isExpired = try await AuthManager.shared.isTokenExpired(accessToken), isExpired {
                 try await AuthManager.shared.refreshToken()
             }
         } catch {
@@ -151,7 +147,7 @@ final class NetworkManager {
     }
 
     private func getBearerToken() -> String? {
-        return AuthManager.shared.getToken(for: accessTokenKey)
+        return "ABS" /*AuthManager.shared.getToken(for: accessTokenKey)*/
     }
 }
 

@@ -27,7 +27,6 @@ struct ToolsView: View {
                             }
                     }
                 }
-                .padding()
                 if viewModel.isFailure {
                     VStack(spacing: 16) {
                         Text("Het is niet gelukt om de hulpmiddelen op te halen.")

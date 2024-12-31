@@ -17,7 +17,7 @@ final class GeneralInformationService {
             "search": search
         ]
         return try await NetworkManager.shared.request(
-            endpoint: baseURL + "general-information",
+            endpoint: baseURL,
             method: .GET,
             parameters: parameters,
             responseType: PaginatedResponse<GeneralInformationItem, Pagination>.self
@@ -26,7 +26,7 @@ final class GeneralInformationService {
 
     func getGeneralInformationById(id: String) async throws -> GeneralInformation {
         return try await NetworkManager.shared.request(
-            endpoint: baseURL + "general-information/\(id)",
+            endpoint: baseURL + "\(id)",
             method: .GET,
             responseType: GeneralInformation.self
         )

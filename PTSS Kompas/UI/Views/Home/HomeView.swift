@@ -8,45 +8,63 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject private var authManager = AuthManager.shared
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            EmergencyContactButton().padding(.bottom, 20)
-            HStack {
-                Text("Welkom in de groep!").font(.title)
-                Spacer().frame(height: 0)
-                Button("Leden", systemImage: "person.3") {
-                    
-                }.labelStyle(.iconOnly).padding(8)
-                
-            }
-            VStack(alignment: .leading) {
-                Spacer().frame(maxWidth: .infinity, maxHeight: 0)
-                Text("Er staat 1 vragenlijst klaar")
-                    .font(.headline)
-                    .foregroundColor(.dark).fontWeight(.bold)
-            }
-            .padding()
-            .background(.light2)
-            .cornerRadius(8)
-            
-            VStack(alignment: .leading) {
-                Spacer().frame(maxWidth: .infinity, maxHeight: 0)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 8) {
+                EmergencyContactButton().padding(.bottom, 20)
                 HStack {
-                    Text("Vraag de professional")
-                        .font(.headline)
-                        .foregroundColor(.dark)
+                    Text("Welkom in de groep!").font(.title).layoutPriority(1)
                     Spacer()
-                    VStack(alignment: .center) {
-                        Text("1")
-                        Text("Nieuwe reactie")
+                    MembersButton()
+                }
+                NavigationLink(destination: QuestionnairesView()) {
+                    VStack(alignment: .leading) {
+                        Spacer().frame(maxWidth: .infinity, maxHeight: 0)
+                        Text("Er staat 1 vragenlijst klaar")
+                            .font(.headline)
+                            .foregroundColor(.dark).fontWeight(.bold)
+                    }
+                    .padding()
+                    .background(.light2)
+                    .cornerRadius(8)
+                }
+                NavigationLink(destination: ContactProfessionalView()) {
+                    VStack(alignment: .leading) {
+                        Spacer().frame(maxWidth: .infinity, maxHeight: 0)
+                        HStack {
+                            Text("Vraag de professional")
+                                .font(.headline)
+                                .foregroundColor(.dark)
+                            Spacer()
+                            VStack(alignment: .center) {
+                                Text("1")
+                                Text("Nieuwe reactie")
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(.light2)
+                    .cornerRadius(8)
+                }
+                Spacer()
+            }.padding().navigationTitle("Home")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationViewStyle(StackNavigationViewStyle())
+                .toolbar {
+                    if let user = authManager.user {
+                        NavigationLink(destination: AccountView()) {
+                            Text("\(user.firstName.prefix(1))\(user.lastName.prefix(1))")
+                                .textCase(.uppercase)
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+                                .padding( 6).background(.light2).cornerRadius(25)
+                        }
+                        
                     }
                 }
-            }
-            .padding()
-            .background(.light2)
-            .cornerRadius(8)
-            Spacer()
-        }.padding()
+        }
     }
 }
 

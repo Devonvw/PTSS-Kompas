@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject var viewModel = ChatViewModel()
-
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
@@ -98,8 +98,11 @@ struct ChatView: View {
                 }
             }
             .searchable(text: $viewModel.searchText)
-            .navigationTitle("Vragenlijsten")
+            .navigationTitle("Familie chat")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                MembersButton()
+            }
         }
     }
 }

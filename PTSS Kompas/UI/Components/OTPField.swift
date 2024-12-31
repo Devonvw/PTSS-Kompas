@@ -43,7 +43,7 @@ struct OTPField: View {
                             if index < numberOfFields - 1 {
                                 pinFocusState = FocusPin.pin(index + 1)
                             }
-                        } else if newVal.count == numberOfFields, let intValue = Int(newVal) {
+                        } else if newVal.count == numberOfFields, let _ = Int(newVal) {
                             // Handle pasted value
                             otp = newVal
                             updatePinsFromOTP()

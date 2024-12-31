@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ToolView: View {
     @StateObject var viewModel = ToolViewModel()
-    
+
     let tool: Tool
     
     var body: some View {

@@ -76,7 +76,7 @@ struct CreateToolView: View {
                 }
             }.onAppear {
                 Task {
-                    //                    await viewModel.fetchToolCategories()
+                                        await viewModel.fetchToolCategories()
                 }
             }
         //            .toolbar {

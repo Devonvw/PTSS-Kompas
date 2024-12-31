@@ -33,6 +33,16 @@
         }
       }
     },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
 
     },
@@ -50,6 +60,12 @@
 
     },
     "Aangemaakt op %@" : {
+
+    },
+    "Aanpassen" : {
+
+    },
+    "Account" : {
 
     },
     "Achternaam" : {
@@ -79,6 +95,9 @@
     "Code" : {
 
     },
+    "Contact" : {
+
+    },
     "Deze vragenlijst heeft geen groepen!" : {
 
     },
@@ -92,6 +111,9 @@
 
     },
     "Er is geen andere informatie beschikbaar" : {
+
+    },
+    "Er is geen hoofdmantelzorger!" : {
 
     },
     "Er is geen informatie beschikbaar" : {
@@ -124,7 +146,16 @@
     "Er zijn nog geen berichten verzonden." : {
 
     },
+    "Er zijn nog geen leden!" : {
+
+    },
     "Er zijn nog geen vragenlijsten aan jou toegewezen." : {
+
+    },
+    "Familie chat" : {
+
+    },
+    "Familieleden" : {
 
     },
     "Geef een duidelijke beschrijving aan het nieuwe hulpmiddel.." : {
@@ -157,6 +188,9 @@
     "Het is niet gelukt om de hulpmiddelen op te halen." : {
 
     },
+    "Het is niet gelukt om de leden op te halen." : {
+
+    },
     "Het is niet gelukt om de noodnummers op te halen." : {
 
     },
@@ -181,7 +215,7 @@
     "Home" : {
 
     },
-    "Home2" : {
+    "Hoofdmantelzorger" : {
 
     },
     "Hulpmiddelen" : {
@@ -221,6 +255,9 @@
       "extractionState" : "manual"
     },
     "Kort onderwerp van je vraag.." : {
+
+    },
+    "Laatst online: %@" : {
 
     },
     "Leden" : {
@@ -272,10 +309,16 @@
     "Opmerkingen" : {
 
     },
+    "Patient" : {
+
+    },
     "Pincode" : {
 
     },
     "Pincode vergeten? Log dan in met jouw emailadres. Vervolgens is het bij instellingen mogelijk om de pincode te wijzigen." : {
+
+    },
+    "PTSS Info" : {
 
     },
     "Sluiten" : {
@@ -288,6 +331,9 @@
 
     },
     "Verstuur een bericht door een bericht te schrijven in het onderstaande veld en te klikken op de rechter knop." : {
+
+    },
+    "Verwijderen" : {
 
     },
     "Voeg een nieuwe hulpmiddel toe" : {
@@ -337,6 +383,9 @@
     "Wachtwoord" : {
 
     },
+    "Weet u zeker dat u deze gebruiker wilt verwijderen?" : {
+
+    },
     "Welkom" : {
 
     },
@@ -344,6 +393,9 @@
 
     },
     "Welkom in de groep!" : {
+
+    },
+    "Wijzig de hoofdmantelzorger" : {
 
     },
     "Zoeken" : {

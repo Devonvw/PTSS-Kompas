@@ -30,7 +30,7 @@ struct QuestionnairesView: View {
                                         await viewModel.fetchMoreQuestionnaires(questionnaire: questionnaire)
                                     }
                                 }
-                        }
+                        }.disabled(questionnaire.isFinished)
                     }
                 }
                 .padding()

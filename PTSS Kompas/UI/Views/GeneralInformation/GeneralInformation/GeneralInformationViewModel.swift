@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class GeneralInformationViewModel: ObservableObject {
     @Published var generalInformation: GeneralInformation?
     @Published var items: [GeneralInformationItem] = []

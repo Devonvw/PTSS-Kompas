@@ -65,10 +65,10 @@ final class UserService {
     }
     
     func deleteUserFromGroup(userId: String) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "\(userId)",
             method: .DELETE,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     

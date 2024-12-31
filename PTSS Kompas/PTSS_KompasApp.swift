@@ -34,13 +34,13 @@ struct PTSS_KompasApp: App {
                             .tabItem {
                                 Label("Chat", systemImage: "message")
                             }
-                        QuestionnairesView()
+                        GeneralInformationItemView()
                             .tabItem {
-                                Label("Home", systemImage: "house")
+                                Label("Info", systemImage: "info.circle")
                             }
                         ContactProfessionalView()
                             .tabItem {
-                                Label("Home2", systemImage: "house")
+                                Label("Contact", systemImage: "person.crop.circle.badge.exclam")
                             }
                     }.toolbar(.visible, for: .tabBar)
                         .toolbarBackground(Color.light3, for: .tabBar)

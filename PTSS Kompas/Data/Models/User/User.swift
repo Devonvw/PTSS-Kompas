@@ -5,7 +5,7 @@
 //  Created by Devon van Wichen on 09/12/2024.
 //
 
-struct User: Codable, Identifiable, ExampleProvidable {
+struct User: Codable, Identifiable, Hashable, ExampleProvidable {
     let id: String
     let email: String
     let firstName: String

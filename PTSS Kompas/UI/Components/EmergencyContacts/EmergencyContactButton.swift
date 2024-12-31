@@ -18,7 +18,7 @@ struct EmergencyContactButton: View {
             HStack {
                 Text("Direct hulp nodig? Bel met het noodnummer.").multilineTextAlignment(.leading)
                 Spacer()
-                Image(systemName: "phone").frame(width: 24, height: 24)
+                Image(systemName: "phone").resizable().frame(width: 24, height: 24)
             }
         }.padding()
             .background(.yellow)

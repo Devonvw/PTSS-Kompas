@@ -15,6 +15,7 @@ struct GeneralInformationListItem: View {
             Text(item.title)
                 .font(.headline)
                 .foregroundColor(.dark)
+            Spacer().frame(maxWidth: .infinity, maxHeight: 0)
         }
         .padding()
         .background(.light2)
