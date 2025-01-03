@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PasswordForgotVerifyView: View {
     @ObservedObject var passwordForgotStore: PasswordForgotStore
-    @StateObject var viewModel = PasswordForgotVerifyViewModel()
+    @StateObject var viewModel = PasswordForgotResetViewModel()
     
     
     var body: some View {
@@ -41,7 +41,7 @@ struct PasswordForgotVerifyView: View {
         ButtonVariant(label: "Verstuur email", disabled: passwordForgotStore.email.isEmpty) {
             Task {
                 await viewModel.request(body: ForgotPasswordVerify(email: passwordForgotStore.email, resetCode: passwordForgotStore.code)) {
-                    passwordForgotStore.currentScreen = .Password
+                    passwordForgotStore.currentScreen = .Reset
                 }
             }
         }

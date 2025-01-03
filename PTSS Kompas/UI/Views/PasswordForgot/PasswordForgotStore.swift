@@ -12,7 +12,7 @@ import SwiftUI
 enum PasswordForgotScreens {
     case Request
     case Verify
-    case Password
+    case Reset
 }
 
 @MainActor
