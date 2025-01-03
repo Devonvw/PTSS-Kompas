@@ -11,7 +11,7 @@ final class ContactService {
     let baseURL = "contact/"
     
     func getContactQuestions(cursor: String?, search: String?) async throws -> PaginatedResponse<ContactQuestion, Pagination> {
-        let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
+        let parameters: [String: String?] = ["cursor": cursor, "size": "50", "search": search]
         return try await NetworkManager.shared.request(
             endpoint: baseURL,
             method: .GET,
@@ -21,7 +21,7 @@ final class ContactService {
     }
     
     func getContactQuestionMessages(questionId: String, cursor: String?, search: String?) async throws -> PaginatedResponse<ContactQuestionMessage, Pagination> {
-        let parameters: [String: String?] = ["cursor": cursor, "pageSize": "100", "search": search]
+        let parameters: [String: String?] = ["cursor": cursor, "size": "50", "search": search]
         return try await NetworkManager.shared.request(
             endpoint: baseURL + "\(questionId)/messages",
             method: .GET,

@@ -16,24 +16,25 @@ final class RegisterViewModel: ObservableObject {
     @Published var passwordValidation: PasswordValidationResult?
     
     private let apiService = UserService()
-    private let validator = RegisterVerifyValidator()
+    private let validator = RegisterValidator()
     
     func validatePassword(password: String) async {
         passwordValidation = PasswordValidator.validate(password: password)
     }
     
-    func verifyRegister(body: UserInviteVerify, onSuccess: () -> Void) async {
+    func register(body: UserRegister, onSuccess: () -> Void) async {
         isLoading = true
         isAlertFailure = false
         
         do {
             try validator.validate(body)
-        } catch let validationError as RegisterVerifyValidator.ValidatorError {
+        } catch let validationError as RegisterValidator.ValidatorError {
             await MainActor.run {
                 self.isLoading = false
                 self.error = .validation(error: validationError)
             }
             print(validationError)
+            return
         } catch {
             await MainActor.run {
                 self.isLoading = false
@@ -41,11 +42,14 @@ final class RegisterViewModel: ObservableObject {
                 self.error = .system(error: error)
             }
             print(error)
+            return
         }
         
         do {
-            try await apiService.verifyUserInvitation(body: body)
-            
+            let response = try await apiService.register(body: body)
+            _ = KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
+            _ = KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+
             await MainActor.run {
                 self.isLoading = false
                 print("Success")
@@ -62,6 +66,7 @@ final class RegisterViewModel: ObservableObject {
             await MainActor.run {
                 self.isAlertFailure = true
                 self.isLoading = false
+                self.error = .system(error: error)
             }
             print("Error: \(error)")
         }

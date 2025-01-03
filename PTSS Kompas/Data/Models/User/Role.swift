@@ -5,7 +5,7 @@
 //  Created by Devon van Wichen on 09/12/2024.
 //
 
-enum Role: String, Codable {
+enum Role: String, Codable, Hashable {
     case Patient = "patient"
     case PrimaryCaregiver = "primary_caregiver"
     case FamilyMember = "family_member"

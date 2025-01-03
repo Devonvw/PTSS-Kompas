@@ -65,19 +65,19 @@ final class UserService {
     }
     
     func deleteUserFromGroup(userId: String) async throws {
-        try await NetworkManager.shared.request(
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "\(userId)",
             method: .DELETE,
-            responseType: Never.self
+            responseType: VoidResponse.self
         )
     }
     
-    func updatePassword(body: PasswordUpdate) async throws -> AuthResponse {
-        return try await NetworkManager.shared.request(
+    func updatePassword(body: PasswordUpdate) async throws {
+        _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "me/password",
             method: .PUT,
             body: body,
-            responseType: AuthResponse.self
+            responseType: VoidResponse.self
         )
     }
     

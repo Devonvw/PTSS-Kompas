@@ -73,7 +73,7 @@ struct ContactQuestionMessagesView: View {
                     }
                     .padding(.top, 50)
                 }
-            }.refreshable{Task { await viewModel.refreshContactQuestions()}}
+            }.refreshable{Task { await viewModel.refreshQuestionMessages()}}
             HStack(alignment: .bottom) {
                 TextField(
                     "Nieuw bericht..",

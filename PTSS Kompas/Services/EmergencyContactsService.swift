@@ -2,20 +2,27 @@
 //  EmergencyContactsService.swift
 //  PTSS Kompas
 //
-//  Created by Devon van Wichen on 04/12/2024.
+//  Created by Devon van Wichen on 27/12/2024.
+//
+
+//
+//  ContentService.swift
+//  PTSS Kompas
+//
+//  Created by Devon van Wichen on 27/12/2024.
 //
 
 import Foundation
 
 final class EmergencyContactsService {
-    let baseURL =  "emergency-contacts/"
+    let baseURL = "emergency-contacts/"
 
-//    func getEmergencyContacts(completion: @escaping (Result<[EmergencyContact], NetworkError>) -> Void) {
-//        NetworkManager.shared.request(
-//            endpoint: baseURL,
-//            method: .GET,
-//            responseType: [EmergencyContact].self,
-//            completion: completion
-//        )
-//    }
+    // Fetch all emergency contacts
+    func getEmergencyContacts() async throws -> [EmergencyContact] {
+        return try await NetworkManager.shared.request(
+            endpoint: baseURL,
+            method: .GET,
+            responseType: [EmergencyContact].self
+        )
+    }
 }

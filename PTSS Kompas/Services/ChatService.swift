@@ -14,7 +14,7 @@ final class ChatService {
         let parameters: [String: String?] = [
             "direction": pageDirection?.rawValue,
             "cursor": cursor,
-            "pageSize": "100",
+            "size": "50",
             "search": search
         ]
         return try await NetworkManager.shared.request(

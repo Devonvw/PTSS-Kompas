@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class QuestionnaireViewModel: ObservableObject {
     @Published var explanation: QuestionnaireExplanation?
     @Published var isLoading: Bool = false
@@ -31,6 +32,7 @@ final class QuestionnaireViewModel: ObservableObject {
             await MainActor.run {
                 self.isFailure = true
                 self.isLoading = false
+                self.explanation = nil
             }
             print("Error: \(error)")
         }

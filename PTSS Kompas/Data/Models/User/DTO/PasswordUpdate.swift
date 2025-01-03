@@ -8,9 +8,11 @@
 struct PasswordUpdate: Codable, ExampleProvidable {
     let currentPassword: String
     let newPassword: String
+    let repeatNewPassword: String
 
     static let example: PasswordUpdate = .init(
         currentPassword: "Password123!",
-        newPassword: "NewPassword123!"
+        newPassword: "NewPassword123!",
+        repeatNewPassword: "NewPassword123!"
     )
 }

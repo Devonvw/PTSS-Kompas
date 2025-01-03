@@ -8,9 +8,63 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject private var authManager = AuthManager.shared
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-        Text(Locale.current.identifier)
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 8) {
+                EmergencyContactButton().padding(.bottom, 20)
+                HStack {
+                    Text("Welkom in de groep!").font(.title).layoutPriority(1)
+                    Spacer()
+                    MembersButton()
+                }
+                NavigationLink(destination: QuestionnairesView()) {
+                    VStack(alignment: .leading) {
+                        Spacer().frame(maxWidth: .infinity, maxHeight: 0)
+                        Text("Er staat 1 vragenlijst klaar")
+                            .font(.headline)
+                            .foregroundColor(.dark).fontWeight(.bold)
+                    }
+                    .padding()
+                    .background(.light2)
+                    .cornerRadius(8)
+                }
+                NavigationLink(destination: ContactProfessionalView()) {
+                    VStack(alignment: .leading) {
+                        Spacer().frame(maxWidth: .infinity, maxHeight: 0)
+                        HStack {
+                            Text("Vraag de professional")
+                                .font(.headline)
+                                .foregroundColor(.dark)
+                            Spacer()
+                            VStack(alignment: .center) {
+                                Text("1")
+                                Text("Nieuwe reactie")
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(.light2)
+                    .cornerRadius(8)
+                }
+                Spacer()
+            }.padding().navigationTitle("Home")
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationViewStyle(StackNavigationViewStyle())
+                .toolbar {
+                    if let user = authManager.user {
+                        NavigationLink(destination: AccountView()) {
+                            Text("\(user.firstName.prefix(1))\(user.lastName.prefix(1))")
+                                .textCase(.uppercase)
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+                                .padding( 6).background(.light2).cornerRadius(25)
+                        }
+                        
+                    }
+                }
+        }
     }
 }
 

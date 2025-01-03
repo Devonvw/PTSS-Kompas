@@ -12,7 +12,7 @@ struct Pagination: Codable, ExampleProvidable {
     let totalPages: Int
     
     static let example: Pagination = .init(
-        nextCursor: "asdasd", pageSize: 100, totalItems: 10, totalPages: 1
+        nextCursor: "asdasd", pageSize: 50, totalItems: 10, totalPages: 1
     )
 }
 
@@ -24,7 +24,7 @@ struct BiDirectionalPagination: Codable, ExampleProvidable {
     let totalPages: Int
     
     static let example: BiDirectionalPagination = .init(
-        nextCursor: "asdasd", previousCursor: "asdasd", pageSize: 100, totalItems: 10, totalPages: 1
+        nextCursor: "asdasd", previousCursor: "asdasd", pageSize: 50, totalItems: 10, totalPages: 1
     )
 }
 

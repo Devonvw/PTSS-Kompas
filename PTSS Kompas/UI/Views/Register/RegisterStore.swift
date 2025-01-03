@@ -16,6 +16,7 @@ enum RegisterScreens {
     case Pin
 }
 
+@MainActor
 final class RegisterStore: ObservableObject {
     @Published var currentScreen: RegisterScreens = .Verify
     @Published var email: String = ""
@@ -24,5 +25,4 @@ final class RegisterStore: ObservableObject {
     @Published var lastName: String = ""
     @Published var password: String = ""
     @Published var repeatPassword: String = ""
-    @Published var pin: String = ""
 }

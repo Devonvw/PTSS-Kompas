@@ -16,33 +16,40 @@ struct PTSS_KompasApp: App {
     
     var body: some Scene {
         WindowGroup {
-            TabView {
-                Group {
-                    RegisterView()
-                        .tabItem {
-                            Label("Home", systemImage: "house")
-                        }
-                    ToolsView()
-                        .tabItem {
-                            Label("Hulpmiddelen", image: "hulpmiddelenIcon")
-                        }
-                    ChatView()
-                        .tabItem {
-                            Label("Chat", systemImage: "message")
-                        }
-                    QuestionnairesView()
-                        .tabItem {
-                            Label("Home", systemImage: "house")
-                        }
-                    ContactProfessionalView()
-                        .tabItem {
-                            Label("Home2", systemImage: "house")
-                        }
-                }.toolbar(.visible, for: .tabBar)
-                    .toolbarBackground(Color.light3, for: .tabBar)
-                    .toolbarBackground(.visible, for: .tabBar)
+            if (AuthManager.shared.isLoadingInitial) {
+                LandingView()
+            }
+            else if (AuthManager.shared.isLoggedIn) {
+                TabView {
+                    Group {
+                        HomeView()
+                            .tabItem {
+                                Label("Home", systemImage: "house")
+                            }
+                        ToolsView()
+                            .tabItem {
+                                Label("Hulpmiddelen", image: "hulpmiddelenIcon")
+                            }
+                        ChatView()
+                            .tabItem {
+                                Label("Chat", systemImage: "message")
+                            }
+                        GeneralInformationItemView()
+                            .tabItem {
+                                Label("Info", systemImage: "info.circle")
+                            }
+                        ContactProfessionalView()
+                            .tabItem {
+                                Label("Contact", systemImage: "person.crop.circle.badge.exclam")
+                            }
+                    }.toolbar(.visible, for: .tabBar)
+                        .toolbarBackground(Color.light3, for: .tabBar)
+                        .toolbarBackground(.visible, for: .tabBar)
                     
-            }.tint(Color.dark)
+                }.tint(Color.dark)
+            } else {
+                Text("Login")
+            }
         }
     }
 }

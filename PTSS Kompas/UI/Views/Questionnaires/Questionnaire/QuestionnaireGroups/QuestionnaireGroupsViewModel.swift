@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class QuestionnaireGroupsViewModel: ObservableObject {
     @Published var groups: [QuestionnaireGroup] = []
     @Published var completedGroups: Int = 0

@@ -13,6 +13,36 @@
     "..." : {
 
     },
+    "%@ - %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
+    "%@ (%lld)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$lld)"
+          }
+        }
+      }
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
 
     },
@@ -26,7 +56,16 @@
         }
       }
     },
+    "1" : {
+
+    },
     "Aangemaakt op %@" : {
+
+    },
+    "Aanpassen" : {
+
+    },
+    "Account" : {
 
     },
     "Achternaam" : {
@@ -38,10 +77,16 @@
     "Berichten (%lld)" : {
 
     },
+    "Beschrijf je opmerking in detail.." : {
+
+    },
     "Beschrijf je vraag of situatie in detail.." : {
 
     },
     "Beschrijving" : {
+
+    },
+    "Categorieën" : {
 
     },
     "Chat" : {
@@ -50,13 +95,46 @@
     "Code" : {
 
     },
+    "Contact" : {
+
+    },
     "Deze vragenlijst heeft geen groepen!" : {
+
+    },
+    "Direct hulp nodig? Bel met het noodnummer." : {
 
     },
     "Email" : {
 
     },
+    "Er informatie gevonden met deze zoekopdracht." : {
+
+    },
+    "Er is geen andere informatie beschikbaar" : {
+
+    },
+    "Er is geen hoofdmantelzorger!" : {
+
+    },
+    "Er is geen informatie beschikbaar" : {
+
+    },
+    "Er is iets fout gegaan tijdens het opslaan. Probeer het opnieuw." : {
+
+    },
+    "Er staat 1 vragenlijst klaar" : {
+
+    },
     "Er zijn geen berichten gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen hulpmiddelen gevonden met deze zoekopdracht." : {
+
+    },
+    "Er zijn geen hulpmiddelen!" : {
+
+    },
+    "Er zijn geen opmerkingen gevonden" : {
 
     },
     "Er zijn geen vragen gevonden met deze zoekopdracht." : {
@@ -68,7 +146,22 @@
     "Er zijn nog geen berichten verzonden." : {
 
     },
+    "Er zijn nog geen leden!" : {
+
+    },
     "Er zijn nog geen vragenlijsten aan jou toegewezen." : {
+
+    },
+    "Familie chat" : {
+
+    },
+    "Familieleden" : {
+
+    },
+    "Geef een duidelijke beschrijving aan het nieuwe hulpmiddel.." : {
+
+    },
+    "Geef een duidelijke naam aan het nieuwe hulpmiddel.." : {
 
     },
     "Geschatte tijd: %@" : {
@@ -80,16 +173,31 @@
     "Heb je geen 6-cijferige code ontvangen? Neem dan contact op met de persoon die jou heeft uitgenodigd." : {
 
     },
-    "Hello, World!" : {
+    "Herhaal nieuw wachtwoord" : {
 
     },
     "Herhaal wachtwoord" : {
+
+    },
+    "Het is niet gelukt om andere informatie op te halen." : {
 
     },
     "Het is niet gelukt om de berichten op te halen." : {
 
     },
     "Het is niet gelukt om de groepen op te halen." : {
+
+    },
+    "Het is niet gelukt om de hulpmiddelen op te halen." : {
+
+    },
+    "Het is niet gelukt om de leden op te halen." : {
+
+    },
+    "Het is niet gelukt om de noodnummers op te halen." : {
+
+    },
+    "Het is niet gelukt om de opmerkingen op te halen." : {
 
     },
     "Het is niet gelukt om de uitleg op te halen." : {
@@ -101,10 +209,22 @@
     "Het is niet gelukt om de vragenlijsten op te halen." : {
 
     },
+    "Het is niet gelukt om deze informatie op te halen." : {
+
+    },
+    "Het is niet gelukt om informatie op te halen." : {
+
+    },
     "Home" : {
 
     },
-    "Home2" : {
+    "Hoofdmantelzorger" : {
+
+    },
+    "Huidige pincode" : {
+
+    },
+    "Huidige wachtwoord" : {
 
     },
     "Hulpmiddelen" : {
@@ -114,6 +234,12 @@
 
     },
     "Info" : {
+
+    },
+    "Informatie" : {
+
+    },
+    "Inloggen" : {
 
     },
     "Jan" : {
@@ -140,10 +266,52 @@
     "Kort onderwerp van je vraag.." : {
 
     },
+    "Laatst online: %@" : {
+
+    },
+    "Leden" : {
+
+    },
+    "Lees meer over:" : {
+
+    },
+    "Login" : {
+
+    },
     "Maak een wachtwoord aan en start met PTSS Kompas." : {
 
     },
+    "Minimaal 1 cijfer" : {
+
+    },
+    "Minimaal 1 hoofdletter" : {
+
+    },
+    "Minimaal 1 kleine letter" : {
+
+    },
+    "Minimaal 1 speciaal karakter" : {
+
+    },
+    "Minimaal 9 karakters" : {
+
+    },
+    "Naam" : {
+
+    },
+    "Nieuw" : {
+
+    },
     "Nieuw bericht.." : {
+
+    },
+    "Nieuw wachtwoord" : {
+
+    },
+    "Nieuwe pincode" : {
+
+    },
+    "Nieuwe reactie" : {
 
     },
     "Nog %lld %@ in te vullen" : {
@@ -156,10 +324,34 @@
         }
       }
     },
+    "OK" : {
+
+    },
     "Omschrijving hoe het werkt" : {
 
     },
     "Onderwerp" : {
+
+    },
+    "Opmerking" : {
+
+    },
+    "Opmerkingen" : {
+
+    },
+    "Patient" : {
+
+    },
+    "Pincode" : {
+
+    },
+    "Pincode vergeten? Log dan in met jouw emailadres. Vervolgens is het bij instellingen mogelijk om de pincode te wijzigen." : {
+
+    },
+    "PTSS Info" : {
+
+    },
+    "Sluiten" : {
 
     },
     "Stel een nieuwe vraag" : {
@@ -169,6 +361,18 @@
 
     },
     "Verstuur een bericht door een bericht te schrijven in het onderstaande veld en te klikken op de rechter knop." : {
+
+    },
+    "Verstuur een uitnoding" : {
+
+    },
+    "Verwijderen" : {
+
+    },
+    "Voeg een nieuwe hulpmiddel toe" : {
+
+    },
+    "Voeg een nieuwe opmerking toe" : {
 
     },
     "Volgende" : {
@@ -212,10 +416,25 @@
     "Wachtwoord" : {
 
     },
+    "Weet u zeker dat u deze gebruiker wilt verwijderen?" : {
+
+    },
     "Welkom" : {
 
     },
     "Welkom %@" : {
+
+    },
+    "Welkom in de groep!" : {
+
+    },
+    "Wijzig de hoofdmantelzorger" : {
+
+    },
+    "Wijzig pincode" : {
+
+    },
+    "Wijzig wachtwoord" : {
 
     },
     "Zoeken" : {

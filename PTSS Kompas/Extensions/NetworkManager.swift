@@ -43,81 +43,80 @@ struct VoidResponse: Decodable {}
 final class NetworkManager {
     static let shared = NetworkManager()
     private let baseURL = Config.APIBaseURL
-    private let tokenKey = "jwt_token"
-    
-    private init() {}
-    
+    private let accessTokenKey = "accessToken"
+    private let refreshTokenKey = "refreshToken"
+    private let authRefreshEndpoint = "auth/refresh"
+
+    private init() {
+        _ = KeychainManager.shared.saveToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", for: accessTokenKey)
+        _ = KeychainManager.shared.saveToken("dGhpcyBpcyBhIHNhbXBsZSByZWZyZXNoIHRva2VuIHZhbHVlIHdpdGggYSBsb25nZXIgZXhwaXJhdGlvbiB0aW1l", for: refreshTokenKey)
+    }
+
     func request<T: Decodable>(
         endpoint: String,
         method: HTTPMethod,
         parameters: [String: String?]? = nil,
-        body: Any? = nil,
+        body: Encodable? = nil,
         headers: [String: String]? = nil,
         responseType: T.Type = T.self
     ) async throws -> T {
-        // Build the URL
         guard var url = URL(string: endpoint.hasSuffix("/") ? String(endpoint.dropLast()) : endpoint, relativeTo: baseURL) else {
             throw NetworkError.invalidURL
         }
-        
+
         if let parameters {
-            let filteredParameters = parameters.compactMapValues { value in
-                value?.isEmpty == false ? value : nil
-            }
+            let filteredParameters = parameters.compactMapValues { $0?.isEmpty == false ? $0 : nil }
             guard let appendedURL = url.appendingQueryParameters(filteredParameters) else {
                 throw NetworkError.invalidURL
             }
             url = appendedURL
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        
+
         if [.POST, .PUT, .PATCH].contains(method), headers?["Content-Type"] == nil {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
-        
-        if let token = getBearerToken() {
+
+
+        if let token = getBearerToken(), !token.isEmpty {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        headers?.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
         
-        // Attach body if needed
+        headers?.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
+
         if let body {
             do {
                 let jsonData: Data
-                if let arrayBody = body as? [Any] {
-                    jsonData = try JSONSerialization.data(withJSONObject: arrayBody, options: [])
+
+                if let encodableArrayBody = body as? [Encodable] {
+                    let wrappedArray = encodableArrayBody.map { EncodableWrapper($0) }
+                    jsonData = try JSONEncoder().encode(wrappedArray)
                 } else if let dictBody = body as? [String: Any] {
                     jsonData = try JSONSerialization.data(withJSONObject: dictBody, options: [])
-                } else if let encodableBody = body as? Encodable {
-                    jsonData = try JSONEncoder().encode(EncodableWrapper(encodableBody))
                 } else {
-                    throw NetworkError.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid body data"]))
+                    jsonData = try JSONEncoder().encode(EncodableWrapper(body))
                 }
-                
+
                 request.httpBody = jsonData
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             } catch {
                 throw NetworkError.unknown(error: error)
             }
         }
-        
+
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.unknown(error: NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"]))
             }
-            
+
             switch httpResponse.statusCode {
             case 200...299:
                 if responseType == VoidResponse.self {
-                    return VoidResponse() as! T // Return empty VoidResponse
+                    return VoidResponse() as! T
                 } else {
-//                    guard let data = data else {
-//                        throw NetworkError.missingData
-//                    }
                     return try JSONDecoder().decode(responseType, from: data)
                 }
             case 400...499:
@@ -132,14 +131,26 @@ final class NetworkManager {
             throw NetworkError.unknown(error: error)
         }
     }
-    
+
+    private func ensureTokenValidity() async throws {
+        guard let accessToken = getBearerToken() else {
+            return
+        }
+
+        do {
+            if let isExpired = try await AuthManager.shared.isTokenExpired(accessToken), isExpired {
+                try await AuthManager.shared.refreshToken()
+            }
+        } catch {
+            throw NetworkError.unknown(error: error)
+        }
+    }
+
     private func getBearerToken() -> String? {
-        return "ABC"
-        // return KeychainManager.shared.retrieveToken(for: tokenKey)
+        return "ABS" /*AuthManager.shared.getToken(for: accessTokenKey)*/
     }
 }
 
-// Add this extension for URL parameter handling if not already present
 extension URL {
     func appendingQueryParameters(_ parameters: [String: String]) -> URL? {
         var components = URLComponents(url: self, resolvingAgainstBaseURL: true)

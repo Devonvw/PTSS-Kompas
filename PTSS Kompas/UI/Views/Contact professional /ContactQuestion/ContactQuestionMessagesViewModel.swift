@@ -39,7 +39,7 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
             .sink { [weak self] query in
                 self?.debouncedSearchText = query
                 Task {
-                    await self?.refreshContactQuestions()
+                    await self?.refreshQuestionMessages()
                 }
             }
             .store(in: &cancellables)
@@ -87,7 +87,7 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
     }
     
     
-    func refreshContactQuestions() async {
+    func refreshQuestionMessages() async {
         guard let questionId else { return }
         
         pagination = nil
