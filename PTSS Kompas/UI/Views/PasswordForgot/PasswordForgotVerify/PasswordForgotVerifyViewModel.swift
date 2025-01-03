@@ -61,9 +61,7 @@ final class PasswordForgotVerifyViewModel: ObservableObject {
             }
             print("Error: \(error)")
         }
-        
     }
-    
 }
 
 

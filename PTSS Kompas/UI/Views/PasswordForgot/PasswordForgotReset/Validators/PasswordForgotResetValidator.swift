@@ -8,13 +8,17 @@
 import Foundation
 
 struct PasswordForgetResetValidator {
-    func validate (_ forgotPasswordReset: ForgotPasswordReset) throws {
+    func validate(_ forgotPasswordReset: ForgotPasswordReset) throws {
         if forgotPasswordReset.resetCode.isEmpty {
             throw ValidatorError.missingCode
         }
         
         if forgotPasswordReset.resetCode.count != 6 {
             throw ValidatorError.invalidCode
+        }
+        
+        if !forgotPasswordReset.resetCode.allSatisfy({ $0.isNumber }) {
+            throw ValidatorError.invalidCodeFormat
         }
         
         if forgotPasswordReset.newPassword.isEmpty {
@@ -39,6 +43,7 @@ extension PasswordForgetResetValidator {
     enum ValidatorError: LocalizedError {
         case missingCode
         case invalidCode
+        case invalidCodeFormat
         case missingPassword
         case missingRepeatPassword
         case invalidPassword
@@ -53,6 +58,8 @@ extension PasswordForgetResetValidator.ValidatorError {
             return "De code moet uit 6 karakters bestaan"
         case .missingCode:
             return "Vergeet niet om jouw code in te vullen"
+        case .invalidCodeFormat:
+            return "De code mag alleen uit nummers bestaan"
         case .missingPassword:
             return "Vergeet niet om een nieuw wachtwoord in te vullen"
         case .missingRepeatPassword:

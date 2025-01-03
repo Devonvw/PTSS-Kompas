@@ -8,7 +8,7 @@
 import Foundation
 
 struct RegisterVerifyValidator {
-    func validate (_ userInviteVerify: UserInviteVerify) throws {
+    func validate(_ userInviteVerify: UserInviteVerify) throws {
         if userInviteVerify.email.isEmpty {
             throw ValidatorError.missingEmail
         }
@@ -24,6 +24,10 @@ struct RegisterVerifyValidator {
         if userInviteVerify.invitationCode.count != 6 {
             throw ValidatorError.invalidCode
         }
+        
+        if !userInviteVerify.invitationCode.allSatisfy({ $0.isNumber }) {
+            throw ValidatorError.invalidCodeFormat
+        }
     }
 }
 
@@ -33,6 +37,7 @@ extension RegisterVerifyValidator {
         case invalidEmail
         case missingCode
         case invalidCode
+        case invalidCodeFormat
     }
 }
 
@@ -47,6 +52,8 @@ extension RegisterVerifyValidator.ValidatorError {
             return "De code moet uit 6 karakters bestaan"
         case .missingCode:
             return "Vergeet niet om jouw code in te vullen"
+        case .invalidCodeFormat:
+            return "De code mag alleen uit nummers bestaan"
         }
     }
 }

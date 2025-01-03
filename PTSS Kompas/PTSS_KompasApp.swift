@@ -19,7 +19,7 @@ struct PTSS_KompasApp: App {
             if (AuthManager.shared.isLoadingInitial) {
                 LandingView()
             }
-            else if (AuthManager.shared.isLoggedIn) {
+            else if (AuthManager.shared.isLoggedIn && AuthManager.shared.enteredPin) {
                 TabView {
                     Group {
                         HomeView()
@@ -47,8 +47,12 @@ struct PTSS_KompasApp: App {
                         .toolbarBackground(.visible, for: .tabBar)
                     
                 }.tint(Color.dark)
-            } else {
-                Text("Login")
+            }
+//            else if (AuthManager.shared.isLoggedIn && AuthManager.shared.user.hasPin && !AuthManager.shared.enteredPin) {
+//                LoginPinView()
+//            }
+            else {
+                LoginView()
             }
         }
     }

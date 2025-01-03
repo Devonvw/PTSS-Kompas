@@ -12,7 +12,7 @@ import Foundation
 class AuthManager: ObservableObject {
     static let shared = AuthManager()
     
-    @Published var isLoggedIn: Bool = true //false
+    @Published var isLoggedIn: Bool = false //false
     @Published var user: User?
     @Published var enteredPin: Bool = true // false
     
@@ -24,9 +24,9 @@ class AuthManager: ObservableObject {
     private let apiService = UserService()
     
     init() {
-        Task {
-            await getCurrentUser()
-        }
+//        Task {
+//            await getCurrentUser()
+//        }
     }
     
     public func pinLogin(_ body: PinLogin) async {
