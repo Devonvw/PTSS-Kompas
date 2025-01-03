@@ -8,7 +8,6 @@
 import SwiftUI
 import Combine
 
-
 // A SwiftUI view for entering OTP (One-Time Password).
 struct OTPField: View {
     
@@ -39,16 +38,23 @@ struct OTPField: View {
                             .stroke(Color.dark, lineWidth: 2)
                     )
                     .onChange(of: pins[index]) { oldVal, newVal in
-                        if newVal.count == 1 {
+                        // Allow only numbers
+                        let filtered = newVal.filter { $0.isNumber }
+                        if filtered != newVal {
+                            pins[index] = filtered
+                            return
+                        }
+                        
+                        if filtered.count == 1 {
                             if index < numberOfFields - 1 {
                                 pinFocusState = FocusPin.pin(index + 1)
                             }
-                        } else if newVal.count == numberOfFields, let _ = Int(newVal) {
+                        } else if filtered.count == numberOfFields, let _ = Int(filtered) {
                             // Handle pasted value
-                            otp = newVal
+                            otp = filtered
                             updatePinsFromOTP()
                             pinFocusState = FocusPin.pin(numberOfFields - 1)
-                        } else if newVal.isEmpty {
+                        } else if filtered.isEmpty {
                             if index > 0 {
                                 pinFocusState = FocusPin.pin(index - 1)
                             }
@@ -118,5 +124,3 @@ struct OTPFieldView_Previews: PreviewProvider {
         }
     }
 }
-
-

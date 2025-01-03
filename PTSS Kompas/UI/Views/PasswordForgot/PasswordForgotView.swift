@@ -23,9 +23,9 @@ struct PasswordForgotView: View {
                     case .Request:
                         PasswordForgotRequestView(passwordForgotStore: store)
                     case .Verify:
-                        PasswordForgotRequestView(passwordForgotStore: store)
-                    case .Password:
-                        PasswordForgotRequestView(passwordForgotStore: store)
+                        PasswordForgotVerifyView(passwordForgotStore: store)
+                    case .Reset:
+                        PasswordForgotResetView(passwordForgotStore: store)
                     }
                 }
             }.frame(maxHeight: .infinity)

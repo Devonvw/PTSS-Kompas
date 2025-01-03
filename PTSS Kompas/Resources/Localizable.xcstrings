@@ -110,6 +110,9 @@
     "Er informatie gevonden met deze zoekopdracht." : {
 
     },
+    "Er is een 6-cijferige code verstuurd naar %@." : {
+
+    },
     "Er is geen andere informatie beschikbaar" : {
 
     },
@@ -275,10 +278,10 @@
     "Lees meer over:" : {
 
     },
-    "Login" : {
+    "Maak een wachtwoord aan en start met PTSS Kompas." : {
 
     },
-    "Maak een wachtwoord aan en start met PTSS Kompas." : {
+    "Maak jouw nieuwe wachtwoord aan" : {
 
     },
     "Minimaal 1 cijfer" : {
@@ -413,7 +416,16 @@
     "Vul je e-mailadres en de 6-cijferige code in die je per e-mail hebt ontvangen om te beginnen met PTSS Kompas." : {
 
     },
+    "Vul je emailadres in van jouw account en wij sturen jou een email met een code om een nieuw wachtwoord aan te maken." : {
+
+    },
     "Wachtwoord" : {
+
+    },
+    "Wachtwoord vergeten" : {
+
+    },
+    "Wachtwoord vergeten?" : {
 
     },
     "Weet u zeker dat u deze gebruiker wilt verwijderen?" : {

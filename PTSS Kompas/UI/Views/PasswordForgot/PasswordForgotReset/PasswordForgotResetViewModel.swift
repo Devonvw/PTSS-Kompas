@@ -18,7 +18,7 @@ final class PasswordForgotResetViewModel: ObservableObject {
     private let apiService = UserService()
     private let validator = PasswordForgetResetValidator()
     
-    func request(body: ForgotPasswordReset, onSuccess: () -> Void) async {
+    func resetPassword(body: ForgotPasswordReset, onSuccess: () -> Void) async {
         isLoading = true
         isAlertFailure = false
         

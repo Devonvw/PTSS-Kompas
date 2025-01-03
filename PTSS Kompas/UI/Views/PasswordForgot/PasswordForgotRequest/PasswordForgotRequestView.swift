@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct PasswordForgotVerifyView: View {
+struct PasswordForgotRequestView: View {
     @ObservedObject var passwordForgotStore: PasswordForgotStore
-    @StateObject var viewModel = PasswordForgotVerifyViewModel()
+    @StateObject var viewModel = PasswordForgotRequestViewModel()
     
     
     var body: some View {
         Text("Wachtwoord vergeten") .font(.largeTitle)
             .foregroundColor(.dark)
-        Text("Er is een 6-cijferige code verstuurd naar \(passwordForgotStore.email).")
+        Text("Vul je emailadres in van jouw account en wij sturen jou een email met een code om een nieuw wachtwoord aan te maken.")
             .font(.subheadline)
             .foregroundColor(.dark)
             .padding(.bottom, 10).multilineTextAlignment(.center)
@@ -23,9 +23,17 @@ struct PasswordForgotVerifyView: View {
             Section
             {
                 VStack(alignment: .leading) {
-                    Text("Code")
-                    OTPField(numberOfFields: 6, otp: $passwordForgotStore.code)
-                        .previewLayout(.sizeThatFits)
+                    Text("Email")
+                    TextField(
+                        "voorbeeld@gmail.com",
+                        text: $passwordForgotStore.email,
+                        axis: .vertical
+                    )
+                    .padding(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.dark, lineWidth: 2)
+                    )
                 }
             } footer: {
                 if case .validation(let err) = viewModel.error,
@@ -40,8 +48,8 @@ struct PasswordForgotVerifyView: View {
         
         ButtonVariant(label: "Verstuur email", disabled: passwordForgotStore.email.isEmpty) {
             Task {
-                await viewModel.request(body: ForgotPasswordVerify(email: passwordForgotStore.email, resetCode: passwordForgotStore.code)) {
-                    passwordForgotStore.currentScreen = .Password
+                await viewModel.request(body: ForgotPassword(email: passwordForgotStore.email)) {
+                    passwordForgotStore.currentScreen = .Verify
                 }
             }
         }
@@ -49,5 +57,5 @@ struct PasswordForgotVerifyView: View {
 }
 
 #Preview {
-    PasswordForgotVerifyView(passwordForgotStore: PasswordForgotStore())
+    PasswordForgotRequestView(passwordForgotStore: PasswordForgotStore())
 }
