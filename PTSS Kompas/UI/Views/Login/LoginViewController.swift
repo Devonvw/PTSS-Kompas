@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class LoginViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false

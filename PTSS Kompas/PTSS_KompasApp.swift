@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct PTSS_KompasApp: App {
+    @StateObject private var toastManager = ToastManager.shared
+
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 20)!, .foregroundColor: UIColor(.dark)]
         UITabBar.appearance().unselectedItemTintColor = UIColor.red
@@ -52,7 +54,11 @@ struct PTSS_KompasApp: App {
 //                LoginPinView()
 //            }
             else {
-                LoginView()
+                LoginView().toastView(toast: Binding(
+                    get: { toastManager.toast },
+                    set: { newValue in
+                        toastManager.toast = newValue
+                    }))
             }
         }
     }

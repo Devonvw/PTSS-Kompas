@@ -10,7 +10,7 @@ import SwiftUI
 struct PasswordForgotVerifyView: View {
     @ObservedObject var passwordForgotStore: PasswordForgotStore
     @StateObject var viewModel = PasswordForgotVerifyViewModel()
-    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         Text("Wachtwoord vergeten") .font(.largeTitle)
@@ -44,6 +44,11 @@ struct PasswordForgotVerifyView: View {
                     passwordForgotStore.currentScreen = .Reset
                 }
             }
+        }
+        Spacer().frame(maxHeight: .infinity)
+        Text("Wachtwoord toch gevonden?")
+        ButtonVariant(label: "Inloggen", variant: .light) {
+            dismiss()
         }
     }
 }

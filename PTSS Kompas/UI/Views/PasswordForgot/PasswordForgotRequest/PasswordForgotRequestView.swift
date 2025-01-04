@@ -10,7 +10,7 @@ import SwiftUI
 struct PasswordForgotRequestView: View {
     @ObservedObject var passwordForgotStore: PasswordForgotStore
     @StateObject var viewModel = PasswordForgotRequestViewModel()
-    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         Text("Wachtwoord vergeten") .font(.largeTitle)
@@ -45,13 +45,18 @@ struct PasswordForgotRequestView: View {
         }.padding(0)
             .background(.clear)
             .scrollContentBackground(.hidden)
-        
+
         ButtonVariant(label: "Verstuur email", disabled: passwordForgotStore.email.isEmpty) {
             Task {
                 await viewModel.request(body: ForgotPassword(email: passwordForgotStore.email)) {
                     passwordForgotStore.currentScreen = .Verify
                 }
             }
+        }
+        Spacer().frame(maxHeight: .infinity)
+        Text("Wachtwoord toch gevonden?")
+        ButtonVariant(label: "Inloggen", variant: .light) {
+            dismiss()
         }
     }
 }

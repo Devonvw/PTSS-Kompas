@@ -69,6 +69,13 @@ struct LoginView: View {
                         }
                     }
                 }
+                Spacer().frame(maxHeight: .infinity)
+                Text("Wachtwoord toch gevonden?")
+                NavigationLink(destination: RegisterView()) {
+                    ButtonVariant(label: "Heb je nog geen account? \nKlik dan op de registreren knop hieronder. Hierna is het mogelijk om te registreren met een email en de ontvangen code.", variant: .light) {
+                        
+                    }.disabled(true)
+                }
             }.padding()
         }
     }
