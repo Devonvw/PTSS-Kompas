@@ -14,7 +14,8 @@ final class PasswordForgotResetViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
-    
+    private var toastManager = ToastManager.shared
+
     private let apiService = UserService()
     private let validator = PasswordForgetResetValidator()
     
@@ -45,6 +46,7 @@ final class PasswordForgotResetViewModel: ObservableObject {
             await MainActor.run {
                 self.isLoading = false
                 print("Success")
+                toastManager.toast = Toast(style: .success, message: "Het wachtwoord is succesvol gewijzigd")
                 onSuccess()
             }
         } catch let error as NetworkError {
