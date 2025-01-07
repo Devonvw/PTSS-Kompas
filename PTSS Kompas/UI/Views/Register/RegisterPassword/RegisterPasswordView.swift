@@ -65,7 +65,7 @@ struct RegisterPasswordView: View {
             ButtonVariant(label: "", iconRight: "arrow.left") {
                 registerStore.currentScreen = .Name
             }.frame(width: 80).padding(.trailing, 10)
-            ButtonVariant(label: "Verder", disabled: true) {
+            ButtonVariant(label: "Verder") {
                 Task {
                     await viewModel.register(body: UserRegister(firstName: registerStore.firstName, lastName: registerStore.lastName, password: registerStore.password, repeatPassword: registerStore.repeatPassword, invitationCode: registerStore.registerCode, email: registerStore.email)) {
                         registerStore.currentScreen = .Pin

@@ -14,8 +14,8 @@ final class LoginViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
-    @Published var email: String = ""
-    @Published var password: String = ""
+    @Published var email: String = "devon@gmail.com"
+    @Published var password: String = "Wachtwoord"
 
     private let apiService = UserService()
     private let validator = LoginValidator()
@@ -28,7 +28,7 @@ final class LoginViewModel: ObservableObject {
         
         do {
             try validator.validate(body)
-        } catch let validationError as RegisterValidator.ValidatorError {
+        } catch let validationError as LoginValidator.ValidatorError {
             await MainActor.run {
                 self.isLoading = false
                 self.error = .validation(error: validationError)
@@ -46,9 +46,7 @@ final class LoginViewModel: ObservableObject {
         }
         
         do {
-            let response = try await apiService.login(body: body)
-            _ = KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
-            _ = KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+            try await AuthManager.shared.login(body)
 
             await MainActor.run {
                 self.isLoading = false

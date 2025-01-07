@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class RegisterNameViewModel: ObservableObject {
     @Published private(set) var error: FormError?
     private let validator = RegisterNameValidator()
@@ -16,7 +17,7 @@ final class RegisterNameViewModel: ObservableObject {
     func validateName(firstName: String, lastName: String, onSuccess: () -> Void) async {
         do {
             try validator.validate(firstName: firstName, lastName: lastName)
-            onSuccess()
+             onSuccess()
         } catch let validationError as RegisterNameValidator.ValidatorError {
             await MainActor.run {
                 self.error = .validation(error: validationError)

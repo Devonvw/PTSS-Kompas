@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct PTSS_KompasApp: App {
     @StateObject private var toastManager = ToastManager.shared
+    @StateObject private var authManager = AuthManager.shared
 
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 20)!, .foregroundColor: UIColor(.dark)]
@@ -18,10 +19,10 @@ struct PTSS_KompasApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if (AuthManager.shared.isLoadingInitial) {
+            if (authManager.isLoadingInitial) {
                 LandingView()
             }
-            else if (AuthManager.shared.isLoggedIn && AuthManager.shared.enteredPin) {
+            else if (authManager.isLoggedIn && authManager.enteredPin) {
                 TabView {
                     Group {
                         HomeView()
@@ -48,11 +49,15 @@ struct PTSS_KompasApp: App {
                         .toolbarBackground(Color.light3, for: .tabBar)
                         .toolbarBackground(.visible, for: .tabBar)
                     
-                }.tint(Color.dark)
+                }.tint(Color.dark).toastView(toast: Binding(
+                    get: { toastManager.toast },
+                    set: { newValue in
+                        toastManager.toast = newValue
+                    }))
             }
-//            else if (AuthManager.shared.isLoggedIn && AuthManager.shared.user.hasPin && !AuthManager.shared.enteredPin) {
-//                LoginPinView()
-//            }
+            else if (authManager.isLoggedIn && authManager.hasPin && !authManager.enteredPin) {
+                LoginPinView()
+            }
             else {
                 LoginView().toastView(toast: Binding(
                     get: { toastManager.toast },

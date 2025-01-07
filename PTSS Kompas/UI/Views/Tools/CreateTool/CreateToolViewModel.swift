@@ -62,7 +62,7 @@ final class CreateToolViewModel: ObservableObject {
                 self.isLoading = false
                 self.isAlertFailure = true
                 self.error = .networking(error: error)
-                print("Error adding question: \(error)")
+                print("Error adding tool: \(error)")
             }
         } catch {
             await MainActor.run {
@@ -74,7 +74,7 @@ final class CreateToolViewModel: ObservableObject {
     }
     
     func fetchToolCategories() async {
-        isLoading = true
+        isLoadingCategories = true
         await MainActor.run { self.isFailureCategories = false }
         
         do {

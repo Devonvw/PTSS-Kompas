@@ -19,10 +19,14 @@ enum RegisterScreens {
 @MainActor
 final class RegisterStore: ObservableObject {
     @Published var currentScreen: RegisterScreens = .Verify
-    @Published var email: String = ""
-    @Published var registerCode: String = ""
-    @Published var firstName: String = ""
-    @Published var lastName: String = ""
-    @Published var password: String = ""
-    @Published var repeatPassword: String = ""
+    @Published var email: String = "devon@gmail.com"
+    @Published var registerCode: String = "222222"
+    @Published var firstName: String = "Jan"
+    @Published var lastName: String = "Jan"
+    @Published var password: String = "Wachtwoord#1"
+    @Published var repeatPassword: String = "Wachtwoord#1"
+    
+    public func setCurrentScreen(_ screen: RegisterScreens) {
+        currentScreen = screen
+    }
 }

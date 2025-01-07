@@ -117,6 +117,7 @@ final class NetworkManager {
                 if responseType == VoidResponse.self {
                     return VoidResponse() as! T
                 } else {
+                    print(String(data: data, encoding: String.Encoding.utf8) as String?)
                     return try JSONDecoder().decode(responseType, from: data)
                 }
             case 400...499:

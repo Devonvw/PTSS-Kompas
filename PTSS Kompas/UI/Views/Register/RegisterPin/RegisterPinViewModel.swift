@@ -9,12 +9,14 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class RegisterPinViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     @Published var pin: String = ""
-
+    private var toastManager = ToastManager.shared
+    
     private let apiService = UserService()
     private let validator = RegisterPinValidator()
     
@@ -34,22 +36,23 @@ final class RegisterPinViewModel: ObservableObject {
             print(validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            self.isLoading = false
+            self.isAlertFailure = true
+            self.error = .system(error: error)
             print(error)
             return
         }
         
         do {
             _ = try await apiService.createPin(body: body)
-
+            AuthManager.shared.setLoggedIn()
+            
             await MainActor.run {
                 self.isLoading = false
                 print("Success")
+                toastManager.toast = Toast(style: .success, message: "Jouw pincode is aangemaakt!")
                 onSuccess()
+                
             }
         } catch let error as NetworkError {
             await MainActor.run {

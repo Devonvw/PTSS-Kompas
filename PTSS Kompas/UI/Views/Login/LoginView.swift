@@ -52,7 +52,7 @@ struct LoginView: View {
                             Text("Wachtwoord vergeten?")
                         }.buttonStyle(PlainButtonStyle())
                     } footer: {
-                        if case .validation(let err) = viewModel.error,
+                                                if case .validation(let err) = viewModel.error,
                            let errorDesc = err.errorDescription {
                             Text(errorDesc)
                                 .foregroundStyle(.red)
@@ -65,12 +65,11 @@ struct LoginView: View {
                 ButtonVariant(label: "Login") {
                     Task {
                         await viewModel.login {
-                            //                    registerStore.currentScreen = .Name
                         }
                     }
                 }
-                Spacer().frame(maxHeight: .infinity)
-                Text("Heb je nog geen account? \nKlik dan op de registreren knop hieronder. Hierna is het mogelijk om te registreren met een email en de ontvangen code.")
+//                Spacer().frame(maxHeight: .infinity)
+                Text("Heb je nog geen account? \nKlik dan op de registreren knop hieronder. Hierna is het mogelijk om te registreren met een email en de ontvangen code.").multilineTextAlignment(.center)
                 NavigationLink(destination: RegisterView()) {
                     ButtonVariant(label: "Registreren", variant: .light) {
                         

@@ -13,7 +13,9 @@ struct AccountView: View {
     
     var body: some View {
         NavigationStack {
-            LazyVStack(alignment: .leading, spacing: 8) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                
                 Text("Informatie").font(.title2).layoutPriority(1)
                 if let user = AuthManager.shared.user {
                     Text("Voornaam").font(.subheadline)
@@ -117,61 +119,63 @@ struct AccountView: View {
                 
                 Spacer().frame(maxWidth: .infinity)
             }.padding()
-                .navigationTitle("Account")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationViewStyle(StackNavigationViewStyle()).onAppear {
-                    Task {
-                        await viewModel.fetchMembers()
+                    .navigationTitle("Account")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationViewStyle(StackNavigationViewStyle()).onAppear {
+                        Task {
+                            await viewModel.fetchMembers()
+                        }
                     }
-                }
-                .alert(isPresented: $viewModel.showDeleteAlert) {
-                    Alert(
-                        title: Text("Verwijderen"),
-                        message: Text("Weet u zeker dat u deze gebruiker wilt verwijderen?"),
-                        primaryButton: .destructive(Text("Verwijderen")) {
-                            if let member = viewModel.selectedMember {
+                    .alert(isPresented: $viewModel.showDeleteAlert) {
+                        Alert(
+                            title: Text("Verwijderen"),
+                            message: Text("Weet u zeker dat u deze gebruiker wilt verwijderen?"),
+                            primaryButton: .destructive(Text("Verwijderen")) {
+                                if let member = viewModel.selectedMember {
+                                    Task {
+                                        await viewModel.deleteMember(member)
+                                    }
+                                }
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    }.sheet(isPresented: $viewModel.showUpdateAlert) {
+                        ZStack {
+                            Color.light3.edgesIgnoringSafeArea(.all)
+                            EditPrimaryCaregiverView(currentPrimaryCaregiver: viewModel.primaryCaregiver, members: viewModel.allMembers) { newPrimaryCaregiver in
+                                viewModel.primaryCaregiver = newPrimaryCaregiver
                                 Task {
-                                    await viewModel.deleteMember(member)
+                                    await viewModel.fetchMembers()
                                 }
                             }
-                        },
-                        secondaryButton: .cancel()
-                    )
-                }.sheet(isPresented: $viewModel.showUpdateAlert) {
-                    ZStack {
-                        Color.light3.edgesIgnoringSafeArea(.all)
-                        EditPrimaryCaregiverView(currentPrimaryCaregiver: viewModel.primaryCaregiver, members: viewModel.allMembers) { newPrimaryCaregiver in
-                            viewModel.primaryCaregiver = newPrimaryCaregiver
-                            Task {
-                                await viewModel.fetchMembers()
+                        }
+                    }.sheet(isPresented: $viewModel.showInviteAlert) {
+                        ZStack {
+                            Color.light3.edgesIgnoringSafeArea(.all)
+                            InviteMemberView() {
+                                Task {
+                                    await viewModel.fetchMembers()
+                                }
+                            }
+                        }
+                    }.sheet(isPresented: $viewModel.showUpdatePinAlert) {
+                        ZStack {
+                            Color.light3.edgesIgnoringSafeArea(.all)
+                            UpdatePinView() {
+                                
+                            }
+                        }
+                    }.sheet(isPresented: $viewModel.showUpdatePasswordAlert) {
+                        ZStack {
+                            Color.light3.edgesIgnoringSafeArea(.all)
+                            UpdatePasswordView() {
+                                
                             }
                         }
                     }
-                }.sheet(isPresented: $viewModel.showInviteAlert) {
-                    ZStack {
-                        Color.light3.edgesIgnoringSafeArea(.all)
-                        InviteMemberView() {
-                            Task {
-                                await viewModel.fetchMembers()
-                            }
-                        }
-                    }
-                }.sheet(isPresented: $viewModel.showUpdatePinAlert) {
-                    ZStack {
-                        Color.light3.edgesIgnoringSafeArea(.all)
-                        UpdatePinView() {
-                            
-                        }
-                    }
-                }.sheet(isPresented: $viewModel.showUpdatePasswordAlert) {
-                    ZStack {
-                        Color.light3.edgesIgnoringSafeArea(.all)
-                        UpdatePasswordView() {
-                            
-                        }
-                    }
-                }
+            }
         }
+        
     }
 }
 
