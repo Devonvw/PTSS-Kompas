@@ -39,6 +39,7 @@ final class UserService {
     }
     
     func login(body: Login) async throws -> AuthResponse {
+        print(baseURL + "login")
         return try await NetworkManager.shared.request(
             endpoint: baseURL + "login",
             method: .POST,

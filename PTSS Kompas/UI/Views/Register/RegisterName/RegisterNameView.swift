@@ -10,7 +10,7 @@ import SwiftUI
 struct RegisterNameView: View {
     @ObservedObject var registerStore: RegisterStore
     @StateObject var viewModel = RegisterNameViewModel()
-
+    
     var body: some View {
         Text("Welkom") .font(.largeTitle)
             .foregroundColor(.dark)
@@ -63,7 +63,7 @@ struct RegisterNameView: View {
         ButtonVariant(label: "Volgende", disabled: registerStore.lastName.isEmpty || registerStore.firstName.isEmpty) {
             Task {
                 await viewModel.validateName(firstName: registerStore.firstName, lastName: registerStore.lastName) {
-                    registerStore.currentScreen = .Password
+                    registerStore.setCurrentScreen(.Password)
                 }
             }
         }

@@ -14,7 +14,9 @@ class AuthManager: ObservableObject {
     
     @Published var isLoggedIn: Bool = false //false
     @Published var user: User?
-    @Published var enteredPin: Bool = true // false
+    @Published var enteredPin: Bool = false // false
+    @Published var hasPin: Bool = false // false
+
     
     public var isLoadingInitial: Bool = false
     private let accessTokenKey = "accessToken"
@@ -24,34 +26,38 @@ class AuthManager: ObservableObject {
     private let apiService = UserService()
     
     init() {
-//        Task {
-//            await getCurrentUser()
-//        }
-    }
-    
-    public func pinLogin(_ body: PinLogin) async {
-        do {
-            _ = try await apiService.loginPin(body: body)
-            isLoggedIn = true
-            
+        Task {
+            isLoadingInitial = true
             await getCurrentUser()
-        } catch {
-            print("Failed to check login status: \(error.localizedDescription)")
         }
     }
     
-    public func login(_ body: Login) async {
-        do {
-            _ = try await apiService.login(body: body)
-            
-            enteredPin = true
-        } catch {
-            print("Failed to check login status: \(error.localizedDescription)")
+    public func setLoggedIn() {
+        isLoggedIn = true
+        enteredPin = true
+        
+        Task {
+            await getCurrentUser()
         }
+    }
+    
+    public func pinLogin(_ body: PinLogin) async throws {
+        _ = try await apiService.loginPin(body: body)
+         setLoggedIn()
+    }
+    
+    public func login(_ body: Login) async throws {
+        _ = try await apiService.login(body: body)
+        
+        print("klaar")
+         setLoggedIn()
+    }
+    
+    public func register(_ body: UserRegister) async throws {
+        _ = try await apiService.register(body: body)
     }
     
     private func getCurrentUser() async {
-        isLoadingInitial = true
         do {
             let data = try await apiService.getCurrentUser()
             print(data)

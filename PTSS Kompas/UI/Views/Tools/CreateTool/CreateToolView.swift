@@ -14,6 +14,12 @@ struct CreateToolView: View {
     let onSuccess: (Tool) -> Void
     
     var body: some View {
+        HStack {
+            Spacer().frame(height: 0)
+            Button("Sluiten") {
+                dismiss()
+            }.padding()
+        }
         VStack(alignment: .leading) {
             Text("Voeg een nieuwe hulpmiddel toe") .font(.headline)
                 .foregroundColor(.dark)
@@ -23,7 +29,7 @@ struct CreateToolView: View {
         Form {
             Section
             {
-               
+                
                 MultiSelector(
                     label: Text("Categorieën"),
                     options: viewModel.categories,
@@ -76,7 +82,7 @@ struct CreateToolView: View {
                 }
             }.onAppear {
                 Task {
-                                        await viewModel.fetchToolCategories()
+                    await viewModel.fetchToolCategories()
                 }
             }
         //            .toolbar {

@@ -27,7 +27,7 @@ struct RegisterView: View {
                     case .Password:
                         RegisterPasswordView(registerStore: store)
                     case .Pin:
-                        RegisterVerifyView(registerStore: store)
+                        RegisterPinView()
                     }
                 }
             }.frame(maxHeight: .infinity)

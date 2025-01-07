@@ -9,12 +9,14 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class RegisterViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     @Published var passwordValidation: PasswordValidationResult?
-    
+    private var toastManager = ToastManager.shared
+
     private let apiService = UserService()
     private let validator = RegisterValidator()
     
@@ -46,13 +48,14 @@ final class RegisterViewModel: ObservableObject {
         }
         
         do {
-            let response = try await apiService.register(body: body)
-            _ = KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
-            _ = KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+            try await AuthManager.shared.register(body)
+//            _ = KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
+//            _ = KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
 
             await MainActor.run {
                 self.isLoading = false
                 print("Success")
+                toastManager.toast = Toast(style: .success, message: "Jouw wachtwoord is aangemaakt!")
                 onSuccess()
             }
         } catch let error as NetworkError {
