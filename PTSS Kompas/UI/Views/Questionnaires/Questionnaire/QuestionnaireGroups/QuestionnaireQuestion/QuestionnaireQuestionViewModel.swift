@@ -23,7 +23,8 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
     @Published var isFailure: Bool = false
     @Published var isSaving: Bool = false
     @Published var isFailureSaving: Bool = false
-    
+    private var toastManager = ToastManager.shared
+
     
     private let apiService = QuestionnaireService()
     
@@ -66,8 +67,6 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
             return
         }
         
-        print(answers)
-        
         do {
             try await apiService.saveQuestionAnswers(
                 questionnaireId: questionnaireId,
@@ -75,14 +74,12 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
                 questionId: questionId,
                 answers: answers
             )
-            await MainActor.run {
-                self.isSaving = false
-            }
+        
+            self.isSaving = false
         } catch {
-            await MainActor.run {
-                self.isSaving = false
-                self.isFailureSaving = true
-            }
+            self.isSaving = false
+            self.isFailureSaving = true
+//            toastManager.toast = Toast(style: .error, message: "Het is niet gelukt om de antwoorden op te slaan. Probeer het opnieuw.")
             print("Error: \(error)")
             throw error
         }

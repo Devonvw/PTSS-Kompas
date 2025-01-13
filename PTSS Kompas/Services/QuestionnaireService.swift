@@ -55,4 +55,12 @@ final class QuestionnaireService {
             responseType: VoidResponse.self
         )
     }
+    
+    func finishQuestionnaire(questionnaireId: String) async throws {
+        _ = try await NetworkManager.shared.request(
+            endpoint: baseURL + "\(questionnaireId)/finish",
+            method: .PUT,
+            responseType: VoidResponse.self
+        )
+    }
 }

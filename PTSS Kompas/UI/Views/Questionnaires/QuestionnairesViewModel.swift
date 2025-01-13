@@ -26,7 +26,7 @@ final class QuestionnairesViewModel: ObservableObject {
     private var debouncedSearchText = ""
     
     private let apiService = QuestionnaireService()
-    
+
     init() {
         Task {
             await fetchQuestionnaires()

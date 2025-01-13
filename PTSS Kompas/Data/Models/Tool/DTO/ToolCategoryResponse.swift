@@ -8,5 +8,5 @@
 struct ToolCategoryResponse: Codable {
     let category: String
     let createdAt: String
-    let tools: [Tool]
+    let tools: [ToolListItem]
 }

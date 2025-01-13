@@ -82,6 +82,7 @@ struct ButtonVariant<Label: View>: View {
         disabled: Bool = false,
         iconRight: String? = nil,
         iconLeft: String? = nil,
+        isLoading: Bool? = false,
         action: @escaping () -> Void
     ) where Label == Text {
         self.init(
@@ -90,6 +91,7 @@ struct ButtonVariant<Label: View>: View {
             disabled: disabled,
             iconRight: iconRight,
             iconLeft: iconLeft,
+            isLoading: isLoading,
             action: action
         )
     }
@@ -102,7 +104,7 @@ struct ButtonVariant<Label: View>: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
                         .frame(height: 16)
-                        .padding(4)
+                        .padding(4).tint(.white)
                 } else {
                     if let iconLeft {
                         Image(systemName: iconLeft)

@@ -35,7 +35,7 @@ struct GeneralInformationView: View {
                         .padding()
                     }
                     else if viewModel.isLoading && viewModel.generalInformation == nil {
-                        Loading()
+                        ProgressView().frame(maxWidth: .infinity, minHeight: 256)
                     }
                     
                     if let generalInformation = viewModel.generalInformation {
@@ -91,7 +91,7 @@ struct GeneralInformationView: View {
                             
                             ButtonVariant(label: "Probeer opnieuw"){
                                 Task {
-                                    await viewModel.fetchInitialGeneralInformation()
+                                    await viewModel.fetchInitialGeneralInformation(id: item.id)
                                 }
                             }
                         }
@@ -115,7 +115,7 @@ struct GeneralInformationView: View {
             .onAppear {
                 Task {
                     await viewModel.fetchGeneralInformation(id: item.id)
-                    await viewModel.fetchInitialGeneralInformation()
+                    await viewModel.fetchInitialGeneralInformation(id: item.id)
                 }
             }
     }

@@ -41,22 +41,20 @@ final class GeneralInformationViewModel: ObservableObject {
         }
     }
 
-    func fetchInitialGeneralInformation() async {
+    func fetchInitialGeneralInformation(id: String) async {
         isLoadingItems = true
         isFailureItems = false
         
         do {
             let data = try await apiService.getGeneralInformation(cursor: nil, search: nil)
             
-            await MainActor.run {
+            let items = data.data.filter{$0.id != id}
+            
                 self.items = data.data
                 self.isLoadingItems = false
-            }
         } catch {
-            await MainActor.run {
                 self.isFailureItems = true
                 self.isLoadingItems = false
-            }
             print("Error: \(error)")
         }
     }

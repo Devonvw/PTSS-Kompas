@@ -34,8 +34,6 @@ final class QuestionnaireViewModel: ObservableObject {
                 self.isLoading = false
                 self.explanation = nil
             }
-            print("Error: \(error)")
         }
     }
-
 }

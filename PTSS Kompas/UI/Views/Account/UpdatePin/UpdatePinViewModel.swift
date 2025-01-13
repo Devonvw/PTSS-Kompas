@@ -16,10 +16,10 @@ final class UpdatePinViewModel: ObservableObject {
     @Published var currentPin: String = ""
     @Published var newPin: String = ""
 
-    
     private let apiService = UserService()
     private let validator = UpdatePinValidator()
-    
+    private var toastManager = ToastManager.shared
+
     func updatePin(onSuccess: () -> Void) async {
         let pinUpdate = PinUpdate(currentPin: currentPin, newPin: newPin)
         isLoading = true
@@ -51,6 +51,7 @@ final class UpdatePinViewModel: ObservableObject {
                 self.newPin = ""
                 print("Success")
                 onSuccess()
+                toastManager.toast = Toast(style: .success, message: "Jouw pincode is succesvol gewijzigd")
             }
         } catch let error as NetworkError {
             await MainActor.run {

@@ -15,6 +15,7 @@ struct PTSS_KompasApp: App {
     init() {
         UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "Georgia-Bold", size: 20)!, .foregroundColor: UIColor(.dark)]
         UITabBar.appearance().unselectedItemTintColor = UIColor.red
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = .dark
     }
     
     var body: some Scene {

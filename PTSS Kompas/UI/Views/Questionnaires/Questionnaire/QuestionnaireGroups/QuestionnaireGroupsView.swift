@@ -11,6 +11,7 @@ struct QuestionnaireGroupsView: View {
     @StateObject var viewModel = QuestionnaireGroupsViewModel()
     
     let questionnaire: Questionnaire
+    @State private var shouldNavigate = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -98,8 +99,37 @@ struct QuestionnaireGroupsView: View {
                         }
                     }
             )
-            ButtonVariant(label: "Afronden", disabled: true) {}
+            ButtonVariant(label: "Afronden", disabled: !viewModel.questionnaireIsFinished) {
+                viewModel.showFinishAlert = true
+            }
+            NavigationLink(
+                destination: QuestionnairesView(),
+                isActive: $shouldNavigate
+            ) {
+                EmptyView()
+            }
         }.padding()
+            .alert("Er is iets fout gegaan tijdens het afronden van de vragenlijst. Probeer het opnieuw.", isPresented: $viewModel.isFailureFinish) {
+                Button("OK", role: .cancel) { }
+            }
+            .alert(isPresented: $viewModel.showFinishAlert) {
+                Alert(
+                    title: Text("Weet je zeker dat je de “\(questionnaire.title)” vragenlijst wilt afronden?"),
+                    message: Text("De vragenlijst kan hierna niet meer worden gewijzigd."),
+                    primaryButton: .cancel(
+                    ),
+                    secondaryButton: .default(
+                        Text("Afronden"),
+                        action: {
+                            Task {
+                                await viewModel.finishQuestionnaire(questionnaireId: questionnaire.id) {
+                                    shouldNavigate = true
+                                }
+                            }
+                        }
+                    )
+                )
+            }
     }
 }
 

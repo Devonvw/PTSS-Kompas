@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class LoginPinViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
@@ -26,7 +27,7 @@ final class LoginPinViewModel: ObservableObject {
         
         do {
             try validator.validate(body)
-        } catch let validationError as RegisterValidator.ValidatorError {
+        } catch let validationError as LoginPinValidator.ValidatorError {
             await MainActor.run {
                 self.isLoading = false
                 self.error = .validation(error: validationError)
@@ -44,9 +45,8 @@ final class LoginPinViewModel: ObservableObject {
         }
         
         do {
-            let response = try await apiService.loginPin(body: body)
-            _ = KeychainManager.shared.saveToken(response.accessToken, for: "accessToken")
-            _ = KeychainManager.shared.saveToken(response.refreshToken, for: "refreshToken")
+            
+             try await AuthManager.shared.pinLogin(body)
 
             await MainActor.run {
                 self.isLoading = false

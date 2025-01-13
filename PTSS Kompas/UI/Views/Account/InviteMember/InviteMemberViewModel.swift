@@ -4,6 +4,7 @@
 //
 //  Created by Devon van Wichen on 05/12/2024.
 //
+
 import Foundation
 import Combine
 import SwiftUI
@@ -17,6 +18,7 @@ final class InviteMemberViewModel: ObservableObject {
     
     private let apiService = UserService()
     private let validator = InviteMemberValidator()
+    private var toastManager = ToastManager.shared
     
     func inviteMember(onSuccess: () -> Void) async {
         let userInviteCreate = UserInviteCreate(email: newMemberEmail)
@@ -43,25 +45,17 @@ final class InviteMemberViewModel: ObservableObject {
         do {
             _ = try await apiService.inviteUser(body: userInviteCreate)
             
-            await MainActor.run {
-                self.isLoading = false
-                self.newMemberEmail = ""
-                print("Success")
-                onSuccess()
-            }
+            self.isLoading = false
+            self.newMemberEmail = ""
+            onSuccess()
+            toastManager.toast = Toast(style: .success, message: "De persoon is succesvol uitgenodigd")
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error adding question: \(error)")
-            }
+            self.isLoading = false
+            self.isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            self.isAlertFailure = true
+            self.isLoading = false
         }
         
     }

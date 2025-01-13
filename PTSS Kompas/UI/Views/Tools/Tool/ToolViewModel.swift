@@ -11,7 +11,8 @@ import SwiftUI
 
 @MainActor
 final class ToolViewModel: ObservableObject {
-    @Published var comments: [ToolComment] = [ToolComment.example]
+    @Published var tool: Tool?
+    @Published var comments: [ToolComment] = []
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     @Published var searchText = "" {
@@ -46,6 +47,27 @@ final class ToolViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    func fetchTool(id: String) async {
+        isLoading = true
+        isFailure = false
+        
+        do {
+            let data = try await apiService.getToolById(toolId: id)
+            
+            await MainActor.run {
+                self.tool = data
+                self.isLoading = false
+            }
+        } catch {
+            await MainActor.run {
+                self.isFailure = true
+                self.isLoading = false
+                tool = nil
+            }
+            print("Error: \(error)")
+        }
     }
     
     func fetchToolComments(toolId: String) async {

@@ -52,7 +52,7 @@ struct LoginView: View {
                             Text("Wachtwoord vergeten?")
                         }.buttonStyle(PlainButtonStyle())
                     } footer: {
-                                                if case .validation(let err) = viewModel.error,
+                        if case .validation(let err) = viewModel.error,
                            let errorDesc = err.errorDescription {
                             Text(errorDesc)
                                 .foregroundStyle(.red)

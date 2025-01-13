@@ -11,7 +11,7 @@ import SwiftUI
 
 @MainActor
 final class ToolsViewModel: ObservableObject {
-    @Published var categories: [ToolCategory] = [ToolCategory.example]
+    @Published var categories: [ToolCategory] = []
     @Published var isLoading: Bool = false
     @Published var isFailure: Bool = false
     @Published var searchText = "" {
@@ -31,7 +31,7 @@ final class ToolsViewModel: ObservableObject {
     
     init() {
         Task {
-//            await fetchToolCategories()
+            await fetchToolCategories()
         }
         debounceSearchText()
     }

@@ -43,7 +43,7 @@ struct QuestionnaireListItem: View {
             }
         }
         .padding()
-        .background(.light2)
+        .background(questionnaire.isFinished ? .light1  : .light2)
         .cornerRadius(8)
     }
 }

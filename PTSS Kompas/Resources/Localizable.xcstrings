@@ -74,6 +74,9 @@
     "Afgesloten door de professional" : {
 
     },
+    "Afronden" : {
+
+    },
     "Berichten (%lld)" : {
 
     },
@@ -98,6 +101,9 @@
     "Contact" : {
 
     },
+    "De vragenlijst kan hierna niet meer worden gewijzigd." : {
+
+    },
     "Deze vragenlijst heeft geen groepen!" : {
 
     },
@@ -120,6 +126,9 @@
 
     },
     "Er is geen informatie beschikbaar" : {
+
+    },
+    "Er is iets fout gegaan tijdens het afronden van de vragenlijst. Probeer het opnieuw." : {
 
     },
     "Er is iets fout gegaan tijdens het opslaan. Probeer het opnieuw." : {
@@ -243,9 +252,6 @@
 
     },
     "Informatie" : {
-
-    },
-    "Inloggen" : {
 
     },
     "Jan" : {
@@ -435,6 +441,9 @@
 
     },
     "Wachtwoord vergeten?" : {
+
+    },
+    "Weet je zeker dat je de “%@” vragenlijst wilt afronden?" : {
 
     },
     "Weet u zeker dat u deze gebruiker wilt verwijderen?" : {

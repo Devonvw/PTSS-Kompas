@@ -55,13 +55,8 @@ struct HomeView: View {
                 .toolbar {
                     if let user = authManager.user {
                         NavigationLink(destination: AccountView()) {
-                            Text("\(user.firstName.prefix(1))\(user.lastName.prefix(1))")
-                                .textCase(.uppercase)
-                                .fontWeight(.bold)
-                                .multilineTextAlignment(.center)
-                                .padding( 6).background(.light2).cornerRadius(25)
+                            NameBadge(name: "\(user.firstName) \(user.lastName)", variant: .light)
                         }
-                        
                     }
                 }
         }

@@ -8,6 +8,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class CreateContactQuestionViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
@@ -17,6 +18,7 @@ final class CreateContactQuestionViewModel: ObservableObject {
     
     private let apiService = ContactService()
     private let validator = CreateContactQuestionValidator()
+    private var toastManager = ToastManager.shared
     
     func addQuestion(onSuccess: () -> Void) async {
         let createQuestion = CreateContactQuestion(subject: newQuestionSubject, content: newQuestionContent)
@@ -26,44 +28,33 @@ final class CreateContactQuestionViewModel: ObservableObject {
         do {
             try validator.validate(createQuestion)
         } catch let validationError as CreateContactQuestionValidator.CreateValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            self.isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            self.isLoading = false
+            self.isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             let newQuestion = try await apiService.addQuestion(createQuestion: createQuestion)
             
-            await MainActor.run {
-                self.isLoading = false
-                self.newQuestionSubject = ""
-                self.newQuestionContent = ""
-                print("Success")
-                print(newQuestion)
-                onSuccess()
-            }
+            self.isLoading = false
+            self.newQuestionSubject = ""
+            self.newQuestionContent = ""
+            onSuccess()
+            toastManager.toast = Toast(style: .success, message: "De nieuwe vraag is succesvol toegevoegd")
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error adding question: \(error)")
-            }
+            self.isLoading = false
+            self.isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
             await MainActor.run {
                 self.isAlertFailure = true
                 self.isLoading = false
             }
-            print("Error: \(error)")
         }
         
     }
