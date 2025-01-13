@@ -57,9 +57,11 @@ struct AccountView: View {
                     HStack(alignment: .center) {
                         Text("Hoofdmantelzorger").font(.headline).layoutPriority(1)
                         Spacer().frame(maxHeight: 0)
-                        Button("Aanpassen", systemImage: "pencil") {
-                            viewModel.showUpdateAlert = true
-                        }.labelStyle(.iconOnly).padding(4)
+                        if AuthManager.shared.user?.role == Role.Patient {
+                            Button("Aanpassen", systemImage: "pencil") {
+                                viewModel.showUpdateAlert = true
+                            }.labelStyle(.iconOnly).padding(4)
+                        }
                     }.padding(.top, 8)
                     if let primaryCaregiver = viewModel.primaryCaregiver {
                         HStack(alignment: .center) {
@@ -88,10 +90,12 @@ struct AccountView: View {
                                         Text(member.email)
                                     }.layoutPriority(1)
                                     Spacer().frame(maxHeight: 0)
-                                    Button("Verwijderen", systemImage: "xmark.circle") {
-                                        viewModel.selectedMember = member
-                                        viewModel.showDeleteAlert = true
-                                    }.labelStyle(.iconOnly).padding(8).foregroundColor(.red)
+                                    if AuthManager.shared.user?.role == Role.Patient || AuthManager.shared.user?.role == Role.PrimaryCaregiver {
+                                        Button("Verwijderen", systemImage: "xmark.circle") {
+                                            viewModel.selectedMember = member
+                                            viewModel.showDeleteAlert = true
+                                        }.labelStyle(.iconOnly).padding(8).foregroundColor(.red)
+                                    }
                                 }
                                 
                                 Divider()
@@ -106,9 +110,11 @@ struct AccountView: View {
                         }
                         .padding(.top, 50)
                     }
-                    ButtonVariant(label: "Nieuw lid uitnodigen") {
-                        viewModel.showInviteAlert = true
-                    }.padding(.bottom, 16)
+                    if AuthManager.shared.user?.role == Role.Patient || AuthManager.shared.user?.role == Role.PrimaryCaregiver {
+                        ButtonVariant(label: "Nieuw lid uitnodigen") {
+                            viewModel.showInviteAlert = true
+                        }.padding(.bottom, 16)
+                    }
                 }
                 ButtonVariant(label: "Pincode wijzigen", iconRight: "arrow.right") {
                     viewModel.showUpdatePinAlert = true

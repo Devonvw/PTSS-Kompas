@@ -18,14 +18,17 @@ class AuthManager: ObservableObject {
     @Published var hasPin: Bool = false // false
     
     
-    public var isLoadingInitial: Bool = false
+    public var isLoadingInitial: Bool = true
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "accessToken"
     private let authRefreshEndpoint = "auth/refresh"
+    private let initialAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY0Njc4ODMsImlhdCI6MTczNjQ2NjY4MywianRpIjoiNmMyOTg2OWItZmNkMy00NjA0LWEyZjMtMWQ4NzA1N2M3Y2JiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9wdHNzLXN1cHBvcnQiLCJzdWIiOiIxM2ZhZDAyYS03OTJlLTRmNWMtYTI3NC02ODNiZTgyZTY3NjYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJhdXRoZW50aWNhdGlvbi1zZXJ2aWNlIiwic2lkIjoiNzU4MzlhOTctNjNmZC00OTJmLTgxOGMtZTViZDU5ODg2YjIwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInNjb3BlIjoib3BlbmlkIHVzZXItZGV0YWlscyIsInVzZXJfaWQiOiIxM2ZhZDAyYS03OTJlLTRmNWMtYTI3NC02ODNiZTgyZTY3NjYiLCJncm91cF9pZCI6ImE1NWEzNWQzLTMwZjAtNDA4Yi1iMWQ0LWE2MDkxZWVjYzAzNiIsInJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1wdHNzLXN1cHBvcnQiLCJ1bWFfYXV0aG9yaXphdGlvbiJdLCJyb2xlIjoicGF0aWVudCIsImxhc3RfbmFtZSI6IkRlcnNqYW50IiwiZmlyc3RfbmFtZSI6IkZyYW5rIiwiaGFzX3BpbiI6ZmFsc2V9.xxoFGOVvy5AQKvkQOyvZ2s29SIRJOzrkPYjkZRtsWjk"
     
     private let apiService = UserService()
-    
+    private let authApiService = AuthService()
+
     init() {
+        setInitialAccessToken()
         Task {
             isLoadingInitial = true
             await getCurrentUser()
@@ -49,7 +52,6 @@ class AuthManager: ObservableObject {
     public func login(_ body: Login) async throws {
         _ = try await apiService.login(body: body)
         
-        print("klaar")
         setLoggedIn()
     }
     
@@ -60,22 +62,49 @@ class AuthManager: ObservableObject {
     private func getCurrentUser() async {
         do {
             let data = try await apiService.getCurrentUser()
-            print(data)
             user = data
             isLoggedIn = true
             
-            // Decode access token payload
             if let payload = getAccessTokenPayload() {
                 hasPin = payload.hasPin
             } else {
                 hasPin = false
             }
+            //            hasPin = true
         } catch {
             print("Failed to check login status: \(error.localizedDescription)")
             isLoggedIn = false
             hasPin = false
         }
         isLoadingInitial = false
+    }
+    
+    public func logout() async {
+        do {
+            try await authApiService.logout()
+            
+            clearCookies()
+           
+            print("User successfully logged out.")
+        } catch {
+            print("Failed to logout: \(error.localizedDescription)")
+        }
+    }
+    
+    
+    private func setInitialAccessToken() {
+        let cookieProperties: [HTTPCookiePropertyKey: Any] = [
+            .name: accessTokenKey,
+            .value: initialAccessToken,
+            .domain: "localhost",
+            .path: "/",
+            .secure: false,
+            .expires: Date().addingTimeInterval(3600) // 1 hour from now
+        ]
+        
+        if let cookie = HTTPCookie(properties: cookieProperties) {
+            HTTPCookieStorage.shared.setCookie(cookie)
+        }
     }
     
     public func getAccessTokenPayload() -> AccessTokenPayload? {
@@ -112,6 +141,23 @@ class AuthManager: ObservableObject {
         } catch {
             print("Failed to decode JWT payload: \(error.localizedDescription)")
             return nil
+        }
+    }
+    
+    
+    public func clearCookies() {
+        isLoggedIn = false
+        user = nil
+        enteredPin = false
+        hasPin = false
+        
+        let cookieStorage = HTTPCookieStorage.shared
+        if let cookies = cookieStorage.cookies {
+            for cookie in cookies {
+                if cookie.name == accessTokenKey || cookie.name == refreshTokenKey {
+                    cookieStorage.deleteCookie(cookie)
+                }
+            }
         }
     }
     

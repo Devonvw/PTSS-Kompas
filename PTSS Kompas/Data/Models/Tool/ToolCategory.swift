@@ -9,7 +9,7 @@ struct ToolCategory: Codable, Identifiable, Hashable, ExampleProvidable {
     let id: String
     let category: String
     let createdAt: String
-    let tools: [Tool]
+    let tools: [ToolListItem]
     
     static func map(response: ToolCategoryResponse) -> Self {
         return ToolCategory(id: response.category, category: response.category, createdAt: response.createdAt, tools: response.tools)
@@ -20,7 +20,7 @@ struct ToolCategory: Codable, Identifiable, Hashable, ExampleProvidable {
         category: "5-4-3-2-1 Methode",
         createdAt: "2024-01-01T10:00:00Z",
         tools: [
-            Tool.example
+            ToolListItem.example
         ]
     )
     
@@ -30,7 +30,7 @@ struct ToolCategory: Codable, Identifiable, Hashable, ExampleProvidable {
                                             category: "5-4-3-2-1 Methode 2",
                                             createdAt: "2024-01-01T10:00:00Z",
                                             tools: [
-                                                Tool.example
+                                                ToolListItem.example
                                             ]
                                            ),
                                            .init(
@@ -38,7 +38,7 @@ struct ToolCategory: Codable, Identifiable, Hashable, ExampleProvidable {
                                             category: "5-4-3-2-1 Methode 3",
                                             createdAt: "2024-01-01T10:00:00Z",
                                             tools: [
-                                                Tool.example
+                                                ToolListItem.example
                                             ]
                                            )
     ]

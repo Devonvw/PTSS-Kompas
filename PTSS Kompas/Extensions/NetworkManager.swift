@@ -137,13 +137,7 @@ final class NetworkManager {
     
     @MainActor
     private func handleUnauthorizedResponse() {
-        if let cookieStorage = HTTPCookieStorage.shared.cookies {
-            for cookie in cookieStorage {
-                if cookie.name == accessTokenKey || cookie.name == refreshTokenKey {
-                    HTTPCookieStorage.shared.deleteCookie(cookie)
-                }
-            }
-        }
+        AuthManager.shared.clearCookies()
         
         AuthManager.shared.isLoggedIn = false
         AuthManager.shared.enteredPin = false

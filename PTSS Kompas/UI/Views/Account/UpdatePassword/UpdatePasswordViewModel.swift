@@ -19,7 +19,8 @@ final class UpdatePasswordViewModel: ObservableObject {
 
     private let apiService = UserService()
     private let validator = UpdatePasswordValidator()
-    
+    private var toastManager = ToastManager.shared
+
     func updatePassword(onSuccess: () -> Void) async {
         let passwordUpdate = PasswordUpdate(currentPassword: currentPassword, newPassword: newPassword, repeatNewPassword: repeatNewPassword)
         isLoading = true
@@ -50,8 +51,8 @@ final class UpdatePasswordViewModel: ObservableObject {
                 self.currentPassword = ""
                 self.newPassword = ""
                 self.repeatNewPassword = ""
-                print("Success")
                 onSuccess()
+                toastManager.toast = Toast(style: .success, message: "Jouw wachtwoord is succesvol gewijzigd")
             }
         } catch let error as NetworkError {
             await MainActor.run {

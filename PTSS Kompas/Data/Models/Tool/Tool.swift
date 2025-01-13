@@ -9,7 +9,7 @@ struct Tool: Codable, Identifiable, Hashable, ExampleProvidable {
     let id: String
     let name: String
     let description: String
-    let createdBy: String
+    let createdBy: String?
     let createdAt: String
     let media: Media?
 

@@ -17,8 +17,8 @@ struct ToolCategoryListItem: View {
                 LazyVStack(alignment: .leading, spacing: 4) {
                     Spacer().frame(maxWidth: .infinity, maxHeight: 0)
                     ForEach(category.tools) { tool in
-                        NavigationLink(destination: ToolView(tool: tool)) {
-                            ToolListItem(tool: tool)
+                        NavigationLink(destination: ToolView(toolListItem: tool)) {
+                            ToolListItemView(toolListItem: tool)
                                 .frame(maxWidth: .infinity)
                         }
                     }

@@ -10,7 +10,7 @@ import Foundation
 final class UserService {
     let baseURL = "users/"
     let groupsBaseURL = "groups/"
-    
+
     func inviteUser(body: UserInviteCreate) async throws {
         _ = try await NetworkManager.shared.request(
             endpoint: baseURL + "invite",
@@ -39,7 +39,6 @@ final class UserService {
     }
     
     func login(body: Login) async throws -> AuthResponse {
-        print(baseURL + "login")
         return try await NetworkManager.shared.request(
             endpoint: baseURL + "login",
             method: .POST,
@@ -50,7 +49,7 @@ final class UserService {
     
     func loginPin(body: PinLogin) async throws -> AuthResponse {
         return try await NetworkManager.shared.request(
-            endpoint: baseURL + "login",
+            endpoint: baseURL + "login/pin",
             method: .POST,
             body: body,
             responseType: AuthResponse.self
@@ -159,5 +158,9 @@ final class UserService {
             responseType: VoidResponse.self
         )
     }
+    
+
+
 }
+
 

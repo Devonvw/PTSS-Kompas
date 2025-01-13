@@ -12,13 +12,14 @@ import SwiftUI
 @MainActor
 final class EditPrimaryCaregiverViewModel: ObservableObject {
     @Published var isLoading: Bool = false
-
+    
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     @Published var selectedMember: User?
-
+    
     private let apiService = UserService()
     private let validator = EditPrimaryCaregiverValidator()
+    private var toastManager = ToastManager.shared
     
     func setInitialPrimaryCaregiver(primaryCaregiver: User?, members: [User]) {
         if let primaryCaregiver {
@@ -36,17 +37,13 @@ final class EditPrimaryCaregiverViewModel: ObservableObject {
         do {
             try validator.validate(primaryCaregiverAssign)
         } catch let validationError as EditPrimaryCaregiverValidator.CreateValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            self.isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            self.isLoading = false
+            self.isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
@@ -55,24 +52,18 @@ final class EditPrimaryCaregiverViewModel: ObservableObject {
             
             await MainActor.run {
                 self.isLoading = false
-                print("Success")
                 if let selectedMember {
                     onSuccess(selectedMember)
                 }
+                toastManager.toast = Toast(style: .success, message: "De hoofdmantelzorger is succesvol gewijzigd")
             }
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error updating primary caregiver: \(error)")
-            }
+            self.isLoading = false
+            self.isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            self.isAlertFailure = true
+            self.isLoading = false
         }
     }
 }
