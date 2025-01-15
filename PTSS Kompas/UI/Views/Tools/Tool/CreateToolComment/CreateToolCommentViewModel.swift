@@ -17,7 +17,8 @@ final class CreateToolCommentViewModel: ObservableObject {
     
     private let apiService = ToolService()
     private let validator = CreateToolCommentValidator()
-    
+    private var toastManager = ToastManager.shared
+
     func addComment(toolId: String, onSuccess: (_ comment: ToolComment) -> Void) async {
         let createComment = CreateToolComment(content: newCommentContent)
         isLoading = true
@@ -49,6 +50,8 @@ final class CreateToolCommentViewModel: ObservableObject {
                 print("Success")
                 print(newComment)
                 onSuccess(newComment)
+                toastManager.toast = Toast(style: .success, message: "Jouw opmerking is succesvol geplaatst!")
+
             }
         } catch let error as NetworkError {
             await MainActor.run {

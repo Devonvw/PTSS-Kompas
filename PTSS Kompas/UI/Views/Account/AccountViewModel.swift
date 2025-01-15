@@ -29,7 +29,8 @@ final class AccountViewModel: ObservableObject {
 
     
     private let apiService = UserService()
-    
+    private var toastManager = ToastManager.shared
+
     func fetchMembers() async {
         isLoading = true
         isFailure = false
@@ -66,6 +67,8 @@ final class AccountViewModel: ObservableObject {
             _ = try await apiService.deleteUserFromGroup(userId: member.id)
             
             self.members = self.members.filter { $0.id != member.id }
+            toastManager.toast = Toast(style: .success, message: "De persoon is succesvol verwijderd")
+
             self.isLoadingDelete = false
         } catch {
             self.isFailureDelete = true

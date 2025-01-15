@@ -62,7 +62,7 @@ struct LoginView: View {
                     .background(.clear)
                     .scrollContentBackground(.hidden)
                 
-                ButtonVariant(label: "Login") {
+                ButtonVariant(label: "Login", isLoading: viewModel.isLoading) {
                     Task {
                         await viewModel.login {
                         }

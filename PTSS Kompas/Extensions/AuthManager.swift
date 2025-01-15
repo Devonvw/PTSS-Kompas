@@ -25,7 +25,6 @@ class AuthManager: ObservableObject {
     private let initialAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MzY0Njc4ODMsImlhdCI6MTczNjQ2NjY4MywianRpIjoiNmMyOTg2OWItZmNkMy00NjA0LWEyZjMtMWQ4NzA1N2M3Y2JiIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9wdHNzLXN1cHBvcnQiLCJzdWIiOiIxM2ZhZDAyYS03OTJlLTRmNWMtYTI3NC02ODNiZTgyZTY3NjYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJhdXRoZW50aWNhdGlvbi1zZXJ2aWNlIiwic2lkIjoiNzU4MzlhOTctNjNmZC00OTJmLTgxOGMtZTViZDU5ODg2YjIwIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInNjb3BlIjoib3BlbmlkIHVzZXItZGV0YWlscyIsInVzZXJfaWQiOiIxM2ZhZDAyYS03OTJlLTRmNWMtYTI3NC02ODNiZTgyZTY3NjYiLCJncm91cF9pZCI6ImE1NWEzNWQzLTMwZjAtNDA4Yi1iMWQ0LWE2MDkxZWVjYzAzNiIsInJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZGVmYXVsdC1yb2xlcy1wdHNzLXN1cHBvcnQiLCJ1bWFfYXV0aG9yaXphdGlvbiJdLCJyb2xlIjoicGF0aWVudCIsImxhc3RfbmFtZSI6IkRlcnNqYW50IiwiZmlyc3RfbmFtZSI6IkZyYW5rIiwiaGFzX3BpbiI6ZmFsc2V9.xxoFGOVvy5AQKvkQOyvZ2s29SIRJOzrkPYjkZRtsWjk"
     
     private let apiService = UserService()
-    private let authApiService = AuthService()
 
     init() {
         setInitialAccessToken()
@@ -81,7 +80,7 @@ class AuthManager: ObservableObject {
     
     public func logout() async {
         do {
-            try await authApiService.logout()
+//            try await apiService.logout()
             
             clearCookies()
            

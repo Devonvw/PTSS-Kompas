@@ -15,116 +15,124 @@ struct AccountView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                
-                Text("Informatie").font(.title2).layoutPriority(1)
-                if let user = AuthManager.shared.user {
-                    Text("Voornaam").font(.subheadline)
-                    Text(user.firstName).padding(.bottom, 6).fontWeight(.bold)
-                    Text("Achternaam").font(.subheadline)
-                    Text(user.lastName).padding(.bottom, 6).fontWeight(.bold)
-                    Text("Email").font(.subheadline)
-                    Text(user.email).fontWeight(.bold)
-                }
-                
-                Text("Leden").font(.title2).layoutPriority(1).padding(.top, 20)
-                if viewModel.isFailure {
-                    VStack(spacing: 16) {
-                        Text("Het is niet gelukt om de leden op te halen.")
-                            .font(.title3)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                        
-                        ButtonVariant(label: "Probeer opnieuw"){
-                            Task {
-                                await viewModel.fetchMembers()
-                            }
-                        }
-                    }
-                    .padding()
-                }
-                else if viewModel.isLoading {
-                    Loading()
-                }
-                else {
                     
-                    Text("Patient").font(.headline).layoutPriority(1).padding(.top, 4)
-                    if let patient = viewModel.patient {
-                        VStack(alignment: .leading) {
-                            Text("\(patient.firstName) \(patient.lastName)").font(.subheadline).fontWeight(.bold)
-                            Text(patient.email)
-                        }
+                    Text("Informatie").font(.title2).layoutPriority(1)
+                    if let user = AuthManager.shared.user {
+                        Text("Voornaam").font(.subheadline)
+                        Text(user.firstName).padding(.bottom, 6).fontWeight(.bold)
+                        Text("Achternaam").font(.subheadline)
+                        Text(user.lastName).padding(.bottom, 6).fontWeight(.bold)
+                        Text("Email").font(.subheadline)
+                        Text(user.email).fontWeight(.bold)
                     }
-                    HStack(alignment: .center) {
-                        Text("Hoofdmantelzorger").font(.headline).layoutPriority(1)
-                        Spacer().frame(maxHeight: 0)
-                        if AuthManager.shared.user?.role == Role.Patient {
-                            Button("Aanpassen", systemImage: "pencil") {
-                                viewModel.showUpdateAlert = true
-                            }.labelStyle(.iconOnly).padding(4)
-                        }
-                    }.padding(.top, 8)
-                    if let primaryCaregiver = viewModel.primaryCaregiver {
-                        HStack(alignment: .center) {
-                            VStack(alignment: .leading) {
-                                Text("\(primaryCaregiver.firstName) \(primaryCaregiver.lastName)").font(.subheadline).fontWeight(.bold)
-                                Text(primaryCaregiver.email)
-                            }
-                            
-                        }
-                    } else {
+                    
+                    Text("Leden").font(.title2).layoutPriority(1).padding(.top, 20)
+                    if viewModel.isFailure {
                         VStack(spacing: 16) {
-                            Text("Er is geen hoofdmantelzorger!")
-                                .font(.title2)
-                                .foregroundColor(.gray)
+                            Text("Het is niet gelukt om de leden op te halen.")
+                                .font(.title3)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            
+                            ButtonVariant(label: "Probeer opnieuw"){
+                                Task {
+                                    await viewModel.fetchMembers()
+                                }
+                            }
                         }
-                        .padding(.top, 50)
+                        .padding()
                     }
-                    
-                    Text("Familieleden").font(.headline).layoutPriority(1).padding(.top, 8)
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(viewModel.members) { member in
-                            VStack {
-                                HStack(alignment: .center) {
-                                    VStack(alignment: .leading) {
-                                        Text("\(member.firstName) \(member.lastName)").font(.subheadline).fontWeight(.bold)
-                                        Text(member.email)
-                                    }.layoutPriority(1)
-                                    Spacer().frame(maxHeight: 0)
-                                    if AuthManager.shared.user?.role == Role.Patient || AuthManager.shared.user?.role == Role.PrimaryCaregiver {
-                                        Button("Verwijderen", systemImage: "xmark.circle") {
-                                            viewModel.selectedMember = member
-                                            viewModel.showDeleteAlert = true
-                                        }.labelStyle(.iconOnly).padding(8).foregroundColor(.red)
-                                    }
+                    else if viewModel.isLoading {
+                        Loading()
+                    }
+                    else {
+                        
+                        Text("Patient").font(.headline).layoutPriority(1).padding(.top, 4)
+                        if let patient = viewModel.patient {
+                            VStack(alignment: .leading) {
+                                Text("\(patient.firstName) \(patient.lastName)").font(.subheadline).fontWeight(.bold)
+                                Text(patient.email)
+                            }
+                        }
+                        HStack(alignment: .center) {
+                            Text("Hoofdmantelzorger").font(.headline).layoutPriority(1)
+                            Spacer().frame(maxHeight: 0)
+                            if AuthManager.shared.user?.role == Role.Patient {
+                                Button("Aanpassen", systemImage: "pencil") {
+                                    viewModel.showUpdateAlert = true
+                                }.labelStyle(.iconOnly).padding(4)
+                            }
+                        }.padding(.top, 8)
+                        if let primaryCaregiver = viewModel.primaryCaregiver {
+                            HStack(alignment: .center) {
+                                VStack(alignment: .leading) {
+                                    Text("\(primaryCaregiver.firstName) \(primaryCaregiver.lastName)").font(.subheadline).fontWeight(.bold)
+                                    Text(primaryCaregiver.email)
                                 }
                                 
-                                Divider()
+                            }
+                        } else {
+                            VStack(spacing: 16) {
+                                Text("Er is geen hoofdmantelzorger!")
+                                    .font(.title2)
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.top, 50)
+                        }
+                        
+                        Text("Familieleden").font(.headline).layoutPriority(1).padding(.top, 8)
+                        VStack(alignment: .leading, spacing: 8) {
+                            ForEach(viewModel.members) { member in
+                                VStack {
+                                    HStack(alignment: .center) {
+                                        VStack(alignment: .leading) {
+                                            Text("\(member.firstName) \(member.lastName)").font(.subheadline).fontWeight(.bold)
+                                            Text(member.email)
+                                        }.layoutPriority(1)
+                                        Spacer().frame(maxHeight: 0)
+                                        if AuthManager.shared.user?.role == Role.Patient || AuthManager.shared.user?.role == Role.PrimaryCaregiver {
+                                            Button("Verwijderen", systemImage: "xmark.circle") {
+                                                viewModel.selectedMember = member
+                                                viewModel.showDeleteAlert = true
+                                            }.labelStyle(.iconOnly).padding(8).foregroundColor(.red)
+                                        }
+                                    }
+                                    
+                                    Divider()
+                                }
                             }
                         }
-                    }
-                    if viewModel.members.isEmpty {
-                        VStack(spacing: 16) {
-                            Text("Er zijn nog geen leden!")
-                                .font(.title2)
-                                .foregroundColor(.gray)
+                        if viewModel.members.isEmpty {
+                            VStack(spacing: 16) {
+                                Text("Er zijn nog geen leden!")
+                                    .font(.title2)
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.top, 20)
+                            .padding(.bottom, 20)
+                            
                         }
-                        .padding(.top, 50)
+                        if AuthManager.shared.user?.role == Role.Patient || AuthManager.shared.user?.role == Role.PrimaryCaregiver {
+                            ButtonVariant(label: "Nieuw lid uitnodigen") {
+                                viewModel.showInviteAlert = true
+                            }.padding(.bottom, 16)
+                        }
                     }
-                    if AuthManager.shared.user?.role == Role.Patient || AuthManager.shared.user?.role == Role.PrimaryCaregiver {
-                        ButtonVariant(label: "Nieuw lid uitnodigen") {
-                            viewModel.showInviteAlert = true
-                        }.padding(.bottom, 16)
+                    ButtonVariant(label: "Pincode wijzigen", iconRight: "arrow.right") {
+                        viewModel.showUpdatePinAlert = true
                     }
-                }
-                ButtonVariant(label: "Pincode wijzigen", iconRight: "arrow.right") {
-                    viewModel.showUpdatePinAlert = true
-                }
-                ButtonVariant(label: "Wachtwoord wijzigen", iconRight: "arrow.right") {
-                    viewModel.showUpdatePasswordAlert = true
-                }
-                
-                Spacer().frame(maxWidth: .infinity)
-            }.padding()
+                    ButtonVariant(label: "Wachtwoord wijzigen", iconRight: "arrow.right") {
+                        viewModel.showUpdatePasswordAlert = true
+                    }
+                    
+                    ButtonVariant(label: "Uitloggen", variant: .light) {
+                        Task {
+                            await AuthManager.shared.logout()
+                        }
+                    }
+                    
+                    Spacer().frame(maxWidth: .infinity)
+                }.padding()
                     .navigationTitle("Account")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationViewStyle(StackNavigationViewStyle()).onAppear {

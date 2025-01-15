@@ -35,6 +35,17 @@ struct ContactQuestionView: View {
                         .font(.caption)
                         .foregroundColor(.dark).padding(.bottom, 16)
                     
+                    if question.isClosed {
+                        HStack {
+                            Text("Afgesloten door de professional")
+                                .font(.headline)
+                                .foregroundColor(.dark)
+                            Spacer()
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.dark)
+                        }
+                    }
+                    
                     ContactQuestionMessagesView(question: question)
             }
         }.padding()

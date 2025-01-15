@@ -159,7 +159,13 @@ final class UserService {
         )
     }
     
-
+    func logout() async throws -> Void {
+        _ = try await NetworkManager.shared.request(
+            endpoint: baseURL + "logout",
+            method: .POST,
+            responseType: VoidResponse.self
+        )
+    }
 
 }
 

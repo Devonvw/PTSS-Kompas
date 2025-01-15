@@ -83,7 +83,7 @@ struct ChatView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.dark, lineWidth: 2)
                     )
-                    ButtonVariant(iconRight: "paperplane") {
+                    ButtonVariant(iconRight: "paperplane", isLoading: viewModel.isLoadingAdding) {
                         Task {
                             await viewModel.addMessage(content: viewModel.newMessageContent)
                         }
@@ -102,6 +102,9 @@ struct ChatView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 MembersButton()
+            }
+            .alert("Er is iets fout gegaan tijdens het versturen van het bericht. Probeer het opnieuw.", isPresented: $viewModel.isFailureAdding) {
+                Button("OK", role: .cancel) { }
             }
         }
     }

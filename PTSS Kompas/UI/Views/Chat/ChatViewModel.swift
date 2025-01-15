@@ -13,7 +13,10 @@ import SwiftUI
 final class ChatViewModel: ObservableObject {
     @Published var messages: [ChatMessage] = []
     @Published var isLoading: Bool = false
+    @Published var isLoadingAdding: Bool = false
     @Published var isFailure: Bool = false
+    @Published var isFailureAdding: Bool = false
+    
     @Published var searchText = "" {
         didSet {
             if (searchText != oldValue) {
@@ -51,7 +54,7 @@ final class ChatViewModel: ObservableObject {
         isFailure = false
         
         if (pagination?.nextCursor == nil || pagination?.nextCursor == "") &&
-           (pagination?.previousCursor == nil || pagination?.previousCursor == "") {
+            (pagination?.previousCursor == nil || pagination?.previousCursor == "") {
             messages = []
         }
         
@@ -81,7 +84,7 @@ final class ChatViewModel: ObservableObject {
             print("Error: \(error)")
         }
     }
-
+    
     
     func refreshChatQuestions() async {
         pagination = nil
@@ -114,21 +117,21 @@ final class ChatViewModel: ObservableObject {
     
     func addMessage(content: String) async {
         let createMessage = CreateChatMessage(content: content)
+        isLoadingAdding = true
         
         do {
             let newMessage = try await apiService.addMessage(createMessage: createMessage)
             
-            await MainActor.run {
-                messages.append(newMessage)
-                newMessageContent = ""
-            }
+            messages.append(newMessage)
+            newMessageContent = ""
+            isLoadingAdding = false
+            
         } catch {
-            await MainActor.run {
-                isFailure = true
-            }
+            isFailureAdding = true
+            isLoadingAdding = false
             print("Error adding message: \(error)")
         }
     }
-
+    
 }
 

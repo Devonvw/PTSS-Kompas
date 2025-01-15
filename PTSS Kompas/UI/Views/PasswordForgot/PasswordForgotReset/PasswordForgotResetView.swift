@@ -11,7 +11,7 @@ struct PasswordForgotResetView: View {
     @ObservedObject var passwordForgotStore: PasswordForgotStore
     @StateObject var viewModel = PasswordForgotResetViewModel()
     @Environment(\.dismiss) private var dismiss
-
+    
     
     var body: some View {
         VStack {
@@ -62,10 +62,10 @@ struct PasswordForgotResetView: View {
             Spacer()
             PasswordValidatorView(password: passwordForgotStore.password)
             
-            ButtonVariant(label: "Reset wachtwoord", disabled: passwordForgotStore.email.isEmpty) {
+            ButtonVariant(label: "Reset wachtwoord", disabled: passwordForgotStore.email.isEmpty, isLoading: viewModel.isLoading) {
                 Task {
                     await viewModel.resetPassword(body: ForgotPasswordReset(resetCode: passwordForgotStore.code, newPassword: passwordForgotStore.password, repeatNewPassword: passwordForgotStore.repeatPassword)) {
-                        //                        dismiss()
+                        dismiss()
                     }
                 }
             }

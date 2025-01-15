@@ -74,23 +74,25 @@ struct ContactQuestionMessagesView: View {
                     .padding(.top, 50)
                 }
             }.refreshable{Task { await viewModel.refreshQuestionMessages()}}
-            HStack(alignment: .bottom) {
-                TextField(
-                    "Nieuw bericht..",
-                    text: $viewModel.newMessageContent,
-                    axis: .vertical
-                )
-                .lineLimit(1...4)
-                .padding(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.dark, lineWidth: 2)
-                )
-                ButtonVariant(iconRight: "paperplane") {
-                    Task {
-                        await viewModel.addMessage(content: viewModel.newMessageContent)
-                    }
-                }.frame(width: 50)
+            if !question.isClosed {
+                HStack(alignment: .bottom) {
+                    TextField(
+                        "Nieuw bericht..",
+                        text: $viewModel.newMessageContent,
+                        axis: .vertical
+                    )
+                    .lineLimit(1...4)
+                    .padding(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(Color.dark, lineWidth: 2)
+                    )
+                    ButtonVariant(iconRight: "paperplane") {
+                        Task {
+                            await viewModel.addMessage(content: viewModel.newMessageContent)
+                        }
+                    }.frame(width: 50)
+                }
             }
             
         }

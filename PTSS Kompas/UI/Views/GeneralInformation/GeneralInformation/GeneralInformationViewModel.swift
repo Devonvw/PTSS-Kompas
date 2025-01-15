@@ -40,7 +40,7 @@ final class GeneralInformationViewModel: ObservableObject {
             print("Error: \(error)")
         }
     }
-
+    
     func fetchInitialGeneralInformation(id: String) async {
         isLoadingItems = true
         isFailureItems = false
@@ -50,11 +50,11 @@ final class GeneralInformationViewModel: ObservableObject {
             
             let items = data.data.filter{$0.id != id}
             
-                self.items = data.data
-                self.isLoadingItems = false
+            self.items = items
+            self.isLoadingItems = false
         } catch {
-                self.isFailureItems = true
-                self.isLoadingItems = false
+            self.isFailureItems = true
+            self.isLoadingItems = false
             print("Error: \(error)")
         }
     }

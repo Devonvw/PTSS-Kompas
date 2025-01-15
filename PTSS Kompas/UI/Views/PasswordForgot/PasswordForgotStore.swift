@@ -17,7 +17,7 @@ enum PasswordForgotScreens {
 
 @MainActor
 final class PasswordForgotStore: ObservableObject {
-    @Published var currentScreen: PasswordForgotScreens = .Reset
+    @Published var currentScreen: PasswordForgotScreens = .Request
     @Published var code: String = "222222"
     @Published var email: String = "devon@gmail.com"
     @Published var password: String = "Wachtwoord#1"
