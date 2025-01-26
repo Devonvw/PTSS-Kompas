@@ -136,6 +136,9 @@ struct ToolView: View {
             .onAppear {
                 Task {
                     await viewModel.fetchTool(id: toolListItem.id)
+                    
+                    // Mock api doesnt work for this endpoint
+//                    await viewModel.fetchToolComments(toolId: toolListItem.id)
                 }
             }
             .sheet(isPresented: $viewModel.shouldShowCreate) {

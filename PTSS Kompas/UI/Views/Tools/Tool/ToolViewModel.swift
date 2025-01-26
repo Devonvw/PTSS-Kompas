@@ -70,14 +70,13 @@ final class ToolViewModel: ObservableObject {
         isFailure = false
         self.toolId = toolId
         
+        
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
             comments = []
         }
         
-        
         do {
             let data = try await apiService.getToolComments(toolId: toolId, cursor: pagination?.nextCursor)
-            
             comments.append(contentsOf: data.data)
             pagination = data.pagination
             isLoading = false
