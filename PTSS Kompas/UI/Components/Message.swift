@@ -27,7 +27,7 @@ struct Message: View {
                 Text(title)
                     .font(.headline)
                     .foregroundColor(.dark)
-                Text(content)
+                Text(LocalizedStringKey(content))
                     .font(.body)
                     .foregroundColor(.dark)
                 HStack {

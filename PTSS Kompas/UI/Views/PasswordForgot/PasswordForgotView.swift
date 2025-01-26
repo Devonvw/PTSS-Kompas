@@ -29,7 +29,7 @@ struct PasswordForgotView: View {
                             PasswordForgotResetView(passwordForgotStore: store)
                         }
                     }
-                }.frame(maxHeight: .infinity)
+                }
                 Spacer()
             }
         }.padding()

@@ -20,7 +20,6 @@ struct MultiSelector<LabelView: View, Selectable: Identifiable & Hashable>: View
     }
     
     var body: some View {
-        //        NavigationLink(destination: multiSelectionView()) {
         Button(action: {
             shouldShowSelectionView = true
         }, label: {HStack {
@@ -33,8 +32,6 @@ struct MultiSelector<LabelView: View, Selectable: Identifiable & Hashable>: View
         ).sheet(isPresented: $shouldShowSelectionView) {
             multiSelectionView()
         }
-        
-        //        }
     }
     
     private func multiSelectionView() -> some View {

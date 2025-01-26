@@ -10,7 +10,8 @@ import SwiftUI
 struct RegisterVerifyView: View {
     @ObservedObject var registerStore: RegisterStore
     @StateObject var viewModel = RegisterVerifyViewModel()
-    
+    @Environment(\.dismiss) var dismiss
+
     
     var body: some View {
         Text("Welkom") .font(.largeTitle)
@@ -61,7 +62,9 @@ struct RegisterVerifyView: View {
         }
         Text("Heb je geen 6-cijferige code ontvangen? Neem dan contact op met de persoon die jou heeft uitgenodigd.").multilineTextAlignment(.center).padding(.bottom, 10).font(.caption).foregroundColor(.dark.opacity(0.8))
         Text("Heb je al een account?").multilineTextAlignment(.center).font(.caption).foregroundColor(.dark.opacity(0.8))
-//        ButtonVariant(label: "Inloggen met email", variant: .light) {}
+        ButtonVariant(label: "Inloggen met email", variant: .light) {
+            dismiss()
+        }
     }
 }
 

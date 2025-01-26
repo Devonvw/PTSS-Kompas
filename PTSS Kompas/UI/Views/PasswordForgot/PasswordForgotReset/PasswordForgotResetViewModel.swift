@@ -15,7 +15,7 @@ final class PasswordForgotResetViewModel: ObservableObject {
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     private var toastManager = ToastManager.shared
-
+    
     private let apiService = UserService()
     private let validator = PasswordForgetResetValidator()
     
@@ -26,42 +26,29 @@ final class PasswordForgotResetViewModel: ObservableObject {
         do {
             try validator.validate(body)
         } catch let validationError as PasswordForgetResetValidator.ValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             try await apiService.resetPassword(body: body)
             
-            await MainActor.run {
-                self.isLoading = false
-                print("Success")
-                toastManager.toast = Toast(style: .success, message: "Het wachtwoord is succesvol gewijzigd")
-                onSuccess()
-            }
+            self.isLoading = false
+            toastManager.toast = Toast(style: .success, message: "Het wachtwoord is succesvol gewijzigd")
+            onSuccess()
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error password forget reset: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            self.isLoading = false
         }
     }
 }

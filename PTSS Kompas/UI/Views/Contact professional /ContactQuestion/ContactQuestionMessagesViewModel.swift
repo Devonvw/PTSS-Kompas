@@ -8,6 +8,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 final class ContactQuestionMessagesViewModel: ObservableObject {
     @Published var messages: [ContactQuestionMessage] = []
     @Published var isLoading: Bool = false
@@ -49,28 +50,23 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
         isLoading = true
         isFailure = false
         self.questionId = questionId
-
+        
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
             messages = []
         }
-
+        
         do {
             let data = try await apiService.getContactQuestionMessages(questionId: questionId, cursor: pagination?.nextCursor, search: debouncedSearchText)
             
-            await MainActor.run {
-                messages.append(contentsOf: data.data)
-                pagination = data.pagination
-                isLoading = false
-            }
+            messages.append(contentsOf: data.data)
+            pagination = data.pagination
+            isLoading = false
         } catch {
-            await MainActor.run {
-                isLoading = false
-                isFailure = true
-            }
-            print("Error: \(error)")
+            isLoading = false
+            isFailure = true
         }
     }
-
+    
     
     func fetchMoreQuestionMessages(message: ContactQuestionMessage) async {
         guard let questionId else { return }
@@ -100,17 +96,12 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
         do {
             let newMessage = try await apiService.addMessage(questionId: questionId, createMessage: CreateContactQuestionMessage(content: content))
             
-            await MainActor.run {
-                messages.append(newMessage)
-                newMessageContent = ""
-            }
+            messages.append(newMessage)
+            newMessageContent = ""
         } catch {
-            await MainActor.run {
-                isFailure = true
-            }
-            print("Error adding message: \(error)")
+            isFailure = true
         }
     }
-
+    
 }
 

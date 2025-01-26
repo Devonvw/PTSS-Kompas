@@ -56,17 +56,12 @@ final class ToolViewModel: ObservableObject {
         do {
             let data = try await apiService.getToolById(toolId: id)
             
-            await MainActor.run {
-                self.tool = data
-                self.isLoading = false
-            }
+            tool = data
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-                tool = nil
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
+            tool = nil
         }
     }
     
@@ -76,26 +71,19 @@ final class ToolViewModel: ObservableObject {
         self.toolId = toolId
         
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            await MainActor.run {
-                comments = []
-            }
+            comments = []
         }
         
         
         do {
             let data = try await apiService.getToolComments(toolId: toolId, cursor: pagination?.nextCursor)
             
-            await MainActor.run {
-                comments.append(contentsOf: data.data)
-                pagination = data.pagination
-                isLoading = false
-            }
+            comments.append(contentsOf: data.data)
+            pagination = data.pagination
+            isLoading = false
         } catch {
-            await MainActor.run {
-                isLoading = false
-                isFailure = true
-            }
-            print("Error: \(error)")
+            isLoading = false
+            isFailure = true
         }
     }
     
@@ -121,24 +109,6 @@ final class ToolViewModel: ObservableObject {
         pagination = nil
         await fetchToolComments(toolId: toolId)
     }
-    
-    //    func addComment(content: String) async {
-    //        guard let toolId else { return }
-    //
-    //        do {
-    //            let newComment = try await apiService.addToolComment(toolId: toolId, comment: CreateToolComment(content: content))
-    //
-    //            await MainActor.run {
-    //                comments.append(newComment)
-    //                newCommentContent = ""
-    //            }
-    //        } catch {
-    //            await MainActor.run {
-    //                isFailure = true
-    //            }
-    //            print("Error adding message: \(error)")
-    //        }
-    //    }
     
     func addComment(_ comment: ToolComment) {
         comments.append(comment)

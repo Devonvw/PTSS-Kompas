@@ -28,33 +28,31 @@ final class CreateContactQuestionViewModel: ObservableObject {
         do {
             try validator.validate(createQuestion)
         } catch let validationError as CreateContactQuestionValidator.CreateValidatorError {
-            self.isLoading = false
+            isLoading = false
             self.error = .validation(error: validationError)
             return
         } catch {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .system(error: error)
             return
         }
         
         do {
-            let newQuestion = try await apiService.addQuestion(createQuestion: createQuestion)
+            _ = try await apiService.addQuestion(createQuestion: createQuestion)
             
-            self.isLoading = false
-            self.newQuestionSubject = ""
-            self.newQuestionContent = ""
+            isLoading = false
+            newQuestionSubject = ""
+            newQuestionContent = ""
             onSuccess()
             toastManager.toast = Toast(style: .success, message: "De nieuwe vraag is succesvol toegevoegd")
         } catch let error as NetworkError {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
+            isAlertFailure = true
+            isLoading = false
         }
         
     }

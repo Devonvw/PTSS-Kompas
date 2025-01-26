@@ -9,22 +9,24 @@ import SwiftUI
 
 struct ChatView: View {
     @StateObject var viewModel = ChatViewModel()
-    
+    @StateObject private var authManager = AuthManager.shared
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 5) {
-                        ForEach(viewModel.messages) { message in
-                            //TODO Check senderIf if left or right
-                            Message(title: message.senderName, content: message.content, date: message.sentAt, type: .left)
-                                .frame(maxWidth: .infinity)
-                                .onAppear {
-                                    Task {
-                                        await viewModel.fetchNextQuestionMessages(message: message)
-                                        await viewModel.fetchPreviousQuestionMessages(message: message)
+                    if let user = authManager.user {
+                        LazyVStack(alignment: .leading, spacing: 5) {
+                            ForEach(viewModel.messages) { message in
+                                Message(title: message.senderName, content: message.content, date: message.sentAt, type: user.id == message.senderId ? .right : .left)
+                                    .frame(maxWidth: .infinity)
+                                    .onAppear {
+                                        Task {
+                                            await viewModel.fetchNextQuestionMessages(message: message)
+                                            await viewModel.fetchPreviousQuestionMessages(message: message)
+                                        }
                                     }
-                                }
+                            }
                         }
                     }
                     if viewModel.isFailure {
@@ -42,7 +44,7 @@ struct ChatView: View {
                         }
                         .padding()
                     }
-                    else if viewModel.isLoading {
+                    else if viewModel.isLoading || authManager.user == nil {
                         ProgressView()
                             .progressViewStyle(CircularProgressViewStyle())
                             .frame(height: 120)
@@ -83,7 +85,7 @@ struct ChatView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.dark, lineWidth: 2)
                     )
-                    ButtonVariant(iconRight: "paperplane") {
+                    ButtonVariant(iconRight: "paperplane", isLoading: viewModel.isLoadingAdding) {
                         Task {
                             await viewModel.addMessage(content: viewModel.newMessageContent)
                         }
@@ -102,6 +104,9 @@ struct ChatView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 MembersButton()
+            }
+            .alert("Er is iets fout gegaan tijdens het versturen van het bericht. Probeer het opnieuw.", isPresented: $viewModel.isFailureAdding) {
+                Button("OK", role: .cancel) { }
             }
         }
     }

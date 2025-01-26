@@ -24,18 +24,12 @@ final class MembersViewModel: ObservableObject {
         do {
             let data = try await apiService.getMembersOfCurrentUsersGroup()
             
-            await MainActor.run {
-                self.members = data
-                self.isLoading = false
-            }
+            members = data
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-                self.members = []
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
+            members = []
         }
     }
-
 }

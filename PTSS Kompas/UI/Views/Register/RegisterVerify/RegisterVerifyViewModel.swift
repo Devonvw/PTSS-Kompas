@@ -25,41 +25,28 @@ final class RegisterVerifyViewModel: ObservableObject {
         do {
             try validator.validate(body)
         } catch let validationError as RegisterVerifyValidator.ValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             try await apiService.verifyUserInvitation(body: body)
             
-            await MainActor.run {
-                self.isLoading = false
-                print("Success")
-                onSuccess()
-            }
+            isLoading = false
+            onSuccess()
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error adding question2: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error 12: \(error)")
+            isAlertFailure = true
+            isLoading = false
         }
         
     }

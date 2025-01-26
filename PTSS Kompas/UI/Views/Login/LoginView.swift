@@ -62,13 +62,12 @@ struct LoginView: View {
                     .background(.clear)
                     .scrollContentBackground(.hidden)
                 
-                ButtonVariant(label: "Login") {
+                ButtonVariant(label: "Login", isLoading: viewModel.isLoading) {
                     Task {
                         await viewModel.login {
                         }
                     }
                 }
-//                Spacer().frame(maxHeight: .infinity)
                 Text("Heb je nog geen account? \nKlik dan op de registreren knop hieronder. Hierna is het mogelijk om te registreren met een email en de ontvangen code.").multilineTextAlignment(.center)
                 NavigationLink(destination: RegisterView()) {
                     ButtonVariant(label: "Registreren", variant: .light) {
@@ -76,6 +75,7 @@ struct LoginView: View {
                     }.disabled(true)
                 }
             }.padding()
+                .alert(isPresented: $viewModel.isAlertFailure, error: viewModel.error) { }
         }
     }
 }

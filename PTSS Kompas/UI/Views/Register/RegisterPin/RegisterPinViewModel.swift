@@ -29,17 +29,13 @@ final class RegisterPinViewModel: ObservableObject {
         do {
             try validator.validate(body)
         } catch let validationError as RegisterPinValidator.ValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
-            print(validationError)
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .system(error: error)
-            print(error)
             return
         }
         
@@ -47,31 +43,19 @@ final class RegisterPinViewModel: ObservableObject {
             _ = try await apiService.createPin(body: body)
             AuthManager.shared.setLoggedIn()
             
-            await MainActor.run {
-                self.isLoading = false
-                print("Success")
-                toastManager.toast = Toast(style: .success, message: "Jouw pincode is aangemaakt!")
-                onSuccess()
-                
-            }
+            isLoading = false
+            toastManager.toast = Toast(style: .success, message: "Jouw pincode is aangemaakt!")
+            onSuccess()
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error creating pin: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-                self.error = .system(error: error)
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            isLoading = false
+            self.error = .system(error: error)
         }
-        
     }
-    
 }
 
 

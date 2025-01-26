@@ -70,14 +70,6 @@ struct CreateContactQuestionView: View {
                     ProgressView()
                 }
             }
-        //            .toolbar {
-        //                ToolbarItem(placement: .primaryAction) {
-        //                    Button("Klaar") {
-        //                        dismiss()
-        //                    }
-        //                    .accessibilityIdentifier("doneBtn")
-        //                }
-        //            }
         HStack {
             ButtonVariant(label: "Stel nieuwe vraag") {
                 Task {

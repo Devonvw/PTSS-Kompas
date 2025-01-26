@@ -55,14 +55,6 @@ struct EditPrimaryCaregiverView: View {
                         ProgressView()
                     }
                 }
-            //            .toolbar {
-            //                ToolbarItem(placement: .primaryAction) {
-            //                    Button("Klaar") {
-            //                        dismiss()
-            //                    }
-            //                    .accessibilityIdentifier("doneBtn")
-            //                }
-            //            }
             HStack {
                 ButtonVariant(label: "Wijzig hoofdmantelzorger") {
                     Task {

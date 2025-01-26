@@ -17,17 +17,11 @@ final class RegisterNameViewModel: ObservableObject {
     func validateName(firstName: String, lastName: String, onSuccess: () -> Void) async {
         do {
             try validator.validate(firstName: firstName, lastName: lastName)
-             onSuccess()
+            onSuccess()
         } catch let validationError as RegisterNameValidator.ValidatorError {
-            await MainActor.run {
-                self.error = .validation(error: validationError)
-            }
-            print(validationError)
+            self.error = .validation(error: validationError)
         } catch {
-            await MainActor.run {
-                self.error = .system(error: error)
-            }
-            print(error)
+            self.error = .system(error: error)
         }
     }
 }

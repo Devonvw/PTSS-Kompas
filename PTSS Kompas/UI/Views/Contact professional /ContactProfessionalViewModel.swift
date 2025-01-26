@@ -26,7 +26,7 @@ final class ContactProfessionalViewModel: ObservableObject {
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
     @Published var shouldShowCreate = false
-
+    
     private let apiService = ContactService()
     
     init() {
@@ -60,20 +60,15 @@ final class ContactProfessionalViewModel: ObservableObject {
         do {
             let data = try await apiService.getContactQuestions(cursor: pagination?.nextCursor, search: debouncedSearchText)
             
-            await MainActor.run {
-                questions.append(contentsOf: data.data)
-                pagination = data.pagination
-                isLoading = false
-            }
+            questions.append(contentsOf: data.data)
+            pagination = data.pagination
+            isLoading = false
         } catch {
-            await MainActor.run {
-                isFailure = true
-                isLoading = false
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
         }
     }
-
+    
     
     func fetchMoreContactQuestions(question: ContactQuestion) async {
         guard let lastQuestion = questions.last, lastQuestion.id == question.id else {

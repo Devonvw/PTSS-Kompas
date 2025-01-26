@@ -24,16 +24,12 @@ final class QuestionnaireViewModel: ObservableObject {
         do {
             let data = try await apiService.getQuestionnaireExplanation(questionnaireId: id)
             
-            await MainActor.run {
-                self.explanation = data
-                self.isLoading = false
-            }
+            explanation = data
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-                self.explanation = nil
-            }
+            isFailure = true
+            isLoading = false
+            explanation = nil
         }
     }
 }

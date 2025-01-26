@@ -28,34 +28,30 @@ final class InviteMemberViewModel: ObservableObject {
         do {
             try validator.validate(userInviteCreate)
         } catch let validationError as InviteMemberValidator.CreateValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             _ = try await apiService.inviteUser(body: userInviteCreate)
             
-            self.isLoading = false
-            self.newMemberEmail = ""
+            isLoading = false
+            newMemberEmail = ""
             onSuccess()
             toastManager.toast = Toast(style: .success, message: "De persoon is succesvol uitgenodigd")
         } catch let error as NetworkError {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .networking(error: error)
         } catch {
-            self.isAlertFailure = true
-            self.isLoading = false
+            isAlertFailure = true
+            isLoading = false
         }
         
     }

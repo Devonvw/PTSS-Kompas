@@ -24,18 +24,13 @@ final class EmergencyContactViewModel: ObservableObject {
         do {
             let data = try await apiService.getEmergencyContacts()
             
-            await MainActor.run {
-                self.emergencyContacts = data
-                self.isLoading = false
-            }
+            emergencyContacts = data
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-                self.emergencyContacts = []
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
+            emergencyContacts = []
         }
     }
-
+    
 }

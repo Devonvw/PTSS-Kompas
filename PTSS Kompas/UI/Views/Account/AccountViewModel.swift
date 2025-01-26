@@ -24,11 +24,12 @@ final class AccountViewModel: ObservableObject {
     @Published var showInviteAlert = false
     @Published var showUpdatePinAlert = false
     @Published var showUpdatePasswordAlert = false
-
+    
     @Published var selectedMember: User?
-
+    
     
     private let apiService = UserService()
+    private var toastManager = ToastManager.shared
     
     func fetchMembers() async {
         isLoading = true
@@ -37,24 +38,19 @@ final class AccountViewModel: ObservableObject {
         do {
             let data = try await apiService.getMembersOfCurrentUsersGroup()
             
-            await MainActor.run {
-                self.patient = data.first { $0.role == Role.Patient}
-                self.primaryCaregiver = data.first { $0.role == Role.PrimaryCaregiver }
-                self.members = data.filter { $0.role != Role.PrimaryCaregiver && $0.role != Role.Patient }
-                self.allMembers = data
-                self.isLoading = false
-            }
+            patient = data.first { $0.role == Role.Patient}
+            primaryCaregiver = data.first { $0.role == Role.PrimaryCaregiver }
+            members = data.filter { $0.role != Role.PrimaryCaregiver && $0.role != Role.Patient }
+            allMembers = data
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-                self.patient = nil
-                self.primaryCaregiver = nil
-                self.members = []
-                self.allMembers = []
-
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
+            patient = nil
+            primaryCaregiver = nil
+            members = []
+            allMembers = []
+            
         }
     }
     
@@ -62,15 +58,16 @@ final class AccountViewModel: ObservableObject {
         isLoadingDelete = true
         isFailureDelete = false
         
-        do {    
+        do {
             _ = try await apiService.deleteUserFromGroup(userId: member.id)
             
-            self.members = self.members.filter { $0.id != member.id }
-            self.isLoadingDelete = false
+            members = members.filter { $0.id != member.id }
+            toastManager.toast = Toast(style: .success, message: "De persoon is succesvol verwijderd")
+            
+            isLoadingDelete = false
         } catch {
-            self.isFailureDelete = true
-            self.isLoadingDelete = false
-            print("Error: \(error)")
+            isFailureDelete = true
+            isLoadingDelete = false
         }
     }
 }

@@ -26,7 +26,7 @@ final class QuestionnairesViewModel: ObservableObject {
     private var debouncedSearchText = ""
     
     private let apiService = QuestionnaireService()
-
+    
     init() {
         Task {
             await fetchQuestionnaires()
@@ -49,28 +49,21 @@ final class QuestionnairesViewModel: ObservableObject {
     
     func fetchQuestionnaires() async {
         isLoading = true
-        await MainActor.run { self.isFailure = false }
+        isFailure = false
         
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            await MainActor.run {
-                questionnaires = []
-            }
+            questionnaires = []
         }
         
         do {
             let data = try await apiService.getQuestionnaires(cursor: pagination?.nextCursor, search: debouncedSearchText)
             
-            await MainActor.run {
-                self.questionnaires.append(contentsOf: data.data)
-                self.pagination = data.pagination
-                self.isLoading = false
-            }
+            questionnaires.append(contentsOf: data.data)
+            pagination = data.pagination
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
         }
     }
     

@@ -22,7 +22,6 @@ struct PasswordValidationResult {
 
 struct PasswordValidator {
     static func validate(password: String) -> PasswordValidationResult {
-        print(password)
         let isLengthValid = password.count >= 9
         let hasNumber = password.range(of: "\\d", options: .regularExpression) != nil
         let hasUppercase = password.range(of: "[A-Z]", options: .regularExpression) != nil

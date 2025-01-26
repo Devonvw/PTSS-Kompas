@@ -50,28 +50,21 @@ final class GeneralInformationItemViewModel: ObservableObject {
     
     func fetchGeneralInformationItems() async {
         isLoading = true
-        await MainActor.run { self.isFailure = false }
+        isFailure = false
         
         if pagination?.nextCursor == nil || pagination?.nextCursor == "" {
-            await MainActor.run {
-                items = []
-            }
+            items = []
         }
         
         do {
             let data = try await apiService.getGeneralInformation(cursor: pagination?.nextCursor, search: debouncedSearchText)
             
-            await MainActor.run {
-                self.items.append(contentsOf: data.data)
-                self.pagination = data.pagination
-                self.isLoading = false
-            }
+            items.append(contentsOf: data.data)
+            pagination = data.pagination
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
         }
     }
     

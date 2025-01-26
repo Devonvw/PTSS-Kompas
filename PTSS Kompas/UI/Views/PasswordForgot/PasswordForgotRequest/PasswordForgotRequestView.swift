@@ -43,10 +43,11 @@ struct PasswordForgotRequestView: View {
                 }
             }
         }.padding(0)
+            .frame(height: 150)
             .background(.clear)
             .scrollContentBackground(.hidden)
 
-        ButtonVariant(label: "Verstuur email", disabled: passwordForgotStore.email.isEmpty) {
+        ButtonVariant(label: "Verstuur email", disabled: passwordForgotStore.email.isEmpty, isLoading: viewModel.isLoading) {
             Task {
                 await viewModel.request(body: ForgotPassword(email: passwordForgotStore.email)) {
                     passwordForgotStore.currentScreen = .Verify

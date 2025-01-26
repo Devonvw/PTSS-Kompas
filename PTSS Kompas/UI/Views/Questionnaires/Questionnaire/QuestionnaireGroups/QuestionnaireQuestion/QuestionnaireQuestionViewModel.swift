@@ -24,7 +24,7 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
     @Published var isSaving: Bool = false
     @Published var isFailureSaving: Bool = false
     private var toastManager = ToastManager.shared
-
+    
     
     private let apiService = QuestionnaireService()
     
@@ -34,17 +34,12 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
         
         do {
             let data = try await apiService.getQuestionnaireQuestions(questionnaireId: questionnaireId, groupId: groupId)
-            await MainActor.run {
-                self.questions = data
-                self.question = data.first
-                self.isLoading = false
-            }
+            questions = data
+            question = data.first
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
         }
     }
     
@@ -61,9 +56,7 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
         }
         
         guard let questionId = question?.id else {
-            await MainActor.run {
-                self.isSaving = false
-            }
+            isSaving = false
             return
         }
         
@@ -74,13 +67,11 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
                 questionId: questionId,
                 answers: answers
             )
-        
-            self.isSaving = false
+            
+            isSaving = false
         } catch {
-            self.isSaving = false
-            self.isFailureSaving = true
-//            toastManager.toast = Toast(style: .error, message: "Het is niet gelukt om de antwoorden op te slaan. Probeer het opnieuw.")
-            print("Error: \(error)")
+            isSaving = false
+            isFailureSaving = true
             throw error
         }
     }
@@ -117,7 +108,7 @@ final class QuestionnaireQuestionViewModel: ObservableObject {
     
     func backQuestion(questionnaireId: String, groupId: Int) async {
         if (isFirstQuestion) { return }
-
+        
         do {
             try await saveAnswers(questionnaireId: questionnaireId, groupId: groupId)
             

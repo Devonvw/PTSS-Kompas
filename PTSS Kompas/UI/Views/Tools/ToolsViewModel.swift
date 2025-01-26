@@ -26,7 +26,7 @@ final class ToolsViewModel: ObservableObject {
     private var searchTextSubject = PassthroughSubject<String, Never>()
     private var debouncedSearchText = ""
     @Published var shouldShowCreate = false
-
+    
     private let apiService = ToolService()
     
     init() {
@@ -51,21 +51,16 @@ final class ToolsViewModel: ObservableObject {
     
     func fetchToolCategories() async {
         isLoading = true
-        await MainActor.run { self.isFailure = false }
+        isFailure = false
         
         do {
             let data = try await apiService.getTools(search: debouncedSearchText)
             
-            await MainActor.run {
-                self.categories.append(contentsOf: data)
-                self.isLoading = false
-            }
+            categories.append(contentsOf: data)
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
         }
     }
     
