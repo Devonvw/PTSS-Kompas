@@ -29,12 +29,12 @@ final class LoginViewModel: ObservableObject {
         do {
             try validator.validate(body)
         } catch let validationError as LoginValidator.ValidatorError {
-            self.isLoading = false
+            isLoading = false
             self.error = .validation(error: validationError)
             return
         } catch {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .system(error: error)
             return
         }
@@ -42,15 +42,15 @@ final class LoginViewModel: ObservableObject {
         do {
             try await AuthManager.shared.login(body)
             
-            self.isLoading = false
+            isLoading = false
             onSuccess()
         } catch let error as NetworkError {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .networking(error: error)
         } catch {
-            self.isAlertFailure = true
-            self.isLoading = false
+            isAlertFailure = true
+            isLoading = false
             self.error = .system(error: error)
         }
         

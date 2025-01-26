@@ -15,7 +15,7 @@ final class LoginPinViewModel: ObservableObject {
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     @Published var pin: String = ""
-
+    
     private let apiService = UserService()
     private let validator = LoginPinValidator()
     
@@ -28,51 +28,32 @@ final class LoginPinViewModel: ObservableObject {
         do {
             try validator.validate(body)
         } catch let validationError as LoginPinValidator.ValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
-            print(validationError)
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
-            print(error)
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
+            try await AuthManager.shared.pinLogin(body)
             
-             try await AuthManager.shared.pinLogin(body)
-
-            await MainActor.run {
-                self.isLoading = false
-                print("Success")
-                onSuccess()
-            }
+            isLoading = false
+            onSuccess()
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error login: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-                self.error = .system(error: error)
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            isLoading = false
+            self.error = .system(error: error)
         }
-        
     }
-    
 }
-
 
 extension LoginPinViewModel {
     enum FormError: LocalizedError {

@@ -13,14 +13,14 @@ final class UpdatePasswordViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
-    @Published var currentPassword: String = "Password1"
-    @Published var newPassword: String = "Password1#"
-    @Published var repeatNewPassword: String = "Password1#"
-
+    @Published var currentPassword: String = ""
+    @Published var newPassword: String = ""
+    @Published var repeatNewPassword: String = ""
+    
     private let apiService = UserService()
     private let validator = UpdatePasswordValidator()
     private var toastManager = ToastManager.shared
-
+    
     func updatePassword(onSuccess: () -> Void) async {
         let passwordUpdate = PasswordUpdate(currentPassword: currentPassword, newPassword: newPassword, repeatNewPassword: repeatNewPassword)
         isLoading = true
@@ -29,44 +29,32 @@ final class UpdatePasswordViewModel: ObservableObject {
         do {
             try validator.validate(passwordUpdate)
         } catch let validationError as UpdatePasswordValidator.ValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             _ = try await apiService.updatePassword(body: passwordUpdate)
             
-            await MainActor.run {
-                self.isLoading = false
-                self.currentPassword = ""
-                self.newPassword = ""
-                self.repeatNewPassword = ""
-                onSuccess()
-                toastManager.toast = Toast(style: .success, message: "Jouw wachtwoord is succesvol gewijzigd")
-            }
+            isLoading = false
+            currentPassword = ""
+            newPassword = ""
+            repeatNewPassword = ""
+            onSuccess()
+            toastManager.toast = Toast(style: .success, message: "Jouw wachtwoord is succesvol gewijzigd")
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error updating password: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            isLoading = false
         }
         
     }

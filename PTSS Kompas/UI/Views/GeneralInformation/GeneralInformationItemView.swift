@@ -13,13 +13,6 @@ struct GeneralInformationItemView: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                //                if !viewModel.isLoading  {
-                //                    HStack {
-                //                        Text("\(viewModel.pagination?.totalItems ?? 0) vragenlijsten")
-                //                            .font(.caption).fontWeight(.semibold)
-                //                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal)
-                //                }
-                
                 LazyVStack(spacing: 10) {
                     ForEach(viewModel.items) { item in
                         NavigationLink(destination: GeneralInformationView(item: item)) {

@@ -31,13 +31,12 @@ final class QuestionnaireGroupsViewModel: ObservableObject {
         
         do {
             let data = try await apiService.getQuestionnaireGroups(questionnaireId: questionnaireId)
-                self.groups = data
-                self.completedGroups = data.filter { $0.isFinished }.count
-                self.isLoading = false
+            groups = data
+            completedGroups = data.filter { $0.isFinished }.count
+            isLoading = false
         } catch {
-                self.isFailure = true
-                self.isLoading = false
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
         }
     }
     
@@ -47,15 +46,12 @@ final class QuestionnaireGroupsViewModel: ObservableObject {
         
         do {
             try await apiService.finishQuestionnaire(questionnaireId: questionnaireId)
-            self.isLoadingFinish = false
-            
-            
+            isLoadingFinish = false
             onSuccess()
             toastManager.toast = Toast(style: .success, message: "De vragenlijst is succesvol afgerond")
         } catch {
-            self.isFailureFinish = true
-            self.isLoadingFinish = false
-            print("Error: \(error)")
+            isFailureFinish = true
+            isLoadingFinish = false
         }
     }
     

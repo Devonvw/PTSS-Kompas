@@ -64,7 +64,6 @@ final class ContactQuestionMessagesViewModel: ObservableObject {
         } catch {
             isLoading = false
             isFailure = true
-            print("Error: \(error)")
         }
     }
     

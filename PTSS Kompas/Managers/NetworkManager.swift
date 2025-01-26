@@ -19,18 +19,18 @@ enum NetworkError: LocalizedError {
     case invalidURL
     case missingData
     case decodingFailed
-    case serverError(statusCode: Int, message: String)
+    case serverError(message: String)
     case unknown(error: Error)
     
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "Er is iets fout gegaan." //"The URL provided was invalid."
+            return "Er is iets fout gegaan."
         case .missingData:
-            return "Er is iets fout gegaan." //"No data was received from the server."
+            return "Er is iets fout gegaan."
         case .decodingFailed:
-            return "Er is iets fout gegaan." //"Failed to decode the response from the server."
-        case .serverError(let statusCode, let message):
+            return "Er is iets fout gegaan."
+        case .serverError(let message):
             return message
         case .unknown(let error):
             return error.localizedDescription
@@ -80,6 +80,7 @@ final class NetworkManager {
         }
         
         
+        // Is for the mock API
         if let token = getBearerToken(), !token.isEmpty {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
@@ -121,12 +122,12 @@ final class NetworkManager {
                 }
             case 401:
                 Task { await handleUnauthorizedResponse() }
-                throw NetworkError.serverError(statusCode: httpResponse.statusCode, message: "Unauthorized. Please log in again.")
+                throw NetworkError.serverError(message: "Unauthorized. Please log in again.")
             case 400...499:
                 let message = (try? JSONDecoder().decode(ResponseError.self, from: data).localizedDescription) ?? "Client error"
-                throw NetworkError.serverError(statusCode: httpResponse.statusCode, message: message)
+                throw NetworkError.serverError(message: message)
             case 500...599:
-                throw NetworkError.serverError(statusCode: httpResponse.statusCode, message: "Server error occurred")
+                throw NetworkError.serverError(message: "Server error occurred")
             default:
                 throw NetworkError.unknown(error: NSError(domain: "", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "Unexpected error"]))
             }
@@ -138,22 +139,19 @@ final class NetworkManager {
     @MainActor
     private func handleUnauthorizedResponse() {
         AuthManager.shared.clearCookies()
-        
         AuthManager.shared.isLoggedIn = false
         AuthManager.shared.enteredPin = false
-
-        print("User is logged out due to unauthorized response.")
     }
     
     private func getBearerToken() -> String? {
-        return "ABS" /*AuthManager.shared.getToken(for: accessTokenKey)*/
+        return "ABC"
     }
 }
 
-extension URL {
-    func appendingQueryParameters(_ parameters: [String: String]) -> URL? {
-        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
-        components?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
-        return components?.url
-    }
-}
+//extension URL {
+//    func appendingQueryParameters(_ parameters: [String: String]) -> URL? {
+//        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
+//        components?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+//        return components?.url
+//    }
+//}

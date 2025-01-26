@@ -13,18 +13,18 @@ final class CreateToolViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isLoadingCategories: Bool = false
     @Published var isFailureCategories: Bool = false
-
+    
     @Published var isAlertFailure: Bool = false
     @Published private(set) var error: FormError?
     @Published var newToolName: String = ""
     @Published var newToolDescription: String = ""
     @Published var selectedCategories: Set<ToolCategory> = []
     @Published var categories: [ToolCategory] = ToolCategory.examples
-
+    
     private let apiService = ToolService()
     private let validator = CreateToolValidator()
     private var toastManager = ToastManager.shared
-
+    
     func addTool(onSuccess: (_ tool: Tool) -> Void) async {
         let createTool = CreateTool(name: newToolName, description: newToolDescription, category: categories.map{$0.category})
         isLoading = true
@@ -33,66 +33,47 @@ final class CreateToolViewModel: ObservableObject {
         do {
             try validator.validate(createTool)
         } catch let validationError as CreateToolValidator.CreateValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             let newComment = try await apiService.createTool(tool: createTool)
             
-            await MainActor.run {
-                self.isLoading = false
-                self.newToolName = ""
-                self.newToolDescription = ""
-                print("Success")
-                print(newComment)
-                onSuccess(newComment)
-                toastManager.toast = Toast(style: .success, message: "Het nieuwe hulpmiddel is succesvol toegevoegd")
-
-            }
+            isLoading = false
+            newToolName = ""
+            newToolDescription = ""
+            onSuccess(newComment)
+            toastManager.toast = Toast(style: .success, message: "Het nieuwe hulpmiddel is succesvol toegevoegd")
+            
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error adding tool: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            isLoading = false
         }
     }
     
     func fetchToolCategories() async {
         isLoadingCategories = true
-        await MainActor.run { self.isFailureCategories = false }
+        isFailureCategories = false
         
         do {
             let data = try await apiService.getTools(search: nil)
             
-            await MainActor.run {
-                self.categories = data
-                self.isLoadingCategories = false
-            }
+            categories = data
+            isLoadingCategories = false
         } catch {
-            await MainActor.run {
-                self.isFailureCategories = true
-                self.isLoadingCategories = false
-            }
-            print("Error: \(error)")
+            isFailureCategories = true
+            isLoadingCategories = false
         }
     }
     

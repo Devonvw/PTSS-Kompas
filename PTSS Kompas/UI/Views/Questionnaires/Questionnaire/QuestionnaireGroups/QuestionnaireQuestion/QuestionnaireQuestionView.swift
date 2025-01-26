@@ -89,7 +89,6 @@ struct QuestionnaireQuestionView: View {
                     ) {
                         EmptyView()
                     }
-                    //                    NavigationLink(destination: QuestionnaireGroupsView(questionnaire: questionnaire)) {
                     ButtonVariant(label: "Volgende", disabled: !viewModel.areAllSubQuestionsAnsweredState || viewModel.isSaving, iconRight: "arrow.right") {
                         Task {
                             await viewModel.nextQuestion(questionnaireId: questionnaire.id, groupId: group.id) {
@@ -97,7 +96,6 @@ struct QuestionnaireQuestionView: View {
                             }
                         }
                     }
-                    //                    }
                 } else {
                     ButtonVariant(label: {
                         Text("Volgende")

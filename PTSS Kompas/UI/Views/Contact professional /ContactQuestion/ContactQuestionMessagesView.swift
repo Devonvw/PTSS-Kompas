@@ -18,10 +18,8 @@ struct ContactQuestionMessagesView: View {
                     Text("Berichten (\(viewModel.messages.count))")
                         .font(.headline)
                         .foregroundColor(.dark)
-                    
                     LazyVStack(alignment: .leading, spacing: 5) {
                         ForEach(viewModel.messages) { message in
-                            //TODO Check senderIf if left or right
                             Message(title: message.senderName, content: message.content, date: message.createdAt, type: .left)
                                 .frame(maxWidth: .infinity)
                                 .onAppear {

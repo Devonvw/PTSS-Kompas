@@ -54,10 +54,9 @@ final class ToolService {
             "cursor": cursor,
             "size": "50",
         ]
-        print(baseURL + "\(toolId)/comments")
         
         return try await NetworkManager.shared.request(
-            endpoint: baseURL + "9e52b2b1-6a89-4d99-a1d4-2956c7383d88/comments",
+            endpoint: baseURL + "\(toolId)/comments",
             method: .GET,
             parameters: parameters,
             responseType: PaginatedResponse<ToolComment, Pagination>.self

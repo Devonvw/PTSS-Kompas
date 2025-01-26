@@ -65,23 +65,16 @@ final class ChatViewModel: ObservableObject {
                 search: debouncedSearchText
             )
             
-            await MainActor.run {
-                if direction == .Previous {
-                    // Upward scroll, older messages
-                    self.messages.insert(contentsOf: data.data, at: 0)
-                } else {
-                    // Downward scroll, newer messages
-                    self.messages.append(contentsOf: data.data)
-                }
-                self.pagination = data.pagination
-                self.isLoading = false
+            if direction == .Previous {
+                self.messages.insert(contentsOf: data.data, at: 0)
+            } else {
+                self.messages.append(contentsOf: data.data)
             }
+            pagination = data.pagination
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isFailure = true
-            }
-            print("Error: \(error)")
+            isLoading = false
+            isFailure = true
         }
     }
     
@@ -129,7 +122,6 @@ final class ChatViewModel: ObservableObject {
         } catch {
             isFailureAdding = true
             isLoadingAdding = false
-            print("Error adding message: \(error)")
         }
     }
     

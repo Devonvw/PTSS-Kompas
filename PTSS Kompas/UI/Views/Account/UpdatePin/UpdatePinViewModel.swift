@@ -15,11 +15,11 @@ final class UpdatePinViewModel: ObservableObject {
     @Published private(set) var error: FormError?
     @Published var currentPin: String = ""
     @Published var newPin: String = ""
-
+    
     private let apiService = UserService()
     private let validator = UpdatePinValidator()
     private var toastManager = ToastManager.shared
-
+    
     func updatePin(onSuccess: () -> Void) async {
         let pinUpdate = PinUpdate(currentPin: currentPin, newPin: newPin)
         isLoading = true
@@ -28,50 +28,34 @@ final class UpdatePinViewModel: ObservableObject {
         do {
             try validator.validate(pinUpdate)
         } catch let validationError as UpdatePinValidator.ValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             _ = try await apiService.updatePin(body: pinUpdate)
             
-            await MainActor.run {
-                self.isLoading = false
-                self.currentPin = ""
-                self.newPin = ""
-                print("Success")
-                onSuccess()
-                toastManager.toast = Toast(style: .success, message: "Jouw pincode is succesvol gewijzigd")
-            }
+            isLoading = false
+            currentPin = ""
+            newPin = ""
+            onSuccess()
+            toastManager.toast = Toast(style: .success, message: "Jouw pincode is succesvol gewijzigd")
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error updating pin: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            isLoading = false
         }
-        
     }
-    
 }
-
 
 extension UpdatePinViewModel {
     enum FormError: LocalizedError {

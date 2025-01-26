@@ -18,7 +18,7 @@ final class CreateToolCommentViewModel: ObservableObject {
     private let apiService = ToolService()
     private let validator = CreateToolCommentValidator()
     private var toastManager = ToastManager.shared
-
+    
     func addComment(toolId: String, onSuccess: (_ comment: ToolComment) -> Void) async {
         let createComment = CreateToolComment(content: newCommentContent)
         isLoading = true
@@ -27,49 +27,32 @@ final class CreateToolCommentViewModel: ObservableObject {
         do {
             try validator.validate(createComment)
         } catch let validationError as CreateToolCommentValidator.CreateValidatorError {
-            await MainActor.run {
-                self.isLoading = false
-                self.error = .validation(error: validationError)
-            }
+            isLoading = false
+            self.error = .validation(error: validationError)
             return
         } catch {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .system(error: error)
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .system(error: error)
             return
         }
         
         do {
             let newComment = try await apiService.addToolComment(toolId: toolId, comment: createComment)
             
-            await MainActor.run {
-                self.isLoading = false
-                self.newCommentContent = ""
-                print("Success")
-                print(newComment)
-                onSuccess(newComment)
-                toastManager.toast = Toast(style: .success, message: "Jouw opmerking is succesvol geplaatst!")
-
-            }
+            isLoading = false
+            newCommentContent = ""
+            onSuccess(newComment)
+            toastManager.toast = Toast(style: .success, message: "Jouw opmerking is succesvol geplaatst!")
         } catch let error as NetworkError {
-            await MainActor.run {
-                self.isLoading = false
-                self.isAlertFailure = true
-                self.error = .networking(error: error)
-                print("Error adding question: \(error)")
-            }
+            isLoading = false
+            isAlertFailure = true
+            self.error = .networking(error: error)
         } catch {
-            await MainActor.run {
-                self.isAlertFailure = true
-                self.isLoading = false
-            }
-            print("Error: \(error)")
+            isAlertFailure = true
+            isLoading = false
         }
-        
     }
-    
 }
 
 

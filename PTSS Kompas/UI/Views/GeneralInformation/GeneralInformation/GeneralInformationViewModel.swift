@@ -27,17 +27,12 @@ final class GeneralInformationViewModel: ObservableObject {
         do {
             let data = try await apiService.getGeneralInformationById(id: id)
             
-            await MainActor.run {
-                self.generalInformation = data
-                self.isLoading = false
-            }
+            generalInformation = data
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.isFailure = true
-                self.isLoading = false
-                generalInformation = nil
-            }
-            print("Error: \(error)")
+            isFailure = true
+            isLoading = false
+            generalInformation = nil
         }
     }
     
@@ -51,11 +46,10 @@ final class GeneralInformationViewModel: ObservableObject {
             let items = data.data.filter{$0.id != id}
             
             self.items = items
-            self.isLoadingItems = false
+            isLoadingItems = false
         } catch {
-            self.isFailureItems = true
-            self.isLoadingItems = false
-            print("Error: \(error)")
+            isFailureItems = true
+            isLoadingItems = false
         }
     }
 }

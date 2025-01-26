@@ -37,12 +37,12 @@ final class EditPrimaryCaregiverViewModel: ObservableObject {
         do {
             try validator.validate(primaryCaregiverAssign)
         } catch let validationError as EditPrimaryCaregiverValidator.CreateValidatorError {
-            self.isLoading = false
+            isLoading = false
             self.error = .validation(error: validationError)
             return
         } catch {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .system(error: error)
             return
         }
@@ -50,20 +50,18 @@ final class EditPrimaryCaregiverViewModel: ObservableObject {
         do {
             _ = try await apiService.updatePrimaryCaregiverOfCurrentUsersGroup(body: primaryCaregiverAssign)
             
-            await MainActor.run {
-                self.isLoading = false
-                if let selectedMember {
-                    onSuccess(selectedMember)
-                }
-                toastManager.toast = Toast(style: .success, message: "De hoofdmantelzorger is succesvol gewijzigd")
+            isLoading = false
+            if let selectedMember {
+                onSuccess(selectedMember)
             }
+            toastManager.toast = Toast(style: .success, message: "De hoofdmantelzorger is succesvol gewijzigd")
         } catch let error as NetworkError {
-            self.isLoading = false
-            self.isAlertFailure = true
+            isLoading = false
+            isAlertFailure = true
             self.error = .networking(error: error)
         } catch {
-            self.isAlertFailure = true
-            self.isLoading = false
+            isAlertFailure = true
+            isLoading = false
         }
     }
 }
